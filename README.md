@@ -10,6 +10,13 @@ Clientsy simplifies freelance workflow by providing a centralized hub where free
 - Securely view and download files whenever needed
 - Prepare for upcoming lead generation and client management features
 
+## Technology Stack
+
+- **MongoDB** - Flexible document database for storing varied client documents and metadata
+- **Express.js** - Minimalist web framework for Node.js APIs
+- **React** - Component-based frontend for responsive UI
+- **Node.js** - JavaScript runtime for server-side logic
+
 ## Features
 
 - Create individual folders for each client
