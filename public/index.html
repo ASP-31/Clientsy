@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Clientsy | Streamlined Client & Document Management</title>
+  <title>Clientsy | Minimalist Cabinet</title>
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,290 +14,131 @@
   <link rel="stylesheet" href="/css/style.css">
 </head>
 <body class="dark-theme">
-  <!-- App Container -->
-  <div class="app-layout">
+  <!-- Workspace Container -->
+  <div class="workspace-layout">
     
-    <!-- Sidebar -->
-    <aside class="app-sidebar">
-      <div class="sidebar-brand">
+    <!-- Top Minimal Header -->
+    <header class="workspace-header">
+      <div class="header-brand">
         <div class="logo-icon">
-          <i data-lucide="layers"></i>
+          <i data-lucide="folder-closed"></i>
         </div>
         <span class="logo-text">Clientsy</span>
       </div>
       
-      <nav class="sidebar-nav">
-        <button class="nav-link active" data-tab="dashboard">
-          <i data-lucide="layout-dashboard"></i>
-          <span>Dashboard</span>
-        </button>
-        <button class="nav-link" data-tab="clients">
-          <i data-lucide="users"></i>
-          <span>Clients</span>
-        </button>
-        <button class="nav-link" data-tab="documents">
-          <i data-lucide="files"></i>
-          <span>Documents</span>
-        </button>
-      </nav>
-      
-      <div class="sidebar-footer">
-        <div class="user-profile">
-          <div class="user-avatar" id="sidebar-avatar">FD</div>
-          <div class="user-info">
-            <span class="user-name" id="sidebar-name">Developer</span>
-            <span class="user-role" id="sidebar-role">Administrator</span>
-          </div>
-          <button class="action-btn text-danger" id="btn-logout" title="Log Out" style="margin-left: auto;">
-            <i data-lucide="log-out"></i>
-          </button>
+      <div class="header-search">
+        <div class="search-input-wrapper">
+          <i data-lucide="search" class="search-icon"></i>
+          <input type="text" id="global-search" placeholder="Search clients, folders or files...">
         </div>
       </div>
-    </aside>
-
-    <!-- Main Content Wrapper -->
-    <main class="app-content">
       
-      <!-- Header -->
-      <header class="app-header">
-        <div class="header-search">
-          <div class="search-input-wrapper">
-            <i data-lucide="search" class="search-icon"></i>
-            <input type="text" id="global-search" placeholder="Quick search clients or files...">
-          </div>
+      <div class="header-profile">
+        <div class="user-avatar" id="header-avatar" title="Developer Profile">DV</div>
+        <span class="user-name-span" id="header-name">Developer</span>
+        <button class="icon-btn-logout" id="btn-logout" title="Sign Out">
+          <i data-lucide="log-out"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Workspace Area -->
+    <main class="cabinet-container">
+      <div class="cabinet-title-row">
+        <div>
+          <h1 class="cabinet-heading">My Cabinet</h1>
+          <p class="cabinet-subheading" id="cabinet-stats-text">Loading folders...</p>
         </div>
-        <div class="header-actions">
-          <button class="btn btn-secondary btn-icon-text" id="quick-add-client-btn">
-            <i data-lucide="user-plus"></i>
-            <span>Add Client</span>
-          </button>
-          <button class="btn btn-primary btn-icon-text" id="quick-upload-doc-btn">
-            <i data-lucide="upload"></i>
-            <span>Upload Document</span>
-          </button>
-        </div>
-      </header>
+        <button class="btn btn-primary" id="btn-new-folder">
+          <i data-lucide="folder-plus"></i>
+          <span>Create Folder</span>
+        </button>
+      </div>
 
-      <!-- Dynamic Tab Contents -->
-      <div class="tab-viewport">
-        
-        <!-- DASHBOARD TAB -->
-        <section id="dashboard-tab" class="tab-pane active">
-          <div class="welcome-banner">
-            <div class="welcome-text">
-              <h1>Welcome back, Developer!</h1>
-              <p>Here is an overview of your clients, contracts, and documents.</p>
-            </div>
-            <div class="banner-badge">
-              <i data-lucide="sparkles"></i>
-              <span>Pro Account Active</span>
-            </div>
-          </div>
-
-          <!-- Stats Grid -->
-          <div class="stats-grid">
-            <div class="stat-card">
-              <div class="stat-icon client-stat">
-                <i data-lucide="users"></i>
-              </div>
-              <div class="stat-info">
-                <span class="stat-label">Total Clients</span>
-                <h3 class="stat-value" id="stat-total-clients">-</h3>
-              </div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-icon document-stat">
-                <i data-lucide="file-text"></i>
-              </div>
-              <div class="stat-info">
-                <span class="stat-label">Total Documents</span>
-                <h3 class="stat-value" id="stat-total-docs">-</h3>
-              </div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-icon contract-stat">
-                <i data-lucide="scroll"></i>
-              </div>
-              <div class="stat-info">
-                <span class="stat-label">Active Contracts</span>
-                <h3 class="stat-value" id="stat-active-contracts">-</h3>
-              </div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-icon invoice-stat">
-                <i data-lucide="dollar-sign"></i>
-              </div>
-              <div class="stat-info">
-                <span class="stat-label">Total Invoices</span>
-                <h3 class="stat-value" id="stat-total-invoices">-</h3>
-              </div>
-            </div>
-          </div>
-
-          <!-- Dashboard Row -->
-          <div class="dashboard-row">
-            <!-- Left Side: Recent Clients -->
-            <div class="dashboard-panel panel-large">
-              <div class="panel-header">
-                <h2>Recent Clients</h2>
-                <button class="btn btn-text btn-view-all" data-target-tab="clients">View All</button>
-              </div>
-              <div class="panel-body">
-                <div class="table-responsive">
-                  <table class="data-table" id="recent-clients-table">
-                    <thead>
-                      <tr>
-                        <th>Client</th>
-                        <th>Company</th>
-                        <th>Email</th>
-                        <th>Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <!-- Dynamic -->
-                      <tr><td colspan="4" class="text-muted text-center py-4">Loading clients...</td></tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-
-            <!-- Right Side: Document Categories / Upload Summary -->
-            <div class="dashboard-panel panel-small">
-              <div class="panel-header">
-                <h2>Files by Category</h2>
-              </div>
-              <div class="panel-body">
-                <div class="category-chart-list" id="category-distribution-list">
-                  <!-- Dynamic -->
-                  <div class="text-muted text-center py-4">Loading analysis...</div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Second Row: Recent Documents -->
-          <div class="dashboard-panel panel-full mt-4">
-            <div class="panel-header">
-              <h2>Recently Uploaded Documents</h2>
-              <button class="btn btn-text btn-view-all" data-target-tab="documents">View All Files</button>
-            </div>
-            <div class="panel-body">
-              <div class="table-responsive">
-                <table class="data-table" id="recent-docs-table">
-                  <thead>
-                    <tr>
-                      <th>Document</th>
-                      <th>Client</th>
-                      <th>Category</th>
-                      <th>Size</th>
-                      <th>Date Uploaded</th>
-                      <th>Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <!-- Dynamic -->
-                    <tr><td colspan="6" class="text-muted text-center py-4">Loading documents...</td></tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- CLIENTS TAB -->
-        <section id="clients-tab" class="tab-pane">
-          <div class="tab-header-actions">
-            <div>
-              <h1>Client Directories</h1>
-              <p class="text-muted">Manage your client contracts, folders, and key info.</p>
-            </div>
-            <button class="btn btn-primary btn-icon-text" id="add-client-tab-btn">
-              <i data-lucide="plus"></i>
-              <span>Create Client Directory</span>
-            </button>
-          </div>
-
-          <div class="clients-layout">
-            <!-- Left Side: Directory List -->
-            <div class="clients-directory-list">
-              <div class="search-filter-row">
-                <div class="search-input-wrapper">
-                  <i data-lucide="search" class="search-icon"></i>
-                  <input type="text" id="client-search" placeholder="Search clients by name, email, tag...">
-                </div>
-              </div>
-              <div class="directory-list-container" id="clients-list-container">
-                <!-- Dynamic -->
-                <div class="text-center py-5"><div class="spinner"></div></div>
-              </div>
-            </div>
-
-            <!-- Right Side: Details View -->
-            <div class="client-detail-view" id="client-detail-pane">
-              <!-- Empty State -->
-              <div class="detail-empty-state">
-                <i data-lucide="user" class="empty-icon"></i>
-                <h3>Select a Client</h3>
-                <p class="text-muted">Choose a client from the left directory to view full profile details and documents.</p>
-              </div>
-              <!-- Content State (Initially Hidden) -->
-              <div class="detail-content" style="display: none;">
-                <!-- Filled Dynamically -->
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- DOCUMENTS TAB -->
-        <section id="documents-tab" class="tab-pane">
-          <div class="tab-header-actions">
-            <div>
-              <h1>Document Manager</h1>
-              <p class="text-muted">View, search, and categorize all folders and client documents.</p>
-            </div>
-            <button class="btn btn-primary btn-icon-text" id="upload-doc-tab-btn">
-              <i data-lucide="upload"></i>
-              <span>Upload Document</span>
-            </button>
-          </div>
-
-          <!-- Filters Bar -->
-          <div class="filters-bar">
-            <div class="search-input-wrapper flex-grow">
-              <i data-lucide="search" class="search-icon"></i>
-              <input type="text" id="doc-search" placeholder="Search files by name, description, tags...">
-            </div>
-            <div class="select-wrapper">
-              <i data-lucide="filter" class="select-icon"></i>
-              <select id="doc-filter-client">
-                <option value="all">All Clients</option>
-                <!-- Dynamic options -->
-              </select>
-            </div>
-            <div class="select-wrapper">
-              <i data-lucide="tag" class="select-icon"></i>
-              <select id="doc-filter-category">
-                <option value="all">All Categories</option>
-                <option value="invoice">Invoices</option>
-                <option value="contract">Contracts</option>
-                <option value="proposal">Proposals</option>
-                <option value="receipt">Receipts</option>
-                <option value="other">Other</option>
-              </select>
-            </div>
-          </div>
-
-          <!-- Documents Grid -->
-          <div class="documents-grid" id="documents-grid-container">
-            <!-- Dynamic -->
-            <div class="text-center py-5 col-span-full"><div class="spinner"></div></div>
-          </div>
-        </section>
-
+      <!-- Clients Folder Grid -->
+      <div class="folders-grid" id="folders-grid-container">
+        <!-- Dynamic folders go here -->
+        <div class="text-center py-5 col-span-full"><div class="spinner"></div></div>
       </div>
     </main>
   </div>
+
+  <!-- SLIDE OUT CLIENT DRAWER (Client Files Pocket) -->
+  <div class="drawer-overlay" id="folder-drawer-overlay"></div>
+  <aside class="folder-drawer" id="folder-drawer">
+    <div class="drawer-header">
+      <div class="drawer-client-title">
+        <h2 id="drawer-client-name">Client Name</h2>
+        <span class="text-muted" id="drawer-client-company">Company Name</span>
+      </div>
+      <button class="drawer-close-btn" id="drawer-close">
+        <i data-lucide="chevron-right"></i>
+      </button>
+    </div>
+    
+    <div class="drawer-body">
+      <!-- Info Section -->
+      <div class="drawer-meta-section">
+        <div class="meta-row">
+          <div class="meta-item">
+            <span class="meta-label">Email</span>
+            <span class="meta-val" id="drawer-email">-</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Phone</span>
+            <span class="meta-val" id="drawer-phone">-</span>
+          </div>
+        </div>
+        <div class="meta-row">
+          <div class="meta-item">
+            <span class="meta-label">Website</span>
+            <span class="meta-val" id="drawer-website">-</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Address</span>
+            <span class="meta-val" id="drawer-address">-</span>
+          </div>
+        </div>
+        <div class="meta-item mt-2">
+          <span class="meta-label">Tags</span>
+          <div class="tag-list mt-1" id="drawer-tags">
+            <!-- Dynamic tags -->
+          </div>
+        </div>
+        <div class="meta-item mt-2" id="drawer-notes-wrapper">
+          <span class="meta-label">Folder Notes</span>
+          <p class="notes-para" id="drawer-notes">-</p>
+        </div>
+        
+        <div class="drawer-actions-row">
+          <button class="btn btn-secondary btn-sm" id="btn-edit-client">
+            <i data-lucide="edit"></i>
+            <span>Edit Details</span>
+          </button>
+          <button class="btn btn-secondary btn-sm text-danger" id="btn-delete-client">
+            <i data-lucide="trash-2"></i>
+            <span>Delete Folder</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Files Section (Cabinet Pocket) -->
+      <div class="drawer-files-section">
+        <div class="files-header">
+          <h3>Files Pocket (<span id="drawer-files-count">0</span>)</h3>
+          <button class="btn btn-primary btn-sm" id="btn-upload-file">
+            <i data-lucide="upload"></i>
+            <span>Upload File</span>
+          </button>
+        </div>
+        
+        <div class="drawer-files-list" id="drawer-files-list-container">
+          <!-- Dynamic document list -->
+          <div class="text-center py-4 text-muted">No files in this folder.</div>
+        </div>
+      </div>
+    </div>
+  </aside>
 
   <!-- MODALS -->
 
@@ -305,7 +146,7 @@
   <div class="modal-overlay" id="client-modal">
     <div class="modal-container">
       <div class="modal-header">
-        <h2 id="client-modal-title">Create Client Directory</h2>
+        <h2 id="client-modal-title">Create Folder</h2>
         <button class="modal-close-btn" id="client-modal-close">
           <i data-lucide="x"></i>
         </button>
@@ -314,18 +155,18 @@
         <input type="hidden" id="client-form-id">
         <div class="form-row">
           <div class="form-group col-6">
-            <label for="client-name" class="required-label">Client Name</label>
+            <label for="client-name" class="required-label">Folder Title</label>
             <input type="text" id="client-name" required placeholder="e.g. John Doe">
           </div>
           <div class="form-group col-6">
             <label for="client-company">Company</label>
-            <input type="text" id="client-company" placeholder="e.g. Acme Corp">
+            <input type="text" id="client-company" placeholder="e.g. Acme Inc">
           </div>
         </div>
         <div class="form-row">
           <div class="form-group col-6">
             <label for="client-email" class="required-label">Email Address</label>
-            <input type="email" id="client-email" required placeholder="john@example.com">
+            <input type="email" id="client-email" required placeholder="name@domain.com">
           </div>
           <div class="form-group col-6">
             <label for="client-phone">Phone Number</label>
@@ -333,29 +174,29 @@
           </div>
         </div>
         <div class="form-group">
-          <label for="client-website">Website URL</label>
+          <label for="client-website">Website</label>
           <input type="url" id="client-website" placeholder="https://example.com">
         </div>
         <fieldset class="form-fieldset">
-          <legend>Client Address</legend>
+          <legend>Address Details</legend>
           <div class="form-row">
             <div class="form-group col-12">
-              <label for="client-street">Street Address</label>
-              <input type="text" id="client-street" placeholder="123 Main St">
+              <label for="client-street">Street</label>
+              <input type="text" id="client-street" placeholder="123 Freelancer Lane">
             </div>
           </div>
           <div class="form-row">
             <div class="form-group col-4">
               <label for="client-city">City</label>
-              <input type="text" id="client-city" placeholder="San Francisco">
+              <input type="text" id="client-city" placeholder="Seattle">
             </div>
             <div class="form-group col-4">
-              <label for="client-state">State / Region</label>
-              <input type="text" id="client-state" placeholder="CA">
+              <label for="client-state">State</label>
+              <input type="text" id="client-state" placeholder="WA">
             </div>
             <div class="form-group col-4">
-              <label for="client-zip">Zip/Postal Code</label>
-              <input type="text" id="client-zip" placeholder="94107">
+              <label for="client-zip">Zip</label>
+              <input type="text" id="client-zip" placeholder="98101">
             </div>
           </div>
           <div class="form-group">
@@ -365,15 +206,15 @@
         </fieldset>
         <div class="form-group">
           <label for="client-tags">Tags (comma-separated)</label>
-          <input type="text" id="client-tags" placeholder="e.g. Premium, Active, Website Project">
+          <input type="text" id="client-tags" placeholder="e.g. active, retainer, website">
         </div>
         <div class="form-group">
-          <label for="client-notes">Internal Notes</label>
-          <textarea id="client-notes" rows="3" placeholder="Add custom notes about this client relationship..."></textarea>
+          <label for="client-notes">Folder Notes</label>
+          <textarea id="client-notes" rows="3" placeholder="Key relationship points, milestones, etc..."></textarea>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-text" id="client-modal-cancel">Cancel</button>
-          <button type="submit" class="btn btn-primary" id="client-modal-submit">Save Client</button>
+          <button type="submit" class="btn btn-primary" id="client-modal-submit">Create Folder</button>
         </div>
       </form>
     </div>
@@ -389,20 +230,11 @@
         </button>
       </div>
       <form id="document-form" class="modal-body">
-        <div class="form-group">
-          <label for="doc-client" class="required-label">Select Client Folder</label>
-          <div class="select-wrapper">
-            <i data-lucide="user" class="select-icon"></i>
-            <select id="doc-client" required>
-              <option value="" disabled selected>Choose a client...</option>
-              <!-- Dynamic options -->
-            </select>
-          </div>
-        </div>
+        <input type="hidden" id="doc-client" required>
         <div class="form-row">
           <div class="form-group col-8">
-            <label for="doc-name" class="required-label">Document Name</label>
-            <input type="text" id="doc-name" required placeholder="e.g. Website Design Contract">
+            <label for="doc-name" class="required-label">File Name</label>
+            <input type="text" id="doc-name" required placeholder="e.g. Design Proposal">
           </div>
           <div class="form-group col-4">
             <label for="doc-category" class="required-label">Category</label>
@@ -419,22 +251,21 @@
         </div>
         <div class="form-group">
           <label for="doc-description">Description</label>
-          <input type="text" id="doc-description" placeholder="Briefly describe what this file is for...">
+          <input type="text" id="doc-description" placeholder="Brief folder note about this file...">
         </div>
         
-        <!-- File Upload Area -->
+        <!-- File Input Drop Zone -->
         <div class="form-group">
-          <label class="required-label">File Selection</label>
+          <label class="required-label">Select File</label>
           <div class="file-drop-area" id="file-drop-zone">
             <i data-lucide="file-up" class="upload-area-icon"></i>
             <div class="upload-area-text">
-              <span class="highlight">Click to select file</span> or drag & drop here
+              <span class="highlight">Click to browse</span> or drop file here
             </div>
-            <div class="upload-area-subtext">Supports PDF, Images, DOCX, TXT, JSON, etc. (Max 10MB)</div>
             <input type="file" id="doc-file-input" required class="hidden-file-input">
           </div>
           <div class="selected-file-badge" id="selected-file-details" style="display: none;">
-            <i data-lucide="file" class="text-indigo-400"></i>
+            <i data-lucide="file" style="color: var(--primary);"></i>
             <div class="file-details-text">
               <span class="file-name-span" id="selected-file-name">-</span>
               <span class="file-size-span text-muted" id="selected-file-size">-</span>
@@ -447,17 +278,17 @@
 
         <div class="form-group">
           <label for="doc-tags">Tags (comma-separated)</label>
-          <input type="text" id="doc-tags" placeholder="e.g. Signed, Q2, v1.0">
+          <input type="text" id="doc-tags" placeholder="e.g. v2, signed, final">
         </div>
         <div class="form-group">
           <label class="checkbox-label">
             <input type="checkbox" id="doc-is-public">
-            <span>Make this document public (shareable link)</span>
+            <span>Enable public sharing URL</span>
           </label>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-text" id="document-modal-cancel">Cancel</button>
-          <button type="submit" class="btn btn-primary" id="document-modal-submit">Upload & Save</button>
+          <button type="submit" class="btn btn-primary" id="document-modal-submit">Upload & File</button>
         </div>
       </form>
     </div>
@@ -467,9 +298,9 @@
   <div class="modal-overlay" id="preview-modal">
     <div class="modal-container modal-large">
       <div class="modal-header">
-        <h2 id="preview-title">Document Preview</h2>
+        <h2 id="preview-title">File Preview</h2>
         <div class="header-actions-right">
-          <a href="#" id="preview-download-btn" class="btn btn-secondary btn-sm btn-icon-text" download>
+          <a href="#" id="preview-download-btn" class="btn btn-secondary btn-sm" download>
             <i data-lucide="download"></i>
             <span>Download</span>
           </a>
@@ -482,12 +313,12 @@
         <div class="preview-layout">
           <!-- Left: Preview pane -->
           <div class="preview-viewer" id="preview-viewer-container">
-            <!-- Filled dynamically (embed, img, iframe, or placeholder icon) -->
+            <!-- Filled dynamically -->
           </div>
           <!-- Right: Document Info -->
           <div class="preview-meta">
             <div class="meta-section">
-              <span class="meta-label">Client Directory</span>
+              <span class="meta-label">Folder Directory</span>
               <span class="meta-value" id="preview-client">-</span>
             </div>
             <div class="meta-section">
@@ -495,20 +326,16 @@
               <span class="meta-value badge" id="preview-category">-</span>
             </div>
             <div class="meta-section">
-              <span class="meta-label">File Details</span>
+              <span class="meta-label">Format / Size</span>
               <span class="meta-value" id="preview-details">-</span>
             </div>
             <div class="meta-section">
               <span class="meta-label">Date Uploaded</span>
               <span class="meta-value" id="preview-date">-</span>
             </div>
-            <div class="meta-section">
-              <span class="meta-label">Visibility</span>
-              <span class="meta-value" id="preview-visibility">-</span>
-            </div>
             <div class="meta-section border-none">
-              <span class="meta-label">Description</span>
-              <p class="meta-desc" id="preview-desc">No description provided.</p>
+              <span class="meta-label">File Description</span>
+              <p class="meta-desc" id="preview-desc">No description.</p>
             </div>
             <div class="meta-section border-none">
               <span class="meta-label">Tags</span>
@@ -527,14 +354,10 @@
 
   <!-- AUTHENTICATION OVERLAY SCREEN -->
   <div id="auth-screen" class="auth-overlay active">
-    <!-- Glowing background elements -->
-    <div class="ambient-glow glow-1"></div>
-    <div class="ambient-glow glow-2"></div>
-    
     <div class="auth-card">
       <div class="auth-brand">
         <div class="logo-icon">
-          <i data-lucide="layers"></i>
+          <i data-lucide="folder-closed"></i>
         </div>
         <span class="logo-text">Clientsy</span>
       </div>
@@ -546,7 +369,7 @@
 
       <!-- Login Form -->
       <form id="login-form" class="auth-form-panel active">
-        <p class="auth-subtitle">Developer portal access. Authenticate to manage clients.</p>
+        <p class="auth-subtitle">Workspace Portal. Please authenticate to open the cabinet.</p>
         <div class="form-group">
           <label for="login-email" class="required-label">Email Address</label>
           <input type="email" id="login-email" required placeholder="developer@clientsy.com">
@@ -559,16 +382,11 @@
           <span>Sign In</span>
           <i data-lucide="arrow-right"></i>
         </button>
-        
-        <p class="auth-tip-msg mt-4 text-center">
-          <i data-lucide="shield-check" style="width: 14px; display: inline-block; vertical-align: middle; margin-right: 4px; color: var(--primary);"></i>
-          <span style="font-size: 0.8rem; color: var(--text-muted);">Secure server-side JWT authentication.</span>
-        </p>
       </form>
 
       <!-- Register Form -->
       <form id="register-form" class="auth-form-panel">
-        <p class="auth-subtitle">Create developer credentials. Access key folders.</p>
+        <p class="auth-subtitle">Create cabinet credentials. Gain access key features.</p>
         <div class="form-group">
           <label for="register-name" class="required-label">Developer Name</label>
           <input type="text" id="register-name" required placeholder="e.g. John Doe">
