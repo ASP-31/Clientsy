@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clientsy | Streamlined Client & Document Management</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="dark-theme">
+  <!-- App Container -->
+  <div class="app-layout">
+    
+    <!-- Sidebar -->
+    <aside class="app-sidebar">
+      <div class="sidebar-brand">
+        <div class="logo-icon">
+          <i data-lucide="layers"></i>
+        </div>
+        <span class="logo-text">Clientsy</span>
+      </div>
+      
+      <nav class="sidebar-nav">
+        <button class="nav-link active" data-tab="dashboard">
+          <i data-lucide="layout-dashboard"></i>
+          <span>Dashboard</span>
+        </button>
+        <button class="nav-link" data-tab="clients">
+          <i data-lucide="users"></i>
+          <span>Clients</span>
+        </button>
+        <button class="nav-link" data-tab="documents">
+          <i data-lucide="files"></i>
+          <span>Documents</span>
+        </button>
+      </nav>
+      
+      <div class="sidebar-footer">
+        <div class="user-profile">
+          <div class="user-avatar" id="sidebar-avatar">FD</div>
+          <div class="user-info">
+            <span class="user-name" id="sidebar-name">Developer</span>
+            <span class="user-role" id="sidebar-role">Administrator</span>
+          </div>
+          <button class="action-btn text-danger" id="btn-logout" title="Log Out" style="margin-left: auto;">
+            <i data-lucide="log-out"></i>
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Wrapper -->
+    <main class="app-content">
+      
+      <!-- Header -->
+      <header class="app-header">
+        <div class="header-search">
+          <div class="search-input-wrapper">
+            <i data-lucide="search" class="search-icon"></i>
+            <input type="text" id="global-search" placeholder="Quick search clients or files...">
+          </div>
+        </div>
+        <div class="header-actions">
+          <button class="btn btn-secondary btn-icon-text" id="quick-add-client-btn">
+            <i data-lucide="user-plus"></i>
+            <span>Add Client</span>
+          </button>
+          <button class="btn btn-primary btn-icon-text" id="quick-upload-doc-btn">
+            <i data-lucide="upload"></i>
+            <span>Upload Document</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- Dynamic Tab Contents -->
+      <div class="tab-viewport">
+        
+        <!-- DASHBOARD TAB -->
+        <section id="dashboard-tab" class="tab-pane active">
+          <div class="welcome-banner">
+            <div class="welcome-text">
+              <h1>Welcome back, Developer!</h1>
+              <p>Here is an overview of your clients, contracts, and documents.</p>
+            </div>
+            <div class="banner-badge">
+              <i data-lucide="sparkles"></i>
+              <span>Pro Account Active</span>
+            </div>
+          </div>
+
+          <!-- Stats Grid -->
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-icon client-stat">
+                <i data-lucide="users"></i>
+              </div>
+              <div class="stat-info">
+                <span class="stat-label">Total Clients</span>
+                <h3 class="stat-value" id="stat-total-clients">-</h3>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon document-stat">
+                <i data-lucide="file-text"></i>
+              </div>
+              <div class="stat-info">
+                <span class="stat-label">Total Documents</span>
+                <h3 class="stat-value" id="stat-total-docs">-</h3>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon contract-stat">
+                <i data-lucide="scroll"></i>
+              </div>
+              <div class="stat-info">
+                <span class="stat-label">Active Contracts</span>
+                <h3 class="stat-value" id="stat-active-contracts">-</h3>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon invoice-stat">
+                <i data-lucide="dollar-sign"></i>
+              </div>
+              <div class="stat-info">
+                <span class="stat-label">Total Invoices</span>
+                <h3 class="stat-value" id="stat-total-invoices">-</h3>
+              </div>
+            </div>
+          </div>
+
+          <!-- Dashboard Row -->
+          <div class="dashboard-row">
+            <!-- Left Side: Recent Clients -->
+            <div class="dashboard-panel panel-large">
+              <div class="panel-header">
+                <h2>Recent Clients</h2>
+                <button class="btn btn-text btn-view-all" data-target-tab="clients">View All</button>
+              </div>
+              <div class="panel-body">
+                <div class="table-responsive">
+                  <table class="data-table" id="recent-clients-table">
+                    <thead>
+                      <tr>
+                        <th>Client</th>
+                        <th>Company</th>
+                        <th>Email</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <!-- Dynamic -->
+                      <tr><td colspan="4" class="text-muted text-center py-4">Loading clients...</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right Side: Document Categories / Upload Summary -->
+            <div class="dashboard-panel panel-small">
+              <div class="panel-header">
+                <h2>Files by Category</h2>
+              </div>
+              <div class="panel-body">
+                <div class="category-chart-list" id="category-distribution-list">
+                  <!-- Dynamic -->
+                  <div class="text-muted text-center py-4">Loading analysis...</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Second Row: Recent Documents -->
+          <div class="dashboard-panel panel-full mt-4">
+            <div class="panel-header">
+              <h2>Recently Uploaded Documents</h2>
+              <button class="btn btn-text btn-view-all" data-target-tab="documents">View All Files</button>
+            </div>
+            <div class="panel-body">
+              <div class="table-responsive">
+                <table class="data-table" id="recent-docs-table">
+                  <thead>
+                    <tr>
+                      <th>Document</th>
+                      <th>Client</th>
+                      <th>Category</th>
+                      <th>Size</th>
+                      <th>Date Uploaded</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <!-- Dynamic -->
+                    <tr><td colspan="6" class="text-muted text-center py-4">Loading documents...</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- CLIENTS TAB -->
+        <section id="clients-tab" class="tab-pane">
+          <div class="tab-header-actions">
+            <div>
+              <h1>Client Directories</h1>
+              <p class="text-muted">Manage your client contracts, folders, and key info.</p>
+            </div>
+            <button class="btn btn-primary btn-icon-text" id="add-client-tab-btn">
+              <i data-lucide="plus"></i>
+              <span>Create Client Directory</span>
+            </button>
+          </div>
+
+          <div class="clients-layout">
+            <!-- Left Side: Directory List -->
+            <div class="clients-directory-list">
+              <div class="search-filter-row">
+                <div class="search-input-wrapper">
+                  <i data-lucide="search" class="search-icon"></i>
+                  <input type="text" id="client-search" placeholder="Search clients by name, email, tag...">
+                </div>
+              </div>
+              <div class="directory-list-container" id="clients-list-container">
+                <!-- Dynamic -->
+                <div class="text-center py-5"><div class="spinner"></div></div>
+              </div>
+            </div>
+
+            <!-- Right Side: Details View -->
+            <div class="client-detail-view" id="client-detail-pane">
+              <!-- Empty State -->
+              <div class="detail-empty-state">
+                <i data-lucide="user" class="empty-icon"></i>
+                <h3>Select a Client</h3>
+                <p class="text-muted">Choose a client from the left directory to view full profile details and documents.</p>
+              </div>
+              <!-- Content State (Initially Hidden) -->
+              <div class="detail-content" style="display: none;">
+                <!-- Filled Dynamically -->
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- DOCUMENTS TAB -->
+        <section id="documents-tab" class="tab-pane">
+          <div class="tab-header-actions">
+            <div>
+              <h1>Document Manager</h1>
+              <p class="text-muted">View, search, and categorize all folders and client documents.</p>
+            </div>
+            <button class="btn btn-primary btn-icon-text" id="upload-doc-tab-btn">
+              <i data-lucide="upload"></i>
+              <span>Upload Document</span>
+            </button>
+          </div>
+
+          <!-- Filters Bar -->
+          <div class="filters-bar">
+            <div class="search-input-wrapper flex-grow">
+              <i data-lucide="search" class="search-icon"></i>
+              <input type="text" id="doc-search" placeholder="Search files by name, description, tags...">
+            </div>
+            <div class="select-wrapper">
+              <i data-lucide="filter" class="select-icon"></i>
+              <select id="doc-filter-client">
+                <option value="all">All Clients</option>
+                <!-- Dynamic options -->
+              </select>
+            </div>
+            <div class="select-wrapper">
+              <i data-lucide="tag" class="select-icon"></i>
+              <select id="doc-filter-category">
+                <option value="all">All Categories</option>
+                <option value="invoice">Invoices</option>
+                <option value="contract">Contracts</option>
+                <option value="proposal">Proposals</option>
+                <option value="receipt">Receipts</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Documents Grid -->
+          <div class="documents-grid" id="documents-grid-container">
+            <!-- Dynamic -->
+            <div class="text-center py-5 col-span-full"><div class="spinner"></div></div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- MODALS -->
+
+  <!-- CLIENT MODAL (Add/Edit) -->
+  <div class="modal-overlay" id="client-modal">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h2 id="client-modal-title">Create Client Directory</h2>
+        <button class="modal-close-btn" id="client-modal-close">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+      <form id="client-form" class="modal-body">
+        <input type="hidden" id="client-form-id">
+        <div class="form-row">
+          <div class="form-group col-6">
+            <label for="client-name" class="required-label">Client Name</label>
+            <input type="text" id="client-name" required placeholder="e.g. John Doe">
+          </div>
+          <div class="form-group col-6">
+            <label for="client-company">Company</label>
+            <input type="text" id="client-company" placeholder="e.g. Acme Corp">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-6">
+            <label for="client-email" class="required-label">Email Address</label>
+            <input type="email" id="client-email" required placeholder="john@example.com">
+          </div>
+          <div class="form-group col-6">
+            <label for="client-phone">Phone Number</label>
+            <input type="tel" id="client-phone" placeholder="+1 (555) 000-0000">
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="client-website">Website URL</label>
+          <input type="url" id="client-website" placeholder="https://example.com">
+        </div>
+        <fieldset class="form-fieldset">
+          <legend>Client Address</legend>
+          <div class="form-row">
+            <div class="form-group col-12">
+              <label for="client-street">Street Address</label>
+              <input type="text" id="client-street" placeholder="123 Main St">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-4">
+              <label for="client-city">City</label>
+              <input type="text" id="client-city" placeholder="San Francisco">
+            </div>
+            <div class="form-group col-4">
+              <label for="client-state">State / Region</label>
+              <input type="text" id="client-state" placeholder="CA">
+            </div>
+            <div class="form-group col-4">
+              <label for="client-zip">Zip/Postal Code</label>
+              <input type="text" id="client-zip" placeholder="94107">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="client-country">Country</label>
+            <input type="text" id="client-country" placeholder="United States">
+          </div>
+        </fieldset>
+        <div class="form-group">
+          <label for="client-tags">Tags (comma-separated)</label>
+          <input type="text" id="client-tags" placeholder="e.g. Premium, Active, Website Project">
+        </div>
+        <div class="form-group">
+          <label for="client-notes">Internal Notes</label>
+          <textarea id="client-notes" rows="3" placeholder="Add custom notes about this client relationship..."></textarea>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-text" id="client-modal-cancel">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="client-modal-submit">Save Client</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- DOCUMENT MODAL (Upload) -->
+  <div class="modal-overlay" id="document-modal">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h2>Upload Document</h2>
+        <button class="modal-close-btn" id="document-modal-close">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+      <form id="document-form" class="modal-body">
+        <div class="form-group">
+          <label for="doc-client" class="required-label">Select Client Folder</label>
+          <div class="select-wrapper">
+            <i data-lucide="user" class="select-icon"></i>
+            <select id="doc-client" required>
+              <option value="" disabled selected>Choose a client...</option>
+              <!-- Dynamic options -->
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-8">
+            <label for="doc-name" class="required-label">Document Name</label>
+            <input type="text" id="doc-name" required placeholder="e.g. Website Design Contract">
+          </div>
+          <div class="form-group col-4">
+            <label for="doc-category" class="required-label">Category</label>
+            <div class="select-wrapper">
+              <select id="doc-category" required>
+                <option value="invoice">Invoice</option>
+                <option value="contract">Contract</option>
+                <option value="proposal">Proposal</option>
+                <option value="receipt">Receipt</option>
+                <option value="other" selected>Other</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="doc-description">Description</label>
+          <input type="text" id="doc-description" placeholder="Briefly describe what this file is for...">
+        </div>
+        
+        <!-- File Upload Area -->
+        <div class="form-group">
+          <label class="required-label">File Selection</label>
+          <div class="file-drop-area" id="file-drop-zone">
+            <i data-lucide="file-up" class="upload-area-icon"></i>
+            <div class="upload-area-text">
+              <span class="highlight">Click to select file</span> or drag & drop here
+            </div>
+            <div class="upload-area-subtext">Supports PDF, Images, DOCX, TXT, JSON, etc. (Max 10MB)</div>
+            <input type="file" id="doc-file-input" required class="hidden-file-input">
+          </div>
+          <div class="selected-file-badge" id="selected-file-details" style="display: none;">
+            <i data-lucide="file" class="text-indigo-400"></i>
+            <div class="file-details-text">
+              <span class="file-name-span" id="selected-file-name">-</span>
+              <span class="file-size-span text-muted" id="selected-file-size">-</span>
+            </div>
+            <button type="button" class="btn-remove-file" id="btn-remove-selected-file">
+              <i data-lucide="trash-2"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="doc-tags">Tags (comma-separated)</label>
+          <input type="text" id="doc-tags" placeholder="e.g. Signed, Q2, v1.0">
+        </div>
+        <div class="form-group">
+          <label class="checkbox-label">
+            <input type="checkbox" id="doc-is-public">
+            <span>Make this document public (shareable link)</span>
+          </label>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-text" id="document-modal-cancel">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="document-modal-submit">Upload & Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- DOCUMENT PREVIEW MODAL -->
+  <div class="modal-overlay" id="preview-modal">
+    <div class="modal-container modal-large">
+      <div class="modal-header">
+        <h2 id="preview-title">Document Preview</h2>
+        <div class="header-actions-right">
+          <a href="#" id="preview-download-btn" class="btn btn-secondary btn-sm btn-icon-text" download>
+            <i data-lucide="download"></i>
+            <span>Download</span>
+          </a>
+          <button class="modal-close-btn" id="preview-modal-close">
+            <i data-lucide="x"></i>
+          </button>
+        </div>
+      </div>
+      <div class="modal-body preview-modal-body">
+        <div class="preview-layout">
+          <!-- Left: Preview pane -->
+          <div class="preview-viewer" id="preview-viewer-container">
+            <!-- Filled dynamically (embed, img, iframe, or placeholder icon) -->
+          </div>
+          <!-- Right: Document Info -->
+          <div class="preview-meta">
+            <div class="meta-section">
+              <span class="meta-label">Client Directory</span>
+              <span class="meta-value" id="preview-client">-</span>
+            </div>
+            <div class="meta-section">
+              <span class="meta-label">Category</span>
+              <span class="meta-value badge" id="preview-category">-</span>
+            </div>
+            <div class="meta-section">
+              <span class="meta-label">File Details</span>
+              <span class="meta-value" id="preview-details">-</span>
+            </div>
+            <div class="meta-section">
+              <span class="meta-label">Date Uploaded</span>
+              <span class="meta-value" id="preview-date">-</span>
+            </div>
+            <div class="meta-section">
+              <span class="meta-label">Visibility</span>
+              <span class="meta-value" id="preview-visibility">-</span>
+            </div>
+            <div class="meta-section border-none">
+              <span class="meta-label">Description</span>
+              <p class="meta-desc" id="preview-desc">No description provided.</p>
+            </div>
+            <div class="meta-section border-none">
+              <span class="meta-label">Tags</span>
+              <div class="tag-list" id="preview-tags">
+                <!-- tags -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION CONTAINER -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- AUTHENTICATION OVERLAY SCREEN -->
+  <div id="auth-screen" class="auth-overlay active">
+    <!-- Glowing background elements -->
+    <div class="ambient-glow glow-1"></div>
+    <div class="ambient-glow glow-2"></div>
+    
+    <div class="auth-card">
+      <div class="auth-brand">
+        <div class="logo-icon">
+          <i data-lucide="layers"></i>
+        </div>
+        <span class="logo-text">Clientsy</span>
+      </div>
+      
+      <div class="auth-tabs">
+        <button type="button" class="auth-tab-btn active" id="tab-login-btn">Sign In</button>
+        <button type="button" class="auth-tab-btn" id="tab-register-btn">Register</button>
+      </div>
+
+      <!-- Login Form -->
+      <form id="login-form" class="auth-form-panel active">
+        <p class="auth-subtitle">Developer portal access. Authenticate to manage clients.</p>
+        <div class="form-group">
+          <label for="login-email" class="required-label">Email Address</label>
+          <input type="email" id="login-email" required placeholder="developer@clientsy.com">
+        </div>
+        <div class="form-group">
+          <label for="login-password" class="required-label">Password</label>
+          <input type="password" id="login-password" required placeholder="••••••••">
+        </div>
+        <button type="submit" class="btn btn-primary mt-4" style="width: 100%;">
+          <span>Sign In</span>
+          <i data-lucide="arrow-right"></i>
+        </button>
+        
+        <p class="auth-tip-msg mt-4 text-center">
+          <i data-lucide="shield-check" style="width: 14px; display: inline-block; vertical-align: middle; margin-right: 4px; color: var(--primary);"></i>
+          <span style="font-size: 0.8rem; color: var(--text-muted);">Secure server-side JWT authentication.</span>
+        </p>
+      </form>
+
+      <!-- Register Form -->
+      <form id="register-form" class="auth-form-panel">
+        <p class="auth-subtitle">Create developer credentials. Access key folders.</p>
+        <div class="form-group">
+          <label for="register-name" class="required-label">Developer Name</label>
+          <input type="text" id="register-name" required placeholder="e.g. John Doe">
+        </div>
+        <div class="form-group">
+          <label for="register-email" class="required-label">Email Address</label>
+          <input type="email" id="register-email" required placeholder="name@domain.com">
+        </div>
+        <div class="form-group">
+          <label for="register-password" class="required-label">Password</label>
+          <input type="password" id="register-password" required placeholder="Minimum 6 characters">
+        </div>
+        <button type="submit" class="btn btn-primary mt-4" style="width: 100%;">
+          <span>Create Account</span>
+          <i data-lucide="user-plus"></i>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Javascript Modules -->
+  <script src="/js/api.js"></script>
+  <script src="/js/app.js"></script>
+</body>
+</html>
