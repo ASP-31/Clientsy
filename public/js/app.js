@@ -81,6 +81,7 @@ const DOM = {
 
 // --- Initializer ---
 document.addEventListener('DOMContentLoaded', () => {
+  setupThemeAndResponsive();
   setupNavigation();
   setupAuthListeners();
   setupClientModalListeners();
@@ -185,7 +186,6 @@ function hideLayouts() {
 
 window.showLandingPage = function() {
   hideLayouts();
-  hideAuthScreen();
   const appContainer = document.getElementById('app-container');
   if (appContainer) appContainer.style.display = 'none';
   
@@ -202,27 +202,37 @@ window.hideLandingPage = function() {
   
   const appContainer = document.getElementById('app-container');
   if (appContainer) appContainer.style.display = 'flex';
+
+  // Restore sidebar and main header display styles (fixing missing layout elements after login)
+  if (DOM.sidebar) DOM.sidebar.style.display = '';
+  const mainHeader = document.querySelector('.main-header');
+  if (mainHeader) mainHeader.style.display = '';
 };
 
 window.showAuthScreen = function(mode) {
-  // Hide landing page
+  // Ensure landing page is visible since auth forms are embedded on it
   const landingPage = document.getElementById('landing-page');
-  if (landingPage) landingPage.style.display = 'none';
+  if (landingPage) landingPage.style.display = 'block';
   
   const appContainer = document.getElementById('app-container');
   if (appContainer) appContainer.style.display = 'none';
   
-  DOM.authScreen.classList.add('active');
   if (mode === 'register') {
-    DOM.tabRegisterBtn.click();
+    if (DOM.tabRegisterBtn) DOM.tabRegisterBtn.click();
   } else {
-    DOM.tabLoginBtn.click();
+    if (DOM.tabLoginBtn) DOM.tabLoginBtn.click();
+  }
+  
+  // Smooth scroll to the auth section in main flow
+  const authSection = document.getElementById('auth-section');
+  if (authSection) {
+    authSection.scrollIntoView({ behavior: 'smooth' });
   }
   lucide.createIcons();
 };
 
 window.hideAuthScreen = function() {
-  DOM.authScreen.classList.remove('active');
+  // Embedded in page flow, active status handled natively
 };
 
 function setupClientPortalUI() {
@@ -2839,3 +2849,56 @@ window.switchSimTab = function(tabName) {
   
   lucide.createIcons();
 };
+
+// --- Theme & Responsive Setup ---
+function setupThemeAndResponsive() {
+  // Theme selection initialization
+  const savedTheme = localStorage.getItem('theme') || 'dark';
+  document.documentElement.setAttribute('data-theme', savedTheme);
+  updateThemeUI();
+
+  // Sidebar responsive buttons
+  const sidebarToggleBtn = document.getElementById('sidebar-toggle-btn');
+  const sidebarCloseBtn = document.getElementById('sidebar-close-btn');
+
+  if (sidebarToggleBtn) {
+    sidebarToggleBtn.addEventListener('click', () => {
+      if (DOM.sidebar) DOM.sidebar.classList.add('mobile-open');
+    });
+  }
+  if (sidebarCloseBtn) {
+    sidebarCloseBtn.addEventListener('click', () => {
+      if (DOM.sidebar) DOM.sidebar.classList.remove('mobile-open');
+    });
+  }
+
+  // Close sidebar on item selection
+  const menuItems = document.querySelectorAll('.menu-item');
+  menuItems.forEach(item => {
+    item.addEventListener('click', () => {
+      if (DOM.sidebar) DOM.sidebar.classList.remove('mobile-open');
+    });
+  });
+}
+
+window.toggleTheme = function() {
+  const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+  const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', newTheme);
+  localStorage.setItem('theme', newTheme);
+  updateThemeUI();
+};
+
+function updateThemeUI() {
+  const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+  const sunIcons = document.querySelectorAll('.theme-icon-sun');
+  const moonIcons = document.querySelectorAll('.theme-icon-moon');
+  
+  if (currentTheme === 'light') {
+    sunIcons.forEach(i => i.style.display = 'none');
+    moonIcons.forEach(i => i.style.display = 'inline-block');
+  } else {
+    sunIcons.forEach(i => i.style.display = 'inline-block');
+    moonIcons.forEach(i => i.style.display = 'none');
+  }
+}

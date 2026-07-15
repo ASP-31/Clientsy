@@ -10,6 +10,13 @@
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Theme load helper to prevent flash -->
+  <script>
+    (function() {
+      const savedTheme = localStorage.getItem('theme') || 'dark';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+    })();
+  </script>
   <!-- Stylesheets -->
   <link rel="stylesheet" href="/css/style.css">
 </head>
@@ -24,6 +31,9 @@
           <i data-lucide="folder-closed"></i>
         </div>
         <span class="sidebar-brand-name">Clientsy</span>
+        <button class="btn-sidebar-close no-print" id="sidebar-close-btn" style="display: none; background: none; border: none; color: var(--text-muted); cursor: pointer; margin-left: auto; padding: 0.25rem;">
+          <i data-lucide="x" style="width: 18px; height: 18px;"></i>
+        </button>
       </div>
       
       <nav class="sidebar-menu">
@@ -82,6 +92,10 @@
             <span class="profile-role" id="footer-role">Developer</span>
           </div>
         </div>
+        <button class="btn-theme-toggle" id="btn-sidebar-theme-toggle" onclick="toggleTheme()" title="Toggle Theme" style="background: none; border: none; color: var(--text-dim); padding: 0.45rem; border-radius: var(--radius-xs); cursor: pointer; display: flex; align-items: center; justify-content: center;">
+          <i data-lucide="sun" class="theme-icon-sun" style="width: 16px; height: 16px;"></i>
+          <i data-lucide="moon" class="theme-icon-moon" style="display: none; width: 16px; height: 16px;"></i>
+        </button>
         <button class="btn-logout" id="btn-logout" title="Sign Out">
           <i data-lucide="log-out"></i>
         </button>
@@ -92,7 +106,10 @@
     <main class="main-content">
       <!-- Top header bar -->
       <header class="main-header no-print">
-        <div class="header-title-area">
+        <div class="header-title-area" style="display: flex; align-items: center; gap: 0.75rem;">
+          <button class="btn-sidebar-toggle no-print" id="sidebar-toggle-btn" style="display: none; background: none; border: none; color: var(--text-main); cursor: pointer; padding: 0.25rem; align-items: center; justify-content: center;">
+            <i data-lucide="menu" style="width: 20px; height: 20px;"></i>
+          </button>
           <h2 id="header-view-title">Dashboard</h2>
         </div>
         <div class="search-bar-wrapper">
@@ -1425,154 +1442,6 @@
   <!-- TOAST NOTIFICATION CONTAINER -->
   <div class="toast-container" id="toast-container"></div>
 
-  <!-- AUTHENTICATION OVERLAY SCREEN -->
-  <div id="auth-screen" class="auth-overlay">
-    <!-- Left Column: Visual Brand side -->
-    <div class="auth-visual-side">
-      <div class="auth-visual-grid"></div>
-      <a href="#" onclick="showLandingPage(); return false;" style="position: absolute; left: 2.5rem; top: 2.5rem; display: flex; align-items: center; gap: 0.5rem; color: rgba(255,255,255,0.55); text-decoration: none; font-size: 0.88rem; font-weight: 600; transition: var(--transition-snap); z-index: 20;" class="hover-primary">
-        <i data-lucide="arrow-left" style="width: 16px; height: 16px;"></i>
-        <span>Back</span>
-      </a>
-      
-      <div class="auth-visual-content">
-        <div class="auth-visual-badge">
-          <i data-lucide="zap" style="width: 12px; height: 12px;"></i>
-          <span>100% Free · No Credit Card</span>
-        </div>
-        <h2 class="auth-visual-title">One app to run your whole freelance business.</h2>
-        <p class="auth-visual-subtitle">Stop stitching together six different tools. Clientsy handles everything — from leads to invoicing, projects to reviews.</p>
-        
-        <div class="auth-feature-list">
-          <div class="auth-feature-item">
-            <i data-lucide="check-circle"></i>
-            <span>CRM Lead Pipeline with drag-and-drop</span>
-          </div>
-          <div class="auth-feature-item">
-            <i data-lucide="check-circle"></i>
-            <span>Smart PDF Invoicing in Indian Rupees (₹)</span>
-          </div>
-          <div class="auth-feature-item">
-            <i data-lucide="check-circle"></i>
-            <span>Google Calendar &amp; Meet integration</span>
-          </div>
-          <div class="auth-feature-item">
-            <i data-lucide="check-circle"></i>
-            <span>Verified client reviews &amp; digital e-sign</span>
-          </div>
-          <div class="auth-feature-item">
-            <i data-lucide="check-circle"></i>
-            <span>Client portal access for your clients</span>
-          </div>
-        </div>
-
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 2rem; margin-top: 2rem;">
-          <div>
-            <div style="font-size: 1.65rem; font-weight: 900; font-family: var(--font-display); background: linear-gradient(135deg,#fff,rgba(255,255,255,0.7)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">₹0/mo</div>
-            <div style="font-size: 0.78rem; opacity: 0.6; margin-top: 0.3rem;">Free Forever Core Plan</div>
-          </div>
-          <div>
-            <div style="font-size: 1.65rem; font-weight: 900; font-family: var(--font-display); background: linear-gradient(135deg,#22d3ee,#818cf8); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">100%</div>
-            <div style="font-size: 0.78rem; opacity: 0.6; margin-top: 0.3rem;">Keep Your Earnings</div>
-          </div>
-        </div>
-      </div>
-    </div>
-    
-    <!-- Right Column: Form side -->
-    <div class="auth-form-side">
-      <!-- Back to Home link on mobile view -->
-      <a href="#" onclick="showLandingPage(); return false;" style="position: absolute; right: 2rem; top: 2rem; display: none; align-items: center; gap: 0.5rem; color: var(--text-muted); text-decoration: none; font-size: 0.9rem; font-weight: 600; transition: var(--transition-fast); z-index: 10001;" class="auth-mobile-back">
-        <i data-lucide="arrow-left" style="width: 16px; height: 16px;"></i>
-        <span>Back to Home</span>
-      </a>
-      
-      <style>
-        @media (max-width: 950px) {
-          .auth-mobile-back { display: flex !important; }
-        }
-      </style>
-
-      <div class="auth-card">
-        <div class="auth-brand">
-          <div class="logo-icon">
-            <i data-lucide="folder-closed"></i>
-          </div>
-          <span class="logo-text">Clientsy</span>
-        </div>
-        
-        <div class="auth-tabs">
-          <button type="button" class="auth-tab-btn active" id="tab-login-btn">Sign In</button>
-          <button type="button" class="auth-tab-btn" id="tab-register-btn">Register</button>
-        </div>
-
-        <!-- Login Form -->
-        <form id="login-form" class="auth-form-panel active">
-          <p class="auth-subtitle">Workspace Portal. Please authenticate to open the dashboard cabinet.</p>
-          <div class="form-group">
-            <label for="login-email" class="required-label">Email Address</label>
-            <input type="email" id="login-email" required placeholder="developer@clientsy.com">
-          </div>
-          <div class="form-group">
-            <label for="login-password" class="required-label">Password</label>
-            <input type="password" id="login-password" required placeholder="••••••••">
-          </div>
-          
-          <div class="form-group">
-            <label class="checkbox-label">
-              <input type="checkbox" id="login-as-client-check">
-              <span>Log in as Client (Client Portal)</span>
-            </label>
-          </div>
-
-          <button type="submit" class="btn btn-primary mt-4" style="width: 100%;">
-            <span>Sign In</span>
-            <i data-lucide="arrow-right"></i>
-          </button>
-
-          <div style="display: flex; align-items: center; text-align: center; margin: 1rem 0; color: var(--text-muted); font-size: 0.75rem;">
-            <div style="flex: 1; border-bottom: 1px solid var(--border-color);"></div>
-            <span style="padding: 0 0.5rem;">OR</span>
-            <div style="flex: 1; border-bottom: 1px solid var(--border-color);"></div>
-          </div>
-
-          <a href="/api/auth/google" class="btn btn-secondary" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.5rem; text-decoration: none;">
-            <i data-lucide="chrome" style="color: #4f46e5;"></i>
-            <span>Continue with Google</span>
-          </a>
-        </form>
-
-        <!-- Register Form -->
-        <form id="register-form" class="auth-form-panel">
-          <p class="auth-subtitle">Create cabinet credentials. Gain access key features.</p>
-          <div class="form-group">
-            <label for="register-name" class="required-label">Name</label>
-            <input type="text" id="register-name" required placeholder="e.g. John Doe">
-          </div>
-          <div class="form-group">
-            <label for="register-email" class="required-label">Email Address</label>
-            <input type="email" id="register-email" required placeholder="name@domain.com">
-          </div>
-          <div class="form-group">
-            <label for="register-password" class="required-label">Password</label>
-            <input type="password" id="register-password" required placeholder="Minimum 6 characters">
-          </div>
-          <div class="form-group">
-            <label for="register-role">Register As</label>
-            <select id="register-role">
-              <option value="developer">Developer / Freelancer</option>
-              <option value="client">Client User</option>
-            </select>
-          </div>
-          <button type="submit" class="btn btn-primary mt-4" style="width: 100%;">
-            <span>Create Account</span>
-            <i data-lucide="user-plus"></i>
-          </button>
-        </form>
-      </div>
-    </div>
-  </div>
-
   <!-- LANDING PAGE CONTAINER -->
   <div id="landing-page" class="landing-page-container">
     <header class="landing-header">
@@ -1583,6 +1452,10 @@
       <nav class="landing-nav">
         <a href="#features" class="landing-nav-link">Features</a>
         <a href="#pricing" class="landing-nav-link">Pricing</a>
+        <button class="btn-theme-toggle" onclick="toggleTheme()" title="Toggle Theme" style="background: none; border: none; color: var(--text-muted); cursor: pointer; padding: 0.5rem; display: flex; align-items: center; justify-content: center;">
+          <i data-lucide="sun" class="theme-icon-sun" style="width: 18px; height: 18px;"></i>
+          <i data-lucide="moon" class="theme-icon-moon" style="display: none; width: 18px; height: 18px;"></i>
+        </button>
         <button class="btn btn-secondary btn-sm" onclick="showAuthScreen('login')">Sign In</button>
       </nav>
     </header>
@@ -1770,6 +1643,160 @@
           </li>
         </ul>
         <button class="btn btn-primary" style="width: 100%;" onclick="showAuthScreen('register')">Create Free Account</button>
+      </div>
+    </section>
+
+    <!-- Join Section (Integrated Auth Section in Main Flow) -->
+    <section class="landing-section" id="auth-section" style="border-top: 1px solid var(--border-color); padding-top: 4rem;">
+      <h2 class="landing-section-title">Ready to take control of your workspace?</h2>
+      <p class="landing-section-subtitle">Sign in or create a free account right here to open your workspace.</p>
+      
+      <!-- AUTHENTICATION SCREEN CONTAINER -->
+      <div id="auth-screen" class="auth-overlay">
+        <!-- Left Column: Visual Brand side -->
+        <div class="auth-visual-side">
+          <div class="auth-visual-grid"></div>
+          <a href="#" onclick="document.getElementById('landing-page').scrollTo({ top: 0, behavior: 'smooth' }); return false;" style="position: absolute; left: 2.5rem; top: 2.5rem; display: flex; align-items: center; gap: 0.5rem; color: rgba(255,255,255,0.55); text-decoration: none; font-size: 0.88rem; font-weight: 600; transition: var(--transition-snap); z-index: 20;" class="hover-primary">
+            <i data-lucide="arrow-up" style="width: 16px; height: 16px;"></i>
+            <span>Top</span>
+          </a>
+          
+          <div class="auth-visual-content">
+            <div class="auth-visual-badge">
+              <i data-lucide="zap" style="width: 12px; height: 12px;"></i>
+              <span>100% Free · No Credit Card</span>
+            </div>
+            <h2 class="auth-visual-title">One app to run your whole freelance business.</h2>
+            <p class="auth-visual-subtitle">Stop stitching together six different tools. Clientsy handles everything — from leads to invoicing, projects to reviews.</p>
+            
+            <div class="auth-feature-list">
+              <div class="auth-feature-item">
+                <i data-lucide="check-circle"></i>
+                <span>CRM Lead Pipeline with drag-and-drop</span>
+              </div>
+              <div class="auth-feature-item">
+                <i data-lucide="check-circle"></i>
+                <span>Smart PDF Invoicing in Indian Rupees (₹)</span>
+              </div>
+              <div class="auth-feature-item">
+                <i data-lucide="check-circle"></i>
+                <span>Google Calendar &amp; Meet integration</span>
+              </div>
+              <div class="auth-feature-item">
+                <i data-lucide="check-circle"></i>
+                <span>Verified client reviews &amp; digital e-sign</span>
+              </div>
+              <div class="auth-feature-item">
+                <i data-lucide="check-circle"></i>
+                <span>Client portal access for your clients</span>
+              </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 2rem; margin-top: 2rem;">
+              <div>
+                <div style="font-size: 1.65rem; font-weight: 900; font-family: var(--font-display); background: linear-gradient(135deg,#fff,rgba(255,255,255,0.7)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">₹0/mo</div>
+                <div style="font-size: 0.78rem; opacity: 0.6; margin-top: 0.3rem;">Free Forever Core Plan</div>
+              </div>
+              <div>
+                <div style="font-size: 1.65rem; font-weight: 900; font-family: var(--font-display); background: linear-gradient(135deg,#22d3ee,#818cf8); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">100%</div>
+                <div style="font-size: 0.78rem; opacity: 0.6; margin-top: 0.3rem;">Keep Your Earnings</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Right Column: Form side -->
+        <div class="auth-form-side">
+          <!-- Back to Home link on mobile view -->
+          <a href="#" onclick="document.getElementById('landing-page').scrollTo({ top: 0, behavior: 'smooth' }); return false;" style="position: absolute; right: 2rem; top: 2rem; display: none; align-items: center; gap: 0.5rem; color: var(--text-muted); text-decoration: none; font-size: 0.9rem; font-weight: 600; transition: var(--transition-fast); z-index: 10001;" class="auth-mobile-back">
+            <i data-lucide="arrow-up" style="width: 16px; height: 16px;"></i>
+            <span>Top</span>
+          </a>
+          
+          <style>
+            @media (max-width: 950px) {
+              .auth-mobile-back { display: flex !important; }
+            }
+          </style>
+
+          <div class="auth-card">
+            <div class="auth-brand">
+              <div class="logo-icon">
+                <i data-lucide="folder-closed"></i>
+              </div>
+              <span class="logo-text">Clientsy</span>
+            </div>
+            
+            <div class="auth-tabs">
+              <button type="button" class="auth-tab-btn active" id="tab-login-btn">Sign In</button>
+              <button type="button" class="auth-tab-btn" id="tab-register-btn">Register</button>
+            </div>
+
+            <!-- Login Form -->
+            <form id="login-form" class="auth-form-panel active">
+              <p class="auth-subtitle">Workspace Portal. Please authenticate to open the dashboard cabinet.</p>
+              <div class="form-group">
+                <label for="login-email" class="required-label">Email Address</label>
+                <input type="email" id="login-email" required placeholder="developer@clientsy.com">
+              </div>
+              <div class="form-group">
+                <label for="login-password" class="required-label">Password</label>
+                <input type="password" id="login-password" required placeholder="••••••••">
+              </div>
+              
+              <div class="form-group">
+                <label class="checkbox-label">
+                  <input type="checkbox" id="login-as-client-check">
+                  <span>Log in as Client (Client Portal)</span>
+                </label>
+              </div>
+
+              <button type="submit" class="btn btn-primary mt-4" style="width: 100%;">
+                <span>Sign In</span>
+                <i data-lucide="arrow-right"></i>
+              </button>
+
+              <div style="display: flex; align-items: center; text-align: center; margin: 1rem 0; color: var(--text-muted); font-size: 0.75rem;">
+                <div style="flex: 1; border-bottom: 1px solid var(--border-color);"></div>
+                <span style="padding: 0 0.5rem;">OR</span>
+                <div style="flex: 1; border-bottom: 1px solid var(--border-color);"></div>
+              </div>
+
+              <a href="/api/auth/google" class="btn btn-secondary" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.5rem; text-decoration: none;">
+                <i data-lucide="chrome" style="color: #4f46e5;"></i>
+                <span>Continue with Google</span>
+              </a>
+            </form>
+
+            <!-- Register Form -->
+            <form id="register-form" class="auth-form-panel">
+              <p class="auth-subtitle">Create cabinet credentials. Gain access key features.</p>
+              <div class="form-group">
+                <label for="register-name" class="required-label">Name</label>
+                <input type="text" id="register-name" required placeholder="e.g. John Doe">
+              </div>
+              <div class="form-group">
+                <label for="register-email" class="required-label">Email Address</label>
+                <input type="email" id="register-email" required placeholder="name@domain.com">
+              </div>
+              <div class="form-group">
+                <label for="register-password" class="required-label">Password</label>
+                <input type="password" id="register-password" required placeholder="Minimum 6 characters">
+              </div>
+              <div class="form-group">
+                <label for="register-role">Register As</label>
+                <select id="register-role">
+                  <option value="developer">Developer / Freelancer</option>
+                  <option value="client">Client User</option>
+                </select>
+              </div>
+              <button type="submit" class="btn btn-primary mt-4" style="width: 100%;">
+                <span>Create Account</span>
+                <i data-lucide="user-plus"></i>
+              </button>
+            </form>
+          </div>
+        </div>
       </div>
     </section>
 
