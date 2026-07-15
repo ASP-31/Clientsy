@@ -205,12 +205,20 @@ window.hideLandingPage = function() {
 };
 
 window.showAuthScreen = function(mode) {
+  // Hide landing page
+  const landingPage = document.getElementById('landing-page');
+  if (landingPage) landingPage.style.display = 'none';
+  
+  const appContainer = document.getElementById('app-container');
+  if (appContainer) appContainer.style.display = 'none';
+  
   DOM.authScreen.classList.add('active');
   if (mode === 'register') {
     DOM.tabRegisterBtn.click();
   } else {
     DOM.tabLoginBtn.click();
   }
+  lucide.createIcons();
 };
 
 window.hideAuthScreen = function() {

@@ -1422,10 +1422,12 @@
 
   <!-- AUTHENTICATION OVERLAY SCREEN -->
   <div id="auth-screen" class="auth-overlay">
-    <div class="auth-card" style="position: relative;">
-      <button type="button" class="modal-close-btn" onclick="hideAuthScreen()" style="position: absolute; right: 1rem; top: 1rem; z-index: 10;">
-        <i data-lucide="x"></i>
-      </button>
+    <a href="#" onclick="showLandingPage(); return false;" style="position: absolute; left: 2rem; top: 2rem; display: flex; align-items: center; gap: 0.5rem; color: var(--text-muted); text-decoration: none; font-size: 0.9rem; font-weight: 600; transition: var(--transition-fast); z-index: 10001;">
+      <i data-lucide="arrow-left" style="width: 16px; height: 16px;"></i>
+      <span>Back to Home</span>
+    </a>
+    
+    <div class="auth-card">
       <div class="auth-brand">
         <div class="logo-icon">
           <i data-lucide="folder-closed"></i>
