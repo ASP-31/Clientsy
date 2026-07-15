@@ -2817,3 +2817,25 @@ function showToast(message, type = 'info') {
     });
   }, 5000);
 }
+
+window.switchSimTab = function(tabName) {
+  // Toggle tab buttons active class
+  document.querySelectorAll('.sim-tab-btn').forEach(btn => {
+    btn.classList.remove('active');
+    if (btn.getAttribute('onclick') && btn.getAttribute('onclick').includes(`'${tabName}'`)) {
+      btn.classList.add('active');
+    }
+  });
+
+  // Toggle views active class
+  document.querySelectorAll('.sim-view').forEach(view => {
+    view.classList.remove('active');
+  });
+  
+  const targetView = document.getElementById(`sim-view-${tabName}`);
+  if (targetView) {
+    targetView.classList.add('active');
+  }
+  
+  lucide.createIcons();
+};

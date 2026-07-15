@@ -7,7 +7,7 @@
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
   <!-- Stylesheets -->
@@ -27,6 +27,7 @@
       </div>
       
       <nav class="sidebar-menu">
+        <div class="menu-section-label">Overview</div>
         <div class="menu-item active" data-view="dashboard">
           <i data-lucide="layout-dashboard"></i>
           <span>Dashboard</span>
@@ -39,13 +40,15 @@
           <i data-lucide="folder-open"></i>
           <span>Clients Vault</span>
         </div>
+
+        <div class="menu-section-label">Work</div>
         <div class="menu-item" data-view="projects">
           <i data-lucide="kanban-square"></i>
           <span>Projects</span>
         </div>
         <div class="menu-item" data-view="invoices">
           <i data-lucide="receipt-text"></i>
-          <span>Invoices & Quotes</span>
+          <span>Invoices &amp; Quotes</span>
         </div>
         <div class="menu-item" data-view="proposals">
           <i data-lucide="file-signature"></i>
@@ -55,6 +58,8 @@
           <i data-lucide="file-text"></i>
           <span>Intake Forms</span>
         </div>
+
+        <div class="menu-section-label">Connect</div>
         <div class="menu-item" data-view="meetings">
           <i data-lucide="calendar"></i>
           <span>Meetings</span>
@@ -1422,87 +1427,149 @@
 
   <!-- AUTHENTICATION OVERLAY SCREEN -->
   <div id="auth-screen" class="auth-overlay">
-    <a href="#" onclick="showLandingPage(); return false;" style="position: absolute; left: 2rem; top: 2rem; display: flex; align-items: center; gap: 0.5rem; color: var(--text-muted); text-decoration: none; font-size: 0.9rem; font-weight: 600; transition: var(--transition-fast); z-index: 10001;">
-      <i data-lucide="arrow-left" style="width: 16px; height: 16px;"></i>
-      <span>Back to Home</span>
-    </a>
-    
-    <div class="auth-card">
-      <div class="auth-brand">
-        <div class="logo-icon">
-          <i data-lucide="folder-closed"></i>
-        </div>
-        <span class="logo-text">Clientsy</span>
-      </div>
+    <!-- Left Column: Visual Brand side -->
+    <div class="auth-visual-side">
+      <div class="auth-visual-grid"></div>
+      <a href="#" onclick="showLandingPage(); return false;" style="position: absolute; left: 2.5rem; top: 2.5rem; display: flex; align-items: center; gap: 0.5rem; color: rgba(255,255,255,0.55); text-decoration: none; font-size: 0.88rem; font-weight: 600; transition: var(--transition-snap); z-index: 20;" class="hover-primary">
+        <i data-lucide="arrow-left" style="width: 16px; height: 16px;"></i>
+        <span>Back</span>
+      </a>
       
-      <div class="auth-tabs">
-        <button type="button" class="auth-tab-btn active" id="tab-login-btn">Sign In</button>
-        <button type="button" class="auth-tab-btn" id="tab-register-btn">Register</button>
-      </div>
-
-      <!-- Login Form -->
-      <form id="login-form" class="auth-form-panel active">
-        <p class="auth-subtitle">Workspace Portal. Please authenticate to open the dashboard cabinet.</p>
-        <div class="form-group">
-          <label for="login-email" class="required-label">Email Address</label>
-          <input type="email" id="login-email" required placeholder="developer@clientsy.com">
+      <div class="auth-visual-content">
+        <div class="auth-visual-badge">
+          <i data-lucide="zap" style="width: 12px; height: 12px;"></i>
+          <span>100% Free · No Credit Card</span>
         </div>
-        <div class="form-group">
-          <label for="login-password" class="required-label">Password</label>
-          <input type="password" id="login-password" required placeholder="••••••••">
+        <h2 class="auth-visual-title">One app to run your whole freelance business.</h2>
+        <p class="auth-visual-subtitle">Stop stitching together six different tools. Clientsy handles everything — from leads to invoicing, projects to reviews.</p>
+        
+        <div class="auth-feature-list">
+          <div class="auth-feature-item">
+            <i data-lucide="check-circle"></i>
+            <span>CRM Lead Pipeline with drag-and-drop</span>
+          </div>
+          <div class="auth-feature-item">
+            <i data-lucide="check-circle"></i>
+            <span>Smart PDF Invoicing in Indian Rupees (₹)</span>
+          </div>
+          <div class="auth-feature-item">
+            <i data-lucide="check-circle"></i>
+            <span>Google Calendar &amp; Meet integration</span>
+          </div>
+          <div class="auth-feature-item">
+            <i data-lucide="check-circle"></i>
+            <span>Verified client reviews &amp; digital e-sign</span>
+          </div>
+          <div class="auth-feature-item">
+            <i data-lucide="check-circle"></i>
+            <span>Client portal access for your clients</span>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 2rem; margin-top: 2rem;">
+          <div>
+            <div style="font-size: 1.65rem; font-weight: 900; font-family: var(--font-display); background: linear-gradient(135deg,#fff,rgba(255,255,255,0.7)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">₹0/mo</div>
+            <div style="font-size: 0.78rem; opacity: 0.6; margin-top: 0.3rem;">Free Forever Core Plan</div>
+          </div>
+          <div>
+            <div style="font-size: 1.65rem; font-weight: 900; font-family: var(--font-display); background: linear-gradient(135deg,#22d3ee,#818cf8); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">100%</div>
+            <div style="font-size: 0.78rem; opacity: 0.6; margin-top: 0.3rem;">Keep Your Earnings</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Right Column: Form side -->
+    <div class="auth-form-side">
+      <!-- Back to Home link on mobile view -->
+      <a href="#" onclick="showLandingPage(); return false;" style="position: absolute; right: 2rem; top: 2rem; display: none; align-items: center; gap: 0.5rem; color: var(--text-muted); text-decoration: none; font-size: 0.9rem; font-weight: 600; transition: var(--transition-fast); z-index: 10001;" class="auth-mobile-back">
+        <i data-lucide="arrow-left" style="width: 16px; height: 16px;"></i>
+        <span>Back to Home</span>
+      </a>
+      
+      <style>
+        @media (max-width: 950px) {
+          .auth-mobile-back { display: flex !important; }
+        }
+      </style>
+
+      <div class="auth-card">
+        <div class="auth-brand">
+          <div class="logo-icon">
+            <i data-lucide="folder-closed"></i>
+          </div>
+          <span class="logo-text">Clientsy</span>
         </div>
         
-        <div class="form-group">
-          <label class="checkbox-label">
-            <input type="checkbox" id="login-as-client-check">
-            <span>Log in as Client (Client Portal)</span>
-          </label>
+        <div class="auth-tabs">
+          <button type="button" class="auth-tab-btn active" id="tab-login-btn">Sign In</button>
+          <button type="button" class="auth-tab-btn" id="tab-register-btn">Register</button>
         </div>
 
-        <button type="submit" class="btn btn-primary mt-4" style="width: 100%;">
-          <span>Sign In</span>
-          <i data-lucide="arrow-right"></i>
-        </button>
+        <!-- Login Form -->
+        <form id="login-form" class="auth-form-panel active">
+          <p class="auth-subtitle">Workspace Portal. Please authenticate to open the dashboard cabinet.</p>
+          <div class="form-group">
+            <label for="login-email" class="required-label">Email Address</label>
+            <input type="email" id="login-email" required placeholder="developer@clientsy.com">
+          </div>
+          <div class="form-group">
+            <label for="login-password" class="required-label">Password</label>
+            <input type="password" id="login-password" required placeholder="••••••••">
+          </div>
+          
+          <div class="form-group">
+            <label class="checkbox-label">
+              <input type="checkbox" id="login-as-client-check">
+              <span>Log in as Client (Client Portal)</span>
+            </label>
+          </div>
 
-        <div style="display: flex; align-items: center; text-align: center; margin: 1rem 0; color: var(--text-muted); font-size: 0.75rem;">
-          <div style="flex: 1; border-bottom: 1px solid var(--border-color);"></div>
-          <span style="padding: 0 0.5rem;">OR</span>
-          <div style="flex: 1; border-bottom: 1px solid var(--border-color);"></div>
-        </div>
+          <button type="submit" class="btn btn-primary mt-4" style="width: 100%;">
+            <span>Sign In</span>
+            <i data-lucide="arrow-right"></i>
+          </button>
 
-        <a href="/api/auth/google" class="btn btn-secondary" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.5rem; text-decoration: none;">
-          <i data-lucide="chrome" style="color: #4f46e5;"></i>
-          <span>Continue with Google</span>
-        </a>
-      </form>
+          <div style="display: flex; align-items: center; text-align: center; margin: 1rem 0; color: var(--text-muted); font-size: 0.75rem;">
+            <div style="flex: 1; border-bottom: 1px solid var(--border-color);"></div>
+            <span style="padding: 0 0.5rem;">OR</span>
+            <div style="flex: 1; border-bottom: 1px solid var(--border-color);"></div>
+          </div>
 
-      <!-- Register Form -->
-      <form id="register-form" class="auth-form-panel">
-        <p class="auth-subtitle">Create cabinet credentials. Gain access key features.</p>
-        <div class="form-group">
-          <label for="register-name" class="required-label">Name</label>
-          <input type="text" id="register-name" required placeholder="e.g. John Doe">
-        </div>
-        <div class="form-group">
-          <label for="register-email" class="required-label">Email Address</label>
-          <input type="email" id="register-email" required placeholder="name@domain.com">
-        </div>
-        <div class="form-group">
-          <label for="register-password" class="required-label">Password</label>
-          <input type="password" id="register-password" required placeholder="Minimum 6 characters">
-        </div>
-        <div class="form-group">
-          <label for="register-role">Register As</label>
-          <select id="register-role">
-            <option value="developer">Developer / Freelancer</option>
-            <option value="client">Client User</option>
-          </select>
-        </div>
-        <button type="submit" class="btn btn-primary mt-4" style="width: 100%;">
-          <span>Create Account</span>
-          <i data-lucide="user-plus"></i>
-        </button>
-      </form>
+          <a href="/api/auth/google" class="btn btn-secondary" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.5rem; text-decoration: none;">
+            <i data-lucide="chrome" style="color: #4f46e5;"></i>
+            <span>Continue with Google</span>
+          </a>
+        </form>
+
+        <!-- Register Form -->
+        <form id="register-form" class="auth-form-panel">
+          <p class="auth-subtitle">Create cabinet credentials. Gain access key features.</p>
+          <div class="form-group">
+            <label for="register-name" class="required-label">Name</label>
+            <input type="text" id="register-name" required placeholder="e.g. John Doe">
+          </div>
+          <div class="form-group">
+            <label for="register-email" class="required-label">Email Address</label>
+            <input type="email" id="register-email" required placeholder="name@domain.com">
+          </div>
+          <div class="form-group">
+            <label for="register-password" class="required-label">Password</label>
+            <input type="password" id="register-password" required placeholder="Minimum 6 characters">
+          </div>
+          <div class="form-group">
+            <label for="register-role">Register As</label>
+            <select id="register-role">
+              <option value="developer">Developer / Freelancer</option>
+              <option value="client">Client User</option>
+            </select>
+          </div>
+          <button type="submit" class="btn btn-primary mt-4" style="width: 100%;">
+            <span>Create Account</span>
+            <i data-lucide="user-plus"></i>
+          </button>
+        </form>
+      </div>
     </div>
   </div>
 
@@ -1533,36 +1600,94 @@
           <a href="#features" class="btn btn-secondary" style="text-decoration: none; display: flex; align-items: center; justify-content: center;">See how it works</a>
         </div>
       </div>
-      <div class="landing-preview-container">
-        <!-- Mock Dashboard Preview card -->
-        <div class="landing-preview-card">
-          <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 0.75rem;">
-            <div style="display: flex; align-items: center; gap: 0.5rem;">
-              <i data-lucide="folder-closed" style="color: var(--primary); width: 18px; height: 18px;"></i>
-              <span style="font-weight: 700; font-size: 0.85rem;">Active Cabinets</span>
-            </div>
-            <span style="font-size: 0.75rem; color: var(--success); font-weight: 600;">● Active</span>
+      <div class="sim-container">
+        <div class="sim-header">
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
+            <span style="display: inline-block; width: 8px; height: 8px; background-color: #ef4444; border-radius: 50%;"></span>
+            <span style="display: inline-block; width: 8px; height: 8px; background-color: #f59e0b; border-radius: 50%;"></span>
+            <span style="display: inline-block; width: 8px; height: 8px; background-color: #10b981; border-radius: 50%;"></span>
+            <span style="margin-left: 0.5rem; font-size: 0.75rem; font-weight: 700; color: var(--text-muted);">clientsy_app_preview</span>
           </div>
-          <div style="display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.8rem;">
-            <div style="display: flex; justify-content: space-between; padding: 0.5rem; background-color: var(--bg-hover); border-radius: var(--radius-sm);">
-              <span>Acme Corp Portal Setup</span>
-              <span class="text-muted">₹45,000</span>
-            </div>
-            <div style="display: flex; justify-content: space-between; padding: 0.5rem; background-color: var(--bg-hover); border-radius: var(--radius-sm);">
-              <span>SaaS Brand Identity</span>
-              <span class="text-muted">₹80,000</span>
-            </div>
+          <div class="sim-tabs">
+            <button type="button" class="sim-tab-btn active" onclick="switchSimTab('crm')">CRM Pipeline</button>
+            <button type="button" class="sim-tab-btn" onclick="switchSimTab('tasks')">Task Board</button>
+            <button type="button" class="sim-tab-btn" onclick="switchSimTab('invoices')">Invoicing</button>
           </div>
         </div>
         
-        <div class="landing-preview-card" style="margin-left: 2rem;">
-          <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
-            <i data-lucide="calendar" style="color: #4f46e5; width: 18px; height: 18px;"></i>
-            <span style="font-weight: 700; font-size: 0.85rem;">Auto Meet & Calendar Sync</span>
+        <div class="sim-body">
+          <!-- CRM View -->
+          <div class="sim-view active" id="sim-view-crm">
+            <div style="display: flex; gap: 0.75rem; overflow-x: auto; padding-bottom: 0.5rem;">
+              <div style="flex: 1; min-width: 120px; background: rgba(255,255,255,0.04); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 0.75rem; display: flex; flex-direction: column; gap: 0.5rem;">
+                <div style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted);">Incoming</div>
+                <div style="background: rgba(255,255,255,0.06); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 0.5rem; font-size: 0.75rem; display: flex; flex-direction: column; gap: 0.25rem;">
+                  <span style="font-weight: 600; color: var(--text-secondary);">Acme Setup</span>
+                  <span style="font-size: 0.65rem; color: var(--primary-bright);">₹45,000</span>
+                </div>
+              </div>
+              <div style="flex: 1; min-width: 120px; background: rgba(255,255,255,0.04); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 0.75rem; display: flex; flex-direction: column; gap: 0.5rem;">
+                <div style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted);">Negotiation</div>
+                <div style="background: rgba(255,255,255,0.06); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 0.5rem; font-size: 0.75rem; display: flex; flex-direction: column; gap: 0.25rem;">
+                  <span style="font-weight: 600; color: var(--text-secondary);">Logo Design</span>
+                  <span style="font-size: 0.65rem; color: var(--primary-bright);">₹15,000</span>
+                </div>
+              </div>
+              <div style="flex: 1; min-width: 120px; background: rgba(52,211,153,0.05); border: 1px solid rgba(52,211,153,0.15); border-radius: var(--radius-sm); padding: 0.75rem; display: flex; flex-direction: column; gap: 0.5rem;">
+                <div style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase; color: var(--success);">Won 🎉</div>
+                <div style="background: rgba(255,255,255,0.06); border: 1px solid rgba(52,211,153,0.15); border-radius: var(--radius-sm); padding: 0.5rem; font-size: 0.75rem; display: flex; flex-direction: column; gap: 0.25rem;">
+                  <span style="font-weight: 600; color: var(--text-secondary);">Identity Kit</span>
+                  <span style="font-size: 0.65rem; color: var(--success); font-weight: 600;">₹80,000</span>
+                </div>
+              </div>
+            </div>
           </div>
-          <p style="font-size: 0.75rem; color: var(--text-muted);">
-            Google Calendar event synced instantly with dynamic Google Meet links for client consultations.
-          </p>
+          
+          <!-- Tasks View -->
+          <div class="sim-view" id="sim-view-tasks">
+            <div style="display: flex; flex-direction: column; gap: 0.65rem;">
+              <div style="display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1rem; background: rgba(255,255,255,0.04); border: 1px solid var(--border-color); border-radius: var(--radius-sm);">
+                <div style="display: flex; align-items: center; gap: 0.75rem;">
+                  <i data-lucide="check-square" style="color: var(--primary-bright); width: 18px; height: 18px;"></i>
+                  <span style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Develop React Landing Page</span>
+                </div>
+                <span style="font-size: 0.7rem; padding: 0.2rem 0.5rem; background: var(--primary-alpha); color: var(--primary-bright); border-radius: 9999px; font-weight: 700; border: 1px solid rgba(99,102,241,0.15);">In Progress</span>
+              </div>
+              <div style="display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1rem; background: rgba(255,255,255,0.04); border: 1px solid var(--border-color); border-radius: var(--radius-sm);">
+                <div style="display: flex; align-items: center; gap: 0.75rem;">
+                  <i data-lucide="check-square" style="color: var(--success); width: 18px; height: 18px;"></i>
+                  <span style="font-size: 0.8rem; font-weight: 600; text-decoration: line-through; color: var(--text-dim);">Database Schema Definition</span>
+                </div>
+                <span style="font-size: 0.7rem; padding: 0.2rem 0.5rem; background: var(--success-alpha); color: var(--success); border-radius: 9999px; font-weight: 700; border: 1px solid rgba(52,211,153,0.15);">Completed</span>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Invoices View -->
+          <div class="sim-view" id="sim-view-invoices">
+            <div style="display: flex; flex-direction: column; gap: 0.65rem;">
+              <div style="display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1rem; border: 1px solid rgba(251,191,36,0.15); border-radius: var(--radius-sm); background: rgba(251,191,36,0.04);">
+                <div>
+                  <div style="font-size: 0.8rem; font-weight: 700; color: var(--text-secondary);">INV-2026-001</div>
+                  <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 0.15rem;">Due: July 20, 2026</div>
+                </div>
+                <div style="text-align: right;">
+                  <div style="font-size: 0.85rem; font-weight: 700; color: var(--text-secondary);">₹45,000</div>
+                  <span style="font-size: 0.65rem; font-weight: 700; color: var(--warning); text-transform: uppercase;">Unpaid</span>
+                </div>
+              </div>
+              <div style="display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1rem; border: 1px solid rgba(52,211,153,0.15); border-radius: var(--radius-sm); background: rgba(52,211,153,0.04);">
+                <div>
+                  <div style="font-size: 0.8rem; font-weight: 700; color: var(--text-secondary);">INV-2026-002</div>
+                  <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 0.15rem;">Due: July 10, 2026</div>
+                </div>
+                <div style="text-align: right;">
+                  <div style="font-size: 0.85rem; font-weight: 700; color: var(--text-secondary);">₹80,000</div>
+                  <span style="font-size: 0.65rem; font-weight: 700; color: var(--success); text-transform: uppercase;">Paid</span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -1570,6 +1695,7 @@
     <!-- Features Section -->
     <section class="landing-section" id="features">
       <h2 class="landing-section-title">Everything you need to run your business</h2>
+      <p class="landing-section-subtitle">Purpose-built for freelancers who want to move fast and look professional.</p>
       <div class="features-grid">
         <!-- Card 1 -->
         <div class="feature-card">
