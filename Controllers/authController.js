@@ -1,12 +1,16 @@
 const User = require('../Models/User');
 const jwt = require('jsonwebtoken');
 const { google } = require('googleapis');
+const { getJwtSecret, makeToken } = require('../Middleware/security');
+
+const oauthStateStore = new Map();
+const OAUTH_STATE_TTL_MS = 10 * 60 * 1000;
 
 // Helper to generate JWT token
 const generateToken = (id) => {
   return jwt.sign(
     { id }, 
-    process.env.JWT_SECRET || 'clientsy_super_secret_dev_key', 
+    getJwtSecret(), 
     { expiresIn: '30d' }
   );
 };
@@ -135,9 +139,13 @@ exports.googleAuthRedirect = (req, res) => {
     'https://www.googleapis.com/auth/calendar.events'
   ];
   
+  const state = makeToken();
+  oauthStateStore.set(state, Date.now() + OAUTH_STATE_TTL_MS);
+
   const url = oauth2Client.generateAuthUrl({
     access_type: 'offline',
     prompt: 'consent',
+    state,
     scope: scopes
   });
   
@@ -148,8 +156,11 @@ exports.googleAuthRedirect = (req, res) => {
 // @route   GET /api/auth/google/callback
 // @access  Public
 exports.googleAuthCallback = async (req, res) => {
-  const { code } = req.query;
-  if (!code) {
+  const { code, state } = req.query;
+  const expiresAt = oauthStateStore.get(state);
+  oauthStateStore.delete(state);
+
+  if (!code || !state || !expiresAt || expiresAt < Date.now()) {
     return res.redirect('/?error=google_auth_failed');
   }
   
@@ -183,7 +194,13 @@ exports.googleAuthCallback = async (req, res) => {
     }
     
     const jwtToken = generateToken(user._id);
-    res.redirect(`/?token=${jwtToken}`);
+    res.cookie('token', jwtToken, {
+      httpOnly: true,
+      sameSite: 'lax',
+      secure: process.env.NODE_ENV === 'production',
+      maxAge: 30 * 24 * 60 * 60 * 1000
+    });
+    res.redirect('/');
   } catch (error) {
     console.error('Google Auth Error:', error);
     res.redirect('/?error=google_auth_server_error');

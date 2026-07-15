@@ -1,4 +1,5 @@
 const Project = require('../Models/Project');
+const { assertOwnedClient, handleControllerError, omitProtectedFields } = require('../Middleware/security');
 
 exports.getProjects = async (req, res) => {
   try {
@@ -23,18 +24,24 @@ exports.getProjectById = async (req, res) => {
 
 exports.createProject = async (req, res) => {
   try {
-    const project = await Project.create({ ...req.body, owner: req.user.id });
+    await assertOwnedClient(req.body.client, req.user.id);
+    const payload = omitProtectedFields(req.body);
+    const project = await Project.create({ ...payload, owner: req.user.id });
     res.status(201).json({ success: true, data: project });
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message || 'Server Error' });
+    handleControllerError(res, error);
   }
 };
 
 exports.updateProject = async (req, res) => {
   try {
+    if (req.body.client) {
+      await assertOwnedClient(req.body.client, req.user.id);
+    }
+    const payload = omitProtectedFields(req.body);
     const project = await Project.findOneAndUpdate(
       { _id: req.params.id, owner: req.user.id },
-      { ...req.body, updatedAt: Date.now() },
+      { ...payload, updatedAt: Date.now() },
       { new: true, runValidators: true }
     );
     if (!project) {
@@ -42,7 +49,7 @@ exports.updateProject = async (req, res) => {
     }
     res.status(200).json({ success: true, data: project });
   } catch (error) {
-    res.status(500).json({ success: false, message: 'Server Error' });
+    handleControllerError(res, error);
   }
 };
 

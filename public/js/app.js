@@ -386,7 +386,7 @@ function renderDashboard() {
     if (state.user.googleId) {
       calBanner.style.backgroundColor = 'var(--success-alpha)';
       calBanner.style.borderColor = 'var(--success)';
-      if (calText) calText.innerHTML = `Connected as <strong>${state.user.email}</strong>. Calendar and Meet auto-sync is active.`;
+      if (calText) calText.innerHTML = `Connected as <strong>${escapeHTML(state.user.email)}</strong>. Calendar and Meet auto-sync is active.`;
       if (calBtnText) calBtnText.textContent = 'Account Sync Active';
       if (calBtn) {
         calBtn.className = 'btn btn-secondary btn-sm';
@@ -437,12 +437,12 @@ function renderDashboard() {
       html: `
         <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">
           <div>
-            <div style="font-size:0.85rem; font-weight:600;">${i.type.toUpperCase()} ${i.invoiceNumber}</div>
-            <div style="font-size:0.75rem; color:var(--text-muted);">${i.client ? i.client.name : 'Unknown'}</div>
+            <div style="font-size:0.85rem; font-weight:600;">${escapeHTML(i.type.toUpperCase())} ${escapeHTML(i.invoiceNumber)}</div>
+            <div style="font-size:0.75rem; color:var(--text-muted);">${escapeHTML(i.client ? i.client.name : 'Unknown')}</div>
           </div>
           <div style="text-align: right;">
             <div style="font-size:0.85rem; font-weight:800;">₹${formatNumberIndian(i.totalAmount)}</div>
-            <span class="badge badge-${i.status}">${i.status}</span>
+            <span class="badge badge-${escapeHTML(i.status)}">${escapeHTML(i.status)}</span>
           </div>
         </div>
       `
@@ -456,10 +456,10 @@ function renderDashboard() {
       html: `
         <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">
           <div>
-            <div style="font-size:0.85rem; font-weight:600;"><i data-lucide="video" style="width:14px;height:14px;display:inline-block;vertical-align:middle;margin-right:4px;"></i> ${m.title}</div>
+            <div style="font-size:0.85rem; font-weight:600;"><i data-lucide="video" style="width:14px;height:14px;display:inline-block;vertical-align:middle;margin-right:4px;"></i> ${escapeHTML(m.title)}</div>
             <div style="font-size:0.75rem; color:var(--text-muted);">${new Date(m.startAt).toLocaleString()}</div>
           </div>
-          <a href="${m.meetLink}" target="_blank" class="btn btn-secondary btn-sm" style="border-radius:6px; padding:0.25rem 0.5rem; font-size:0.7rem;">Join Call</a>
+          <a href="${safeExternalUrl(m.meetLink)}" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm" style="border-radius:6px; padding:0.25rem 0.5rem; font-size:0.7rem;">Join Call</a>
         </div>
       `
     });
@@ -529,8 +529,8 @@ function renderLeadsPipeline() {
         card.setAttribute('draggable', 'true');
         card.setAttribute('data-id', l._id);
         card.innerHTML = `
-          <div class="card-title">${l.name}</div>
-          <div class="card-company">${l.company || 'Private Lead'}</div>
+          <div class="card-title">${escapeHTML(l.name)}</div>
+          <div class="card-company">${escapeHTML(l.company || 'Private Lead')}</div>
           <div class="card-value">₹${formatNumberIndian(l.leadValue || 0)}</div>
           <div class="card-footer">
             <button class="action-btn" onclick="openFolderDrawer('${l._id}')"><i data-lucide="eye" style="width:14px;height:14px;"></i></button>
@@ -645,15 +645,15 @@ function renderClientsVault() {
     card.innerHTML = `
       <i data-lucide="folder" class="folder-icon-glow"></i>
       <div class="folder-meta">
-        <h3 class="folder-name">${c.name}</h3>
-        <span class="folder-company">${c.company || 'Private Client'}</span>
+        <h3 class="folder-name">${escapeHTML(c.name)}</h3>
+        <span class="folder-company">${escapeHTML(c.company || 'Private Client')}</span>
       </div>
       <div class="folder-bottom">
         <span>
           <i data-lucide="file" style="display:inline; width:12px; height:12px; vertical-align:middle; margin-right:2px;"></i>
           <span>${files.length} files</span>
         </span>
-        <span class="badge badge-${c.status}">${c.status}</span>
+        <span class="badge badge-${escapeHTML(c.status)}">${escapeHTML(c.status)}</span>
       </div>
     `;
     container.appendChild(card);
@@ -694,7 +694,7 @@ function renderFolderDrawer() {
   document.getElementById('drawer-email').textContent = client.email;
   document.getElementById('drawer-phone').textContent = client.phone || 'Not provided';
   document.getElementById('drawer-website').innerHTML = client.website 
-    ? `<a href="${client.website}" target="_blank">${client.website}</a>` 
+    ? `<a href="${safeExternalUrl(client.website)}" target="_blank" rel="noopener noreferrer">${escapeHTML(client.website)}</a>` 
     : '—';
   
   let address = '—';
@@ -704,7 +704,7 @@ function renderFolderDrawer() {
   document.getElementById('drawer-address').textContent = address;
   
   document.getElementById('drawer-tags').innerHTML = client.tags && client.tags.length > 0
-    ? client.tags.map(t => `<span class="badge" style="background-color:var(--primary-alpha); color:var(--primary); text-transform:none;">${t}</span>`).join('')
+    ? client.tags.map(t => `<span class="badge" style="background-color:var(--primary-alpha); color:var(--primary); text-transform:none;">${escapeHTML(t)}</span>`).join('')
     : '<span class="text-muted">No tags</span>';
   
   if (client.notes) {
@@ -724,7 +724,7 @@ function renderFolderDrawer() {
     filesList.innerHTML = files.map(f => `
       <div class="drawer-file-item" style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border-color); padding-bottom:0.5rem;">
         <div>
-          <span style="font-size:0.85rem; font-weight:600;">${f.name}</span>
+          <span style="font-size:0.85rem; font-weight:600;">${escapeHTML(f.name)}</span>
           <div style="font-size:0.7rem; color:var(--text-muted);">${f.category.toUpperCase()} • ${formatBytes(f.fileSize)}</div>
         </div>
         <div style="display:flex; gap:0.25rem;">
@@ -744,10 +744,10 @@ function renderFolderDrawer() {
     projList.innerHTML = clientProjs.map(p => `
       <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border-color); padding-bottom:0.5rem;">
         <div>
-          <span style="font-size:0.85rem; font-weight:600;">${p.name}</span>
+          <span style="font-size:0.85rem; font-weight:600;">${escapeHTML(p.name)}</span>
           <div style="font-size:0.7rem; color:var(--text-muted);">Budget: ₹${formatNumberIndian(p.budget)}</div>
         </div>
-        <span class="badge badge-${p.status}">${p.status}</span>
+        <span class="badge badge-${escapeHTML(p.status)}">${escapeHTML(p.status)}</span>
       </div>
     `).join('');
   }
@@ -761,10 +761,10 @@ function renderFolderDrawer() {
     billingList.innerHTML = clientInvs.map(i => `
       <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border-color); padding-bottom:0.5rem;">
         <div>
-          <span style="font-size:0.85rem; font-weight:600;">${i.invoiceNumber} (${i.type.toUpperCase()})</span>
+          <span style="font-size:0.85rem; font-weight:600;">${escapeHTML(i.invoiceNumber)} (${escapeHTML(i.type.toUpperCase())})</span>
           <div style="font-size:0.7rem; color:var(--text-muted);">₹${formatNumberIndian(i.totalAmount)}</div>
         </div>
-        <span class="badge badge-${i.status}">${i.status}</span>
+        <span class="badge badge-${escapeHTML(i.status)}">${escapeHTML(i.status)}</span>
       </div>
     `).join('');
   }
@@ -843,7 +843,7 @@ function renderProjectsModule() {
           card.className = 'kanban-card';
           card.style.padding = '0.75rem';
           card.innerHTML = `
-            <div style="font-size:0.8rem; font-weight:600;">${t.name}</div>
+            <div style="font-size:0.8rem; font-weight:600;">${escapeHTML(t.name)}</div>
             <div style="font-size:0.7rem; color:var(--text-muted); margin-top:0.25rem;">Assignee: ${t.assignedTo || 'Unassigned'}</div>
             <div style="display:flex; justify-content:flex-end; gap:0.25rem; margin-top:0.5rem;">
               <button class="action-btn" onclick="moveTask('${activeProj._id}', ${activeProj.tasks.indexOf(t)}, 'prev')"><i data-lucide="arrow-left" style="width:12px;height:12px;"></i></button>
@@ -915,12 +915,12 @@ function renderInvoicesModule() {
   filtered.forEach(i => {
     const tr = document.createElement('tr');
     tr.innerHTML = `
-      <td><strong>${i.invoiceNumber}</strong></td>
-      <td>${i.client ? i.client.name : 'Unknown'}</td>
-      <td style="text-transform: capitalize;">${i.type}</td>
+      <td><strong>${escapeHTML(i.invoiceNumber)}</strong></td>
+      <td>${escapeHTML(i.client ? i.client.name : 'Unknown')}</td>
+      <td style="text-transform: capitalize;">${escapeHTML(i.type)}</td>
       <td><strong>₹${formatNumberIndian(i.totalAmount)}</strong></td>
       <td>${new Date(i.issueDate).toLocaleDateString()}</td>
-      <td><span class="badge badge-${i.status}">${i.status}</span></td>
+      <td><span class="badge badge-${escapeHTML(i.status)}">${escapeHTML(i.status)}</span></td>
       <td>
         <button class="action-btn" onclick="printInvoiceDocument('${i._id}')" title="Print/PDF"><i data-lucide="printer" style="width:14px;height:14px;"></i></button>
         ${i.type === 'quotation' && i.status === 'approved' ? `<button class="action-btn" onclick="convertQuoteToInvoice('${i._id}')" title="Convert to Invoice" style="color:var(--success);"><i data-lucide="refresh-cw" style="width:14px;height:14px;"></i></button>` : ''}
@@ -985,10 +985,10 @@ function renderProposalsModule() {
   state.proposals.forEach(p => {
     const tr = document.createElement('tr');
     tr.innerHTML = `
-      <td><strong>${p.title}</strong></td>
-      <td>${p.client ? p.client.name : 'Unknown'}</td>
-      <td><span class="badge badge-${p.status}">${p.status}</span></td>
-      <td>${p.signature ? p.signature.signedBy || '—' : '—'}</td>
+      <td><strong>${escapeHTML(p.title)}</strong></td>
+      <td>${escapeHTML(p.client ? p.client.name : 'Unknown')}</td>
+      <td><span class="badge badge-${escapeHTML(p.status)}">${escapeHTML(p.status)}</span></td>
+      <td>${escapeHTML(p.signature ? p.signature.signedBy || '—' : '—')}</td>
       <td>${p.signature ? new Date(p.signature.signedAt).toLocaleDateString() : '—'}</td>
       <td>
         <button class="action-btn" onclick="openProposalEdit('${p._id}')"><i data-lucide="edit" style="width:14px;height:14px;"></i></button>
@@ -1026,8 +1026,8 @@ function renderIntakesModule() {
     const publicUrl = `${window.location.origin}/?intake=${f.token}`;
     const tr = document.createElement('tr');
     tr.innerHTML = `
-      <td><strong>${f.title}</strong></td>
-      <td>${f.client ? f.client.name : 'Unassigned'}</td>
+      <td><strong>${escapeHTML(f.title)}</strong></td>
+      <td>${escapeHTML(f.client ? f.client.name : 'Unassigned')}</td>
       <td>
         <span style="font-size:0.75rem; color:var(--primary); font-family:monospace; word-break:break-all;">${publicUrl}</span>
         <button class="action-btn" onclick="copyTextToClipboard('${publicUrl}')" title="Copy Link"><i data-lucide="copy" style="width:12px;height:12px;"></i></button>
@@ -1061,14 +1061,14 @@ window.viewIntakeSubmissions = function(formId) {
   
   const content = document.createElement('div');
   content.innerHTML = `
-    <h3 style="margin-bottom:1rem; font-family:var(--font-display);">${form.title} Answers</h3>
+    <h3 style="margin-bottom:1rem; font-family:var(--font-display);">${escapeHTML(form.title)} Answers</h3>
     ${form.submissions.length === 0 ? '<p class="text-muted">No client responses logged yet.</p>' : form.submissions.map(sub => `
       <div style="border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 1rem; margin-bottom:1rem; background-color:white;">
         <div style="font-size:0.75rem; color:var(--text-muted); margin-bottom:0.5rem;">Submitted: ${new Date(sub.submittedAt).toLocaleString()}</div>
         ${sub.answers.map(ans => `
           <div style="margin-bottom: 0.5rem;">
-            <strong>${ans.label}:</strong>
-            <p style="font-size:0.85rem; margin-top:0.15rem; color:#444;">${ans.value || '—'}</p>
+            <strong>${escapeHTML(ans.label)}:</strong>
+            <p style="font-size:0.85rem; margin-top:0.15rem; color:#444;">${escapeHTML(ans.value || '—')}</p>
           </div>
         `).join('')}
       </div>
@@ -1103,11 +1103,11 @@ function renderMeetingsModule() {
   state.meetings.forEach(m => {
     const tr = document.createElement('tr');
     tr.innerHTML = `
-      <td><strong>${m.title}</strong></td>
-      <td>${m.client ? m.client.name : 'Unknown'}</td>
+      <td><strong>${escapeHTML(m.title)}</strong></td>
+      <td>${escapeHTML(m.client ? m.client.name : 'Unknown')}</td>
       <td>${new Date(m.startAt).toLocaleString()}</td>
       <td>
-        <a href="${m.meetLink}" target="_blank" style="color:var(--primary); font-weight:600;">Join Google Meet</a>
+        <a href="${safeExternalUrl(m.meetLink)}" target="_blank" rel="noopener noreferrer" style="color:var(--primary); font-weight:600;">Join Google Meet</a>
       </td>
       <td>
         <button class="action-btn delete-action" onclick="deleteMeetingRecord('${m._id}')"><i data-lucide="calendar-x" style="width:14px;height:14px;"></i></button>
@@ -1164,13 +1164,13 @@ function renderReviewsModule() {
     card.innerHTML = `
       <div style="display:flex; justify-content:space-between; margin-bottom:0.5rem; align-items:center;">
         <div>
-          <strong>${r.client ? r.client.name : 'Anonymous Client'}</strong>
-          <span style="font-size:0.75rem; color:var(--text-muted); margin-left:0.5rem;">${r.client && r.client.company ? r.client.company : ''}</span>
+          <strong>${escapeHTML(r.client ? r.client.name : 'Anonymous Client')}</strong>
+          <span style="font-size:0.75rem; color:var(--text-muted); margin-left:0.5rem;">${escapeHTML(r.client && r.client.company ? r.client.company : '')}</span>
         </div>
         <div style="color:var(--warning); font-size:1.1rem;">${stars}</div>
       </div>
-      <p style="font-size:0.85rem; line-height:1.5;">"${r.feedback}"</p>
-      <div style="font-size:0.7rem; color:var(--text-muted); margin-top:0.75rem;">Project: ${r.project ? r.project.name : 'Unknown'} • Verified Review</div>
+      <p style="font-size:0.85rem; line-height:1.5;">"${escapeHTML(r.feedback)}"</p>
+      <div style="font-size:0.7rem; color:var(--text-muted); margin-top:0.75rem;">Project: ${escapeHTML(r.project ? r.project.name : 'Unknown')} • ${r.isVerified ? 'Verified Review' : 'Unverified Review'}</div>
     `;
     feed.appendChild(card);
   });
@@ -1190,10 +1190,10 @@ function renderTeamModule() {
     const paidSum = m.payments ? m.payments.reduce((sum, p) => sum + p.amount, 0) : 0;
     const tr = document.createElement('tr');
     tr.innerHTML = `
-      <td><strong>${m.name}</strong></td>
-      <td>${m.email}</td>
+      <td><strong>${escapeHTML(m.name)}</strong></td>
+      <td>${escapeHTML(m.email)}</td>
       <td>
-        <span style="font-weight:600; font-size:0.85rem;">${m.role}</span>
+        <span style="font-weight:600; font-size:0.85rem;">${escapeHTML(m.role)}</span>
         <span class="badge badge-${m.status === 'active' ? 'active' : 'on-hold'}" style="margin-left:0.5rem;">${m.status}</span>
       </td>
       <td><strong>₹${formatNumberIndian(paidSum)}</strong></td>
@@ -1240,7 +1240,7 @@ function renderClientPortal(data) {
       div.style.padding = '1rem';
       div.innerHTML = `
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
-          <strong>${p.name}</strong>
+          <strong>${escapeHTML(p.name)}</strong>
           <span class="badge badge-${p.status}">${p.status}</span>
         </div>
         <div style="font-size:0.75rem; color:var(--text-muted); margin-bottom:0.5rem;">Tasks Progress: ${doneTasks}/${p.tasks.length} completed</div>
@@ -1266,10 +1266,10 @@ function renderClientPortal(data) {
       div.style.padding = '1rem';
       div.innerHTML = `
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
-          <strong>${p.title}</strong>
+          <strong>${escapeHTML(p.title)}</strong>
           <span class="badge badge-${p.status}">${p.status}</span>
         </div>
-        <p style="font-size:0.8rem; color:var(--text-muted); line-height:1.4; margin-bottom:1rem;">${p.content.substring(0, 120)}...</p>
+        <p style="font-size:0.8rem; color:var(--text-muted); line-height:1.4; margin-bottom:1rem;">${escapeHTML(p.content.substring(0, 120))}...</p>
         <button class="btn btn-primary btn-sm" style="width:100%; border-radius:6px;" onclick="viewAndSignProposalPortal('${p._id}')">
           ${p.status === 'signed' ? 'View Agreement' : 'Review & Sign Digitally'}
         </button>
@@ -1318,9 +1318,9 @@ function renderClientPortal(data) {
       div.style.padding = '1rem';
       div.innerHTML = `
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
-          <strong>${f.title}</strong>
+          <strong>${escapeHTML(f.title)}</strong>
         </div>
-        <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:1rem;">${f.description || 'Onboarding questions.'}</p>
+        <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:1rem;">${escapeHTML(f.description || 'Onboarding questions.')}</p>
         <a href="${publicUrl}" target="_blank" class="btn btn-secondary btn-sm" style="width:100%; border-radius:6px; display:block; text-align:center;">Fill Intake Questionnaire</a>
       `;
       formsList.appendChild(div);
@@ -1345,15 +1345,15 @@ window.viewAndSignProposalPortal = function(id) {
   const content = document.createElement('div');
   content.style.textAlign = 'left';
   content.innerHTML = `
-    <h3 style="font-family:var(--font-display); margin-bottom:1rem;">${proposal.title}</h3>
-    <div style="white-space:pre-wrap; border:1px solid var(--border-color); border-radius:8px; padding:1.25rem; background-color:white; font-size:0.9rem; line-height:1.6; margin-bottom:1.5rem;">${proposal.content}</div>
+    <h3 style="font-family:var(--font-display); margin-bottom:1rem;">${escapeHTML(proposal.title)}</h3>
+    <div style="white-space:pre-wrap; border:1px solid var(--border-color); border-radius:8px; padding:1.25rem; background-color:white; font-size:0.9rem; line-height:1.6; margin-bottom:1.5rem;">${escapeHTML(proposal.content)}</div>
     <h4 style="font-family:var(--font-display); margin-bottom:0.5rem;">Terms & Conditions</h4>
-    <div style="white-space:pre-wrap; font-size:0.8rem; color:var(--text-muted); margin-bottom:1.5rem;">${proposal.terms || 'Standard payment terms apply.'}</div>
+    <div style="white-space:pre-wrap; font-size:0.8rem; color:var(--text-muted); margin-bottom:1.5rem;">${escapeHTML(proposal.terms || 'Standard payment terms apply.')}</div>
     
     ${proposal.status === 'signed' ? `
       <div style="border: 2px solid var(--success); border-radius:8px; padding:1rem; background-color:var(--success-alpha); margin-top:1.5rem;">
         <div style="font-weight:700; color:var(--success); margin-bottom:0.5rem;">SIGNED AGREEMENT</div>
-        <div style="font-size:0.85rem;">Signed by: <strong>${proposal.signature.signedBy}</strong></div>
+        <div style="font-size:0.85rem;">Signed by: <strong>${escapeHTML(proposal.signature.signedBy)}</strong></div>
         <div style="font-size:0.85rem;">Date: <strong>${new Date(proposal.signature.signedAt).toLocaleString()}</strong></div>
         <div style="font-size:0.85rem;">IP Address: <strong>${proposal.signature.ipAddress}</strong></div>
         <img src="${proposal.signature.signatureData}" style="max-height:80px; display:block; margin-top:0.75rem; border:1px solid #ccc; background:#fff;" />
@@ -1509,12 +1509,12 @@ async function loadPublicReviewsPortfolio(userId) {
       div.innerHTML = `
         <div style="display:flex; justify-content:space-between; margin-bottom:0.5rem; align-items:center;">
           <div>
-            <strong>${r.client ? r.client.name : 'Verified Client'}</strong>
-            <span style="font-size:0.75rem; color:var(--text-muted); margin-left:0.5rem;">${r.client && r.client.company ? r.client.company : ''}</span>
+            <strong>${escapeHTML(r.client ? r.client.name : 'Verified Client')}</strong>
+            <span style="font-size:0.75rem; color:var(--text-muted); margin-left:0.5rem;">${escapeHTML(r.client && r.client.company ? r.client.company : '')}</span>
           </div>
           <div style="color:var(--warning); font-size:1.1rem;">${stars}</div>
         </div>
-        <p style="font-size:0.85rem; line-height:1.5;">"${r.feedback}"</p>
+        <p style="font-size:0.85rem; line-height:1.5;">"${escapeHTML(r.feedback)}"</p>
         <div style="font-size:0.7rem; color:var(--text-muted); margin-top:0.75rem;">Verified testimonial of completed project</div>
       `;
       feed.appendChild(div);
@@ -1812,7 +1812,7 @@ window.previewDocument = function(docId) {
   document.getElementById('preview-desc').textContent = doc.description || 'No description.';
 
   const downloadBtn = document.getElementById('preview-download-btn');
-  downloadBtn.href = doc.fileUrl;
+  downloadBtn.href = safeExternalUrl(doc.fileUrl);
   downloadBtn.setAttribute('download', doc.name);
 
   const container = document.getElementById('preview-viewer-container');
@@ -1821,13 +1821,13 @@ window.previewDocument = function(docId) {
 
   if (type.includes('image')) {
     const img = document.createElement('img');
-    img.src = doc.fileUrl;
+    img.src = safeExternalUrl(doc.fileUrl);
     img.style.maxWidth = '100%';
     img.style.maxHeight = '100%';
     container.appendChild(img);
   } else if (type.includes('pdf')) {
     const iframe = document.createElement('iframe');
-    iframe.src = doc.fileUrl;
+    iframe.src = safeExternalUrl(doc.fileUrl);
     iframe.style.width = '100%';
     iframe.style.height = '100%';
     iframe.style.border = 'none';
@@ -1851,7 +1851,7 @@ window.previewDocument = function(docId) {
         <i data-lucide="file" style="width:40px;height:40px;margin-bottom:0.5rem;color:var(--primary);"></i>
         <h3>No Browser Preview</h3>
         <p class="text-muted" style="font-size:0.8rem;margin-bottom:1rem;">Click download to view this format locally.</p>
-        <a href="${doc.fileUrl}" download="${doc.name}" class="btn btn-primary btn-sm">Download File</a>
+        <a href="${safeExternalUrl(doc.fileUrl)}" download="${escapeHTML(doc.name)}" class="btn btn-primary btn-sm">Download File</a>
       </div>
     `;
   }
@@ -1942,7 +1942,7 @@ function setupProjectModalListeners() {
     
     // Fill team members select
     const teamSel = document.getElementById('task-assignee');
-    teamSel.innerHTML = '<option value="">Unassigned</option>' + state.teamMembers.map(m => `<option value="${m.name}">${m.name} (${m.role})</option>`).join('');
+    teamSel.innerHTML = '<option value="">Unassigned</option>' + state.teamMembers.map(m => `<option value="${escapeHTML(m.name)}">${escapeHTML(m.name)} (${escapeHTML(m.role)})</option>`).join('');
 
     openModal('task-modal');
   });
@@ -1974,7 +1974,7 @@ function setupProjectModalListeners() {
 function populateClientSelect(selectId, selectedId = '') {
   const select = document.getElementById(selectId);
   select.innerHTML = '<option value="" disabled selected>Select Client...</option>' + 
-    state.clients.map(c => `<option value="${c._id}" ${c._id === selectedId ? 'selected' : ''}>${c.name} (${c.company || 'Private'})</option>`).join('');
+    state.clients.map(c => `<option value="${escapeHTML(c._id)}" ${c._id === selectedId ? 'selected' : ''}>${escapeHTML(c.name)} (${escapeHTML(c.company || 'Private')})</option>`).join('');
 }
 
 // --- Smart Invoices Creator & Calculator ---
@@ -2134,7 +2134,7 @@ window.openInvoiceEdit = function(id) {
     const tr = document.createElement('tr');
     tr.id = `inv-item-row-${index}`;
     tr.innerHTML = `
-      <td><input type="text" id="inv-item-desc-${index}" required value="${item.description}"></td>
+      <td><input type="text" id="inv-item-desc-${index}" required value="${escapeHTML(item.description)}"></td>
       <td><input type="number" id="inv-item-qty-${index}" value="${item.qty}" min="1" style="text-align:right;" oninput="updateInvoiceRowSum(${index})"></td>
       <td><input type="number" id="inv-item-rate-${index}" value="${item.rate}" min="0" style="text-align:right;" oninput="updateInvoiceRowSum(${index})"></td>
       <td style="text-align:right; font-weight:600;" id="inv-item-amount-${index}">₹${formatNumberIndian(item.qty * item.rate)}</td>
@@ -2183,7 +2183,7 @@ window.printInvoiceDocument = function(invoiceId) {
   const tbody = document.getElementById('print-items-body');
   tbody.innerHTML = invoice.items.map(item => `
     <tr>
-      <td>${item.description}</td>
+      <td>${escapeHTML(item.description)}</td>
       <td style="text-align: right;">${item.qty}</td>
       <td style="text-align: right;">₹${formatNumberIndian(item.rate)}</td>
       <td style="text-align: right; font-weight:600;">₹${formatNumberIndian(item.amount)}</td>
@@ -2196,7 +2196,7 @@ window.printInvoiceDocument = function(invoiceId) {
   document.getElementById('print-total').textContent = `₹${formatNumberIndian(invoice.totalAmount)}`;
   
   document.getElementById('print-notes-area').innerHTML = invoice.notes 
-    ? `<strong>Terms & Notes:</strong><p>${invoice.notes}</p>` 
+    ? `<strong>Terms & Notes:</strong><p>${escapeHTML(invoice.notes)}</p>` 
     : '';
 
   window.print();
@@ -2739,6 +2739,31 @@ function formatNumberIndian(num) {
   // Simple Indian style formatter: e.g. 2,40,000
   const val = Math.round(num);
   return val.toLocaleString('en-IN');
+}
+
+function escapeHTML(value) {
+  return String(value ?? '').replace(/[&<>"']/g, (char) => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;'
+  }[char]));
+}
+
+function safeExternalUrl(value) {
+  try {
+    const url = new URL(value, window.location.origin);
+    const raw = String(value || '').trim().toLowerCase();
+    const isAllowedData =
+      raw.startsWith('data:image/') ||
+      raw.startsWith('data:application/pdf') ||
+      raw.startsWith('data:text/plain');
+    if (url.protocol === 'http:' || url.protocol === 'https:' || isAllowedData) {
+      return escapeHTML(url.href);
+    }
+  } catch (error) {}
+  return '#';
 }
 
 function formatBytes(bytes, decimals = 2) {

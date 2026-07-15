@@ -1,5 +1,6 @@
 const Meeting = require('../Models/Meeting');
 const { google } = require('googleapis');
+const { assertOwnedClient, handleControllerError, omitProtectedFields } = require('../Middleware/security');
 
 const getOAuthClient = (user) => {
   const oauth2Client = new google.auth.OAuth2(
@@ -25,6 +26,7 @@ exports.getMeetings = async (req, res) => {
 
 exports.createMeeting = async (req, res) => {
   try {
+    await assertOwnedClient(req.body.client, req.user.id);
     // Default fallback mock Google Meet link
     const letters = 'abcdefghijklmnopqrstuvwxyz';
     const randPart = (len) => Array.from({length: len}, () => letters[Math.floor(Math.random() * 26)]).join('');
@@ -71,15 +73,16 @@ exports.createMeeting = async (req, res) => {
       }
     }
 
+    const payload = omitProtectedFields(req.body);
     const meeting = await Meeting.create({
-      ...req.body,
+      ...payload,
       meetLink,
       googleCalendarEventId,
       owner: req.user.id
     });
     res.status(201).json({ success: true, data: meeting });
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message || 'Server Error' });
+    handleControllerError(res, error);
   }
 };
 

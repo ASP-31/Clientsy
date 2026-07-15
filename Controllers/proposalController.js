@@ -1,4 +1,5 @@
 const Proposal = require('../Models/Proposal');
+const { assertOwnedClient, handleControllerError, omitProtectedFields } = require('../Middleware/security');
 
 exports.getProposals = async (req, res) => {
   try {
@@ -23,18 +24,24 @@ exports.getProposalById = async (req, res) => {
 
 exports.createProposal = async (req, res) => {
   try {
-    const proposal = await Proposal.create({ ...req.body, owner: req.user.id });
+    await assertOwnedClient(req.body.client, req.user.id);
+    const payload = omitProtectedFields(req.body);
+    const proposal = await Proposal.create({ ...payload, owner: req.user.id });
     res.status(201).json({ success: true, data: proposal });
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message || 'Server Error' });
+    handleControllerError(res, error);
   }
 };
 
 exports.updateProposal = async (req, res) => {
   try {
+    if (req.body.client) {
+      await assertOwnedClient(req.body.client, req.user.id);
+    }
+    const payload = omitProtectedFields(req.body);
     const proposal = await Proposal.findOneAndUpdate(
       { _id: req.params.id, owner: req.user.id },
-      { ...req.body, updatedAt: Date.now() },
+      { ...payload, updatedAt: Date.now() },
       { new: true, runValidators: true }
     );
     if (!proposal) {
@@ -42,7 +49,7 @@ exports.updateProposal = async (req, res) => {
     }
     res.status(200).json({ success: true, data: proposal });
   } catch (error) {
-    res.status(500).json({ success: false, message: 'Server Error' });
+    handleControllerError(res, error);
   }
 };
 

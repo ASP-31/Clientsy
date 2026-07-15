@@ -1,4 +1,5 @@
 const TeamMember = require('../Models/TeamMember');
+const { omitProtectedFields } = require('../Middleware/security');
 
 exports.getTeamMembers = async (req, res) => {
   try {
@@ -11,8 +12,9 @@ exports.getTeamMembers = async (req, res) => {
 
 exports.createTeamMember = async (req, res) => {
   try {
+    const payload = omitProtectedFields(req.body);
     const member = await TeamMember.create({
-      ...req.body,
+      ...payload,
       owner: req.user.id
     });
     res.status(201).json({ success: true, data: member });
@@ -23,9 +25,10 @@ exports.createTeamMember = async (req, res) => {
 
 exports.updateTeamMember = async (req, res) => {
   try {
+    const payload = omitProtectedFields(req.body, ['owner', 'payments']);
     const member = await TeamMember.findOneAndUpdate(
       { _id: req.params.id, owner: req.user.id },
-      req.body,
+      payload,
       { new: true, runValidators: true }
     );
     if (!member) {

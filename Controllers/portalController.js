@@ -7,7 +7,11 @@ const Review = require('../Models/Review');
 
 // Helper to get client matching logged-in user
 const getClientRecord = async (userEmail) => {
-  return await Client.findOne({ email: userEmail.toLowerCase() });
+  const clients = await Client.find({ email: userEmail.toLowerCase() });
+  if (clients.length !== 1) {
+    return null;
+  }
+  return clients[0];
 };
 
 exports.getPortalData = async (req, res) => {
@@ -19,20 +23,22 @@ exports.getPortalData = async (req, res) => {
 
     const clientId = clientRecord._id;
 
+    const ownerId = clientRecord.owner;
+
     // Fetch active projects
-    const projects = await Project.find({ client: clientId });
+    const projects = await Project.find({ client: clientId, owner: ownerId });
 
     // Fetch invoices/quotes (exclude drafts)
-    const invoices = await Invoice.find({ client: clientId, status: { $ne: 'draft' } });
+    const invoices = await Invoice.find({ client: clientId, owner: ownerId, status: { $ne: 'draft' } });
 
     // Fetch proposals (exclude drafts)
-    const proposals = await Proposal.find({ client: clientId, status: { $ne: 'draft' } });
+    const proposals = await Proposal.find({ client: clientId, owner: ownerId, status: { $ne: 'draft' } });
 
     // Fetch intake forms
-    const intakeForms = await IntakeForm.find({ client: clientId });
+    const intakeForms = await IntakeForm.find({ client: clientId, owner: ownerId });
 
     // Fetch reviews
-    const reviews = await Review.find({ client: clientId }).populate('project', 'name');
+    const reviews = await Review.find({ client: clientId, owner: ownerId }).populate('project', 'name');
 
     res.status(200).json({
       success: true,
@@ -58,7 +64,7 @@ exports.signProposal = async (req, res) => {
     }
 
     const { signatureData, signedBy } = req.body;
-    const proposal = await Proposal.findOne({ _id: req.params.id, client: clientRecord._id });
+    const proposal = await Proposal.findOne({ _id: req.params.id, client: clientRecord._id, owner: clientRecord.owner });
 
     if (!proposal) {
       return res.status(404).json({ success: false, message: 'Proposal not found' });
@@ -86,7 +92,7 @@ exports.payInvoice = async (req, res) => {
       return res.status(404).json({ success: false, message: 'Client profile not found.' });
     }
 
-    const invoice = await Invoice.findOne({ _id: req.params.id, client: clientRecord._id });
+    const invoice = await Invoice.findOne({ _id: req.params.id, client: clientRecord._id, owner: clientRecord.owner });
     if (!invoice) {
       return res.status(404).json({ success: false, message: 'Invoice not found' });
     }

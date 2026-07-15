@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const User = require('../Models/User');
+const { getJwtSecret } = require('./security');
 
 // Protect routes
 exports.protect = async (req, res, next) => {
@@ -13,6 +14,16 @@ exports.protect = async (req, res, next) => {
     token = req.headers.authorization.split(' ')[1];
   }
 
+  if (!token && req.headers.cookie) {
+    const cookies = Object.fromEntries(
+      req.headers.cookie.split(';').map((cookie) => {
+        const [key, ...value] = cookie.trim().split('=');
+        return [key, decodeURIComponent(value.join('='))];
+      })
+    );
+    token = cookies.token;
+  }
+
   // Make sure token exists
   if (!token) {
     return res.status(401).json({ success: false, message: 'Not authorized to access this route' });
@@ -20,7 +31,7 @@ exports.protect = async (req, res, next) => {
 
   try {
     // Verify token
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'clientsy_super_secret_dev_key');
+    const decoded = jwt.verify(token, getJwtSecret());
 
     req.user = await User.findById(decoded.id);
 

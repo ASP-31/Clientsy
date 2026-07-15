@@ -1,5 +1,6 @@
 const IntakeForm = require('../Models/IntakeForm');
 const crypto = require('crypto');
+const { assertOwnedClient, handleControllerError, omitProtectedFields } = require('../Middleware/security');
 
 exports.getIntakeForms = async (req, res) => {
   try {
@@ -24,23 +25,29 @@ exports.getIntakeFormById = async (req, res) => {
 
 exports.createIntakeForm = async (req, res) => {
   try {
+    await assertOwnedClient(req.body.client, req.user.id);
     const token = crypto.randomBytes(16).toString('hex');
+    const payload = omitProtectedFields(req.body);
     const form = await IntakeForm.create({
-      ...req.body,
+      ...payload,
       token,
       owner: req.user.id
     });
     res.status(201).json({ success: true, data: form });
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message || 'Server Error' });
+    handleControllerError(res, error);
   }
 };
 
 exports.updateIntakeForm = async (req, res) => {
   try {
+    if (req.body.client) {
+      await assertOwnedClient(req.body.client, req.user.id);
+    }
+    const payload = omitProtectedFields(req.body, ['owner', 'token', 'submissions']);
     const form = await IntakeForm.findOneAndUpdate(
       { _id: req.params.id, owner: req.user.id },
-      req.body,
+      payload,
       { new: true, runValidators: true }
     );
     if (!form) {
@@ -48,7 +55,7 @@ exports.updateIntakeForm = async (req, res) => {
     }
     res.status(200).json({ success: true, data: form });
   } catch (error) {
-    res.status(500).json({ success: false, message: 'Server Error' });
+    handleControllerError(res, error);
   }
 };
 

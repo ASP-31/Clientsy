@@ -4,12 +4,27 @@ const cors = require('cors');
 const path = require('path');
 require('dotenv').config();
 const { connectDB, checkConnection } = require('./config/db');
+const { getJwtSecret } = require('./Middleware/security');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+getJwtSecret();
+
 // Middleware
-app.use(cors());
+const allowedOrigins = (process.env.CORS_ORIGIN || '')
+  .split(',')
+  .map((origin) => origin.trim())
+  .filter(Boolean);
+
+app.use(cors({
+  origin(origin, callback) {
+    if (!origin || allowedOrigins.includes(origin) || (process.env.NODE_ENV !== 'production' && allowedOrigins.length === 0)) {
+      return callback(null, true);
+    }
+    return callback(new Error('Not allowed by CORS'));
+  }
+}));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 

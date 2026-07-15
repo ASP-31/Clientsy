@@ -1,4 +1,5 @@
 const Document = require('../Models/Document');
+const { assertOwnedClient, handleControllerError, omitProtectedFields } = require('../Middleware/security');
 
 // @desc    Get all documents
 // @route   GET /api/documents
@@ -32,17 +33,15 @@ exports.getDocumentById = async (req, res) => {
 // @access  Private
 exports.createDocument = async (req, res) => {
   try {
+    await assertOwnedClient(req.body.client, req.user.id);
+    const payload = omitProtectedFields(req.body);
     const document = await Document.create({
-      ...req.body,
+      ...payload,
       uploadedBy: req.user.id
     });
     res.status(201).json({ success: true, data: document });
   } catch (error) {
-    if (error.name === 'ValidationError') {
-      const messages = Object.values(error.errors).map(val => val.message);
-      return res.status(400).json({ success: false, message: messages.join(', ') });
-    }
-    res.status(500).json({ success: false, message: 'Server Error' });
+    handleControllerError(res, error);
   }
 };
 
@@ -51,10 +50,14 @@ exports.createDocument = async (req, res) => {
 // @access  Private
 exports.updateDocument = async (req, res) => {
   try {
-    req.body.updatedAt = Date.now();
+    if (req.body.client) {
+      await assertOwnedClient(req.body.client, req.user.id);
+    }
+    const payload = omitProtectedFields(req.body);
+    payload.updatedAt = Date.now();
     const document = await Document.findOneAndUpdate(
       { _id: req.params.id, uploadedBy: req.user.id },
-      req.body,
+      payload,
       {
         new: true,
         runValidators: true
@@ -65,11 +68,7 @@ exports.updateDocument = async (req, res) => {
     }
     res.status(200).json({ success: true, data: document });
   } catch (error) {
-    if (error.name === 'ValidationError') {
-      const messages = Object.values(error.errors).map(val => val.message);
-      return res.status(400).json({ success: false, message: messages.join(', ') });
-    }
-    res.status(500).json({ success: false, message: 'Server Error' });
+    handleControllerError(res, error);
   }
 };
 

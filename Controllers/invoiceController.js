@@ -1,4 +1,5 @@
 const Invoice = require('../Models/Invoice');
+const { assertOwnedClient, handleControllerError, omitProtectedFields } = require('../Middleware/security');
 
 exports.getInvoices = async (req, res) => {
   try {
@@ -23,18 +24,24 @@ exports.getInvoiceById = async (req, res) => {
 
 exports.createInvoice = async (req, res) => {
   try {
-    const invoice = await Invoice.create({ ...req.body, owner: req.user.id });
+    await assertOwnedClient(req.body.client, req.user.id);
+    const payload = omitProtectedFields(req.body);
+    const invoice = await Invoice.create({ ...payload, owner: req.user.id });
     res.status(201).json({ success: true, data: invoice });
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message || 'Server Error' });
+    handleControllerError(res, error);
   }
 };
 
 exports.updateInvoice = async (req, res) => {
   try {
+    if (req.body.client) {
+      await assertOwnedClient(req.body.client, req.user.id);
+    }
+    const payload = omitProtectedFields(req.body);
     const invoice = await Invoice.findOneAndUpdate(
       { _id: req.params.id, owner: req.user.id },
-      { ...req.body, updatedAt: Date.now() },
+      { ...payload, updatedAt: Date.now() },
       { new: true, runValidators: true }
     );
     if (!invoice) {
@@ -42,7 +49,7 @@ exports.updateInvoice = async (req, res) => {
     }
     res.status(200).json({ success: true, data: invoice });
   } catch (error) {
-    res.status(500).json({ success: false, message: 'Server Error' });
+    handleControllerError(res, error);
   }
 };
 

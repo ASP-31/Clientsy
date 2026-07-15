@@ -6,6 +6,7 @@ const Proposal = require('../Models/Proposal');
 const IntakeForm = require('../Models/IntakeForm');
 const Meeting = require('../Models/Meeting');
 const Review = require('../Models/Review');
+const { handleControllerError, omitProtectedFields } = require('../Middleware/security');
 
 // @desc    Get all clients
 // @route   GET /api/clients
@@ -39,8 +40,9 @@ exports.getClientById = async (req, res) => {
 // @access  Private
 exports.createClient = async (req, res) => {
   try {
+    const payload = omitProtectedFields(req.body);
     const client = await Client.create({
-      ...req.body,
+      ...payload,
       owner: req.user.id
     });
     res.status(201).json({ success: true, data: client });
@@ -58,10 +60,11 @@ exports.createClient = async (req, res) => {
 // @access  Private
 exports.updateClient = async (req, res) => {
   try {
-    req.body.updatedAt = Date.now();
+    const payload = omitProtectedFields(req.body);
+    payload.updatedAt = Date.now();
     const client = await Client.findOneAndUpdate(
       { _id: req.params.id, owner: req.user.id },
-      req.body,
+      payload,
       {
         new: true,
         runValidators: true
@@ -72,11 +75,7 @@ exports.updateClient = async (req, res) => {
     }
     res.status(200).json({ success: true, data: client });
   } catch (error) {
-    if (error.name === 'ValidationError') {
-      const messages = Object.values(error.errors).map(val => val.message);
-      return res.status(400).json({ success: false, message: messages.join(', ') });
-    }
-    res.status(500).json({ success: false, message: 'Server Error' });
+    handleControllerError(res, error);
   }
 };
 
@@ -91,13 +90,13 @@ exports.deleteClient = async (req, res) => {
     }
 
     // Cascade delete associated entities
-    await Document.deleteMany({ client: req.params.id });
-    await Project.deleteMany({ client: req.params.id });
-    await Invoice.deleteMany({ client: req.params.id });
-    await Proposal.deleteMany({ client: req.params.id });
-    await IntakeForm.deleteMany({ client: req.params.id });
-    await Meeting.deleteMany({ client: req.params.id });
-    await Review.deleteMany({ client: req.params.id });
+    await Document.deleteMany({ client: req.params.id, uploadedBy: req.user.id });
+    await Project.deleteMany({ client: req.params.id, owner: req.user.id });
+    await Invoice.deleteMany({ client: req.params.id, owner: req.user.id });
+    await Proposal.deleteMany({ client: req.params.id, owner: req.user.id });
+    await IntakeForm.deleteMany({ client: req.params.id, owner: req.user.id });
+    await Meeting.deleteMany({ client: req.params.id, owner: req.user.id });
+    await Review.deleteMany({ client: req.params.id, owner: req.user.id });
 
     await Client.findByIdAndDelete(req.params.id);
 
