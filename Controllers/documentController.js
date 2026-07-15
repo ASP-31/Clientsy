@@ -2,10 +2,10 @@ const Document = require('../Models/Document');
 
 // @desc    Get all documents
 // @route   GET /api/documents
-// @access  Public
+// @access  Private
 exports.getDocuments = async (req, res) => {
   try {
-    const documents = await Document.find().populate('client', 'name email').sort({ uploadedAt: -1 });
+    const documents = await Document.find({ uploadedBy: req.user.id }).populate('client', 'name email').sort({ uploadedAt: -1 });
     res.status(200).json({ success: true, data: documents });
   } catch (error) {
     res.status(500).json({ success: false, message: 'Server Error' });
@@ -14,10 +14,10 @@ exports.getDocuments = async (req, res) => {
 
 // @desc    Get single document
 // @route   GET /api/documents/:id
-// @access  Public
+// @access  Private
 exports.getDocumentById = async (req, res) => {
   try {
-    const document = await Document.findById(req.params.id).populate('client', 'name email');
+    const document = await Document.findOne({ _id: req.params.id, uploadedBy: req.user.id }).populate('client', 'name email');
     if (!document) {
       return res.status(404).json({ success: false, message: 'Document not found' });
     }
@@ -29,10 +29,13 @@ exports.getDocumentById = async (req, res) => {
 
 // @desc    Create new document
 // @route   POST /api/documents
-// @access  Public
+// @access  Private
 exports.createDocument = async (req, res) => {
   try {
-    const document = await Document.create(req.body);
+    const document = await Document.create({
+      ...req.body,
+      uploadedBy: req.user.id
+    });
     res.status(201).json({ success: true, data: document });
   } catch (error) {
     if (error.name === 'ValidationError') {
@@ -45,14 +48,18 @@ exports.createDocument = async (req, res) => {
 
 // @desc    Update document
 // @route   PUT /api/documents/:id
-// @access  Public
+// @access  Private
 exports.updateDocument = async (req, res) => {
   try {
     req.body.updatedAt = Date.now();
-    const document = await Document.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-      runValidators: true
-    });
+    const document = await Document.findOneAndUpdate(
+      { _id: req.params.id, uploadedBy: req.user.id },
+      req.body,
+      {
+        new: true,
+        runValidators: true
+      }
+    );
     if (!document) {
       return res.status(404).json({ success: false, message: 'Document not found' });
     }
@@ -68,10 +75,10 @@ exports.updateDocument = async (req, res) => {
 
 // @desc    Delete document
 // @route   DELETE /api/documents/:id
-// @access  Public
+// @access  Private
 exports.deleteDocument = async (req, res) => {
   try {
-    const document = await Document.findByIdAndDelete(req.params.id);
+    const document = await Document.findOneAndDelete({ _id: req.params.id, uploadedBy: req.user.id });
     if (!document) {
       return res.status(404).json({ success: false, message: 'Document not found' });
     }

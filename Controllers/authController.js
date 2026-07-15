@@ -1,5 +1,6 @@
 const User = require('../Models/User');
 const jwt = require('jsonwebtoken');
+const { google } = require('googleapis');
 
 // Helper to generate JWT token
 const generateToken = (id) => {
@@ -104,5 +105,87 @@ exports.getMe = async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({ success: false, message: 'Server Error' });
+  }
+};
+
+const getOAuthClient = () => {
+  return new google.auth.OAuth2(
+    process.env.GOOGLE_CLIENT_ID,
+    process.env.GOOGLE_CLIENT_SECRET,
+    process.env.GOOGLE_REDIRECT_URI
+  );
+};
+
+// @desc    Redirect to Google OAuth consent screen
+// @route   GET /api/auth/google
+// @access  Public
+exports.googleAuthRedirect = (req, res) => {
+  const cid = process.env.GOOGLE_CLIENT_ID;
+  const csec = process.env.GOOGLE_CLIENT_SECRET;
+  
+  if (!cid || !csec || cid.includes('your_client_id') || csec.includes('your_client_secret')) {
+    return res.redirect('/?error=google_not_configured');
+  }
+  
+  const oauth2Client = getOAuthClient();
+  
+  const scopes = [
+    'https://www.googleapis.com/auth/userinfo.profile',
+    'https://www.googleapis.com/auth/userinfo.email',
+    'https://www.googleapis.com/auth/calendar.events'
+  ];
+  
+  const url = oauth2Client.generateAuthUrl({
+    access_type: 'offline',
+    prompt: 'consent',
+    scope: scopes
+  });
+  
+  res.redirect(url);
+};
+
+// @desc    Google OAuth Callback exchange
+// @route   GET /api/auth/google/callback
+// @access  Public
+exports.googleAuthCallback = async (req, res) => {
+  const { code } = req.query;
+  if (!code) {
+    return res.redirect('/?error=google_auth_failed');
+  }
+  
+  try {
+    const oauth2Client = getOAuthClient();
+    const { tokens } = await oauth2Client.getToken(code);
+    oauth2Client.setCredentials(tokens);
+    
+    const oauth2 = google.oauth2({ version: 'v2', auth: oauth2Client });
+    const userInfoRes = await oauth2.userinfo.get();
+    const { id: googleId, name, email } = userInfoRes.data;
+    
+    let user = await User.findOne({ email });
+    
+    if (user) {
+      user.googleId = googleId;
+      user.googleAccessToken = tokens.access_token;
+      if (tokens.refresh_token) {
+        user.googleRefreshToken = tokens.refresh_token;
+      }
+      await user.save();
+    } else {
+      user = await User.create({
+        name,
+        email,
+        googleId,
+        googleAccessToken: tokens.access_token,
+        googleRefreshToken: tokens.refresh_token,
+        role: 'developer'
+      });
+    }
+    
+    const jwtToken = generateToken(user._id);
+    res.redirect(`/?token=${jwtToken}`);
+  } catch (error) {
+    console.error('Google Auth Error:', error);
+    res.redirect('/?error=google_auth_server_error');
   }
 };

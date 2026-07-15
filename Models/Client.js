@@ -2,6 +2,11 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const clientSchema = new Schema({
+  owner: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  },
   name: {
     type: String,
     required: true,
@@ -40,6 +45,20 @@ const clientSchema = new Schema({
     type: String,
     trim: true
   }],
+  status: {
+    type: String,
+    enum: ['lead', 'active', 'on-hold', 'completed'],
+    default: 'active'
+  },
+  leadStage: {
+    type: String,
+    enum: ['new', 'in-talks', 'proposal-sent', 'won', 'lost', 'none'],
+    default: 'none'
+  },
+  leadValue: {
+    type: Number,
+    default: 0
+  },
   createdAt: {
     type: Date,
     default: Date.now
@@ -51,7 +70,8 @@ const clientSchema = new Schema({
 });
 
 // Indexes for faster queries
-clientSchema.index({ email: 1 });
+clientSchema.index({ owner: 1, email: 1 });
+clientSchema.index({ owner: 1, status: 1 });
 clientSchema.index({ name: 'text' });
 
 module.exports = mongoose.model('Client', clientSchema);

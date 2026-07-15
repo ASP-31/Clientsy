@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const path = require('path');
 require('dotenv').config();
-const connectDB = require('./config/db');
+const { connectDB, checkConnection } = require('./config/db');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -18,9 +18,19 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // API routes
 const { protect } = require('./Middleware/auth');
+app.use('/api', checkConnection);
 app.use('/api/auth', require('./Routes/authRoutes'));
 app.use('/api/clients', protect, require('./Routes/clientRoutes'));
 app.use('/api/documents', protect, require('./Routes/documentRoutes'));
+app.use('/api/projects', protect, require('./Routes/projectRoutes'));
+app.use('/api/invoices', protect, require('./Routes/invoiceRoutes'));
+app.use('/api/proposals', protect, require('./Routes/proposalRoutes'));
+app.use('/api/intakes', protect, require('./Routes/intakeRoutes'));
+app.use('/api/meetings', protect, require('./Routes/meetingRoutes'));
+app.use('/api/reviews', protect, require('./Routes/reviewRoutes'));
+app.use('/api/team', protect, require('./Routes/teamRoutes'));
+app.use('/api/portal', protect, require('./Routes/portalRoutes'));
+app.use('/api/public', require('./Routes/publicRoutes'));
 
 // Fallback to SPA index.html for non-API routes
 app.get('*', (req, res) => {

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Clientsy | Minimalist Cabinet</title>
+  <title>Clientsy | Streamlined Freelance Workspace</title>
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,57 +13,664 @@
   <!-- Stylesheets -->
   <link rel="stylesheet" href="/css/style.css">
 </head>
-<body class="dark-theme">
-  <!-- Workspace Container -->
-  <div class="workspace-layout">
+<body>
+  <!-- App Container -->
+  <div class="app-container" id="app-container">
     
-    <!-- Top Minimal Header -->
-    <header class="workspace-header">
-      <div class="header-brand">
-        <div class="logo-icon">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar" id="app-sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-logo">
           <i data-lucide="folder-closed"></i>
         </div>
-        <span class="logo-text">Clientsy</span>
+        <span class="sidebar-brand-name">Clientsy</span>
       </div>
       
-      <div class="header-search">
-        <div class="search-input-wrapper">
-          <i data-lucide="search" class="search-icon"></i>
-          <input type="text" id="global-search" placeholder="Search clients, folders or files...">
+      <nav class="sidebar-menu">
+        <div class="menu-item active" data-view="dashboard">
+          <i data-lucide="layout-dashboard"></i>
+          <span>Dashboard</span>
         </div>
-      </div>
+        <div class="menu-item" data-view="leads">
+          <i data-lucide="columns-3"></i>
+          <span>CRM Leads</span>
+        </div>
+        <div class="menu-item" data-view="clients">
+          <i data-lucide="folder-open"></i>
+          <span>Clients Vault</span>
+        </div>
+        <div class="menu-item" data-view="projects">
+          <i data-lucide="kanban-square"></i>
+          <span>Projects</span>
+        </div>
+        <div class="menu-item" data-view="invoices">
+          <i data-lucide="receipt-text"></i>
+          <span>Invoices & Quotes</span>
+        </div>
+        <div class="menu-item" data-view="proposals">
+          <i data-lucide="file-signature"></i>
+          <span>Proposals</span>
+        </div>
+        <div class="menu-item" data-view="intakes">
+          <i data-lucide="file-text"></i>
+          <span>Intake Forms</span>
+        </div>
+        <div class="menu-item" data-view="meetings">
+          <i data-lucide="calendar"></i>
+          <span>Meetings</span>
+        </div>
+        <div class="menu-item" data-view="reviews">
+          <i data-lucide="badge-check"></i>
+          <span>Client Reviews</span>
+        </div>
+        <div class="menu-item" data-view="team">
+          <i data-lucide="users"></i>
+          <span>Team Members</span>
+        </div>
+      </nav>
       
-      <div class="header-profile">
-        <div class="user-avatar" id="header-avatar" title="Developer Profile">DV</div>
-        <span class="user-name-span" id="header-name">Developer</span>
-        <button class="icon-btn-logout" id="btn-logout" title="Sign Out">
+      <div class="sidebar-footer">
+        <div class="footer-profile">
+          <div class="footer-avatar" id="footer-avatar">DV</div>
+          <div class="profile-info">
+            <span class="profile-name" id="footer-name">Developer</span>
+            <span class="profile-role" id="footer-role">Developer</span>
+          </div>
+        </div>
+        <button class="btn-logout" id="btn-logout" title="Sign Out">
           <i data-lucide="log-out"></i>
         </button>
       </div>
-    </header>
+    </aside>
 
-    <!-- Main Workspace Area -->
-    <main class="cabinet-container">
-      <div class="cabinet-title-row">
-        <div>
-          <h1 class="cabinet-heading">My Cabinet</h1>
-          <p class="cabinet-subheading" id="cabinet-stats-text">Loading folders...</p>
+    <!-- Main Section Panel -->
+    <main class="main-content">
+      <!-- Top header bar -->
+      <header class="main-header no-print">
+        <div class="header-title-area">
+          <h2 id="header-view-title">Dashboard</h2>
         </div>
-        <button class="btn btn-primary" id="btn-new-folder">
-          <i data-lucide="folder-plus"></i>
-          <span>Create Folder</span>
-        </button>
-      </div>
+        <div class="search-bar-wrapper">
+          <i data-lucide="search"></i>
+          <input type="text" id="global-search" placeholder="Search across space...">
+        </div>
+      </header>
 
-      <!-- Clients Folder Grid -->
-      <div class="folders-grid" id="folders-grid-container">
-        <!-- Dynamic folders go here -->
-        <div class="text-center py-5 col-span-full"><div class="spinner"></div></div>
-      </div>
+      <!-- View 1: Dashboard -->
+      <section class="screen-panel active" id="view-dashboard">
+        <div class="screen-title-row">
+          <div>
+            <h1>Dashboard</h1>
+            <p>Your operations rolled up into one beautiful summary</p>
+          </div>
+          <div class="flex gap-2">
+            <button class="btn btn-secondary btn-sm" onclick="triggerMockDataSync()">
+              <i data-lucide="refresh-cw"></i>
+              <span>Refresh Metrics</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Dashboard Stat Cards -->
+        <div class="grid-4" style="margin-bottom: 2rem;">
+          <div class="card stat-card">
+            <div class="stat-icon revenue">
+              <i data-lucide="trending-up"></i>
+            </div>
+            <div class="stat-details">
+              <span class="stat-val" id="dash-stat-revenue">₹0</span>
+              <span class="stat-lbl">Revenue</span>
+            </div>
+          </div>
+          <div class="card stat-card">
+            <div class="stat-icon clients">
+              <i data-lucide="users"></i>
+            </div>
+            <div class="stat-details">
+              <span class="stat-val" id="dash-stat-clients">0</span>
+              <span class="stat-lbl">Active Clients</span>
+            </div>
+          </div>
+          <div class="card stat-card">
+            <div class="stat-icon projects">
+              <i data-lucide="briefcase"></i>
+            </div>
+            <div class="stat-details">
+              <span class="stat-val" id="dash-stat-projects">0</span>
+              <span class="stat-lbl">Projects</span>
+            </div>
+          </div>
+          <div class="card stat-card">
+            <div class="stat-icon invoices">
+              <i data-lucide="file-text"></i>
+            </div>
+            <div class="stat-details">
+              <span class="stat-val" id="dash-stat-invoices">0</span>
+              <span class="stat-lbl">Outstanding</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Google Calendar Integration Widget -->
+        <div class="card" id="google-calendar-banner" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; padding: 1.25rem 1.5rem; background-color: var(--primary-alpha); border: 1px solid var(--border-color); border-radius: var(--radius-md); gap: 1rem; flex-wrap: wrap;">
+          <div style="display: flex; align-items: center; gap: 0.75rem;">
+            <i data-lucide="calendar" style="color: var(--primary); width: 24px; height: 24px; flex-shrink: 0;"></i>
+            <div>
+              <h4 style="font-family: var(--font-display); font-weight: 700; font-size: 0.95rem; color: var(--text-main);">Google Calendar Sync</h4>
+              <p class="text-muted" id="google-calendar-status-text" style="font-size: 0.8rem; margin-top: 0.15rem;">Sync scheduled meetings automatically to your Google Calendar.</p>
+            </div>
+          </div>
+          <a href="/api/auth/google" id="btn-connect-google-calendar" class="btn btn-primary btn-sm" style="text-decoration: none;">
+            <i data-lucide="refresh-cw"></i>
+            <span id="btn-connect-google-calendar-text">Connect Google</span>
+          </a>
+        </div>
+
+        <div class="grid-2">
+          <!-- Left: Revenue Analytics Chart (SVG) -->
+          <div class="card">
+            <h3 style="margin-bottom: 1rem; font-family: var(--font-display);">Revenue Analytics</h3>
+            <div id="revenue-chart-container" style="height: 220px; display: flex; align-items: flex-end; justify-content: space-between; padding: 1rem 0;">
+              <!-- Dynamic SVG Graph Bar -->
+            </div>
+            <div style="display: flex; justify-content: space-between; border-top: 1px solid var(--border-color); padding-top: 0.75rem; font-size: 0.75rem; color: var(--text-muted);">
+              <span>Jan</span><span>Feb</span><span>Mar</span><span>Apr</span><span>May</span><span>Jun</span><span>Jul</span><span>Aug</span><span>Sep</span><span>Oct</span><span>Nov</span><span>Dec</span>
+            </div>
+          </div>
+          <!-- Right: Recent Activities & Deadlines -->
+          <div class="card">
+            <h3 style="margin-bottom: 1rem; font-family: var(--font-display);">Upcoming & Recent</h3>
+            <div style="display: flex; flex-direction: column; gap: 1rem;" id="dashboard-recent-list">
+              <div class="text-center py-4 text-muted">No recent items to show.</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- View 2: CRM Lead Pipeline -->
+      <section class="screen-panel" id="view-leads">
+        <div class="screen-title-row">
+          <div>
+            <h1>CRM Lead Pipeline</h1>
+            <p>Track prospective leads from first contact to close</p>
+          </div>
+          <button class="btn btn-primary" id="btn-new-lead">
+            <i data-lucide="plus"></i>
+            <span>Add Lead</span>
+          </button>
+        </div>
+        
+        <div class="kanban-board" id="crm-kanban-board">
+          <!-- Dynamic CRM columns -->
+          <div class="kanban-column" data-stage="new">
+            <div class="column-header">
+              <span class="column-title">New Lead</span>
+              <span class="column-count" id="count-lead-new">0</span>
+            </div>
+            <div class="column-cards" id="cards-lead-new"></div>
+          </div>
+          <div class="kanban-column" data-stage="in-talks">
+            <div class="column-header">
+              <span class="column-title">In Talks</span>
+              <span class="column-count" id="count-lead-talks">0</span>
+            </div>
+            <div class="column-cards" id="cards-lead-talks"></div>
+          </div>
+          <div class="kanban-column" data-stage="proposal-sent">
+            <div class="column-header">
+              <span class="column-title">Proposal Sent</span>
+              <span class="column-count" id="count-lead-sent">0</span>
+            </div>
+            <div class="column-cards" id="cards-lead-sent"></div>
+          </div>
+          <div class="kanban-column" data-stage="won">
+            <div class="column-header">
+              <span class="column-title">Won</span>
+              <span class="column-count" id="count-lead-won">0</span>
+            </div>
+            <div class="column-cards" id="cards-lead-won"></div>
+          </div>
+          <div class="kanban-column" data-stage="lost">
+            <div class="column-header">
+              <span class="column-title">Lost</span>
+              <span class="column-count" id="count-lead-lost">0</span>
+            </div>
+            <div class="column-cards" id="cards-lead-lost"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- View 3: Clients Vault (Grid directories) -->
+      <section class="screen-panel" id="view-clients">
+        <div class="screen-title-row">
+          <div>
+            <h1>Clients Vault</h1>
+            <p>Access your clients' folder cabinets, contracts, and history</p>
+          </div>
+          <button class="btn btn-primary" id="btn-new-client">
+            <i data-lucide="folder-plus"></i>
+            <span>Create Folder</span>
+          </button>
+        </div>
+
+        <!-- Cabinets Tab Filters -->
+        <div style="display: flex; gap: 1rem; border-bottom: 1px solid var(--border-color); margin-bottom: 1.5rem; padding-bottom: 0.5rem;">
+          <div class="drawer-tab active" id="tab-clients-active" onclick="filterClientsVault('active')">Active Cabinets</div>
+          <div class="drawer-tab" id="tab-clients-completed" onclick="filterClientsVault('completed')">Completed Cabinets</div>
+        </div>
+
+        <div class="folders-grid" id="folders-grid-container">
+          <!-- Dynamic folder cards -->
+        </div>
+      </section>
+
+      <!-- View 4: Projects (Kanban task boards) -->
+      <section class="screen-panel" id="view-projects">
+        <div class="screen-title-row">
+          <div>
+            <h1>Projects</h1>
+            <p>Manage project timelines, tasks, and budgets</p>
+          </div>
+          <button class="btn btn-primary" id="btn-new-project">
+            <i data-lucide="plus"></i>
+            <span>New Project</span>
+          </button>
+        </div>
+
+        <!-- Projects Tab Filters -->
+        <div style="display: flex; gap: 1rem; border-bottom: 1px solid var(--border-color); margin-bottom: 1.5rem; padding-bottom: 0.5rem;">
+          <div class="drawer-tab active" id="tab-projects-active" onclick="filterProjectsView('active')">Active Projects</div>
+          <div class="drawer-tab" id="tab-projects-completed" onclick="filterProjectsView('completed')">Completed Projects</div>
+        </div>
+
+        <div style="display: flex; gap: 1.5rem; flex-wrap: wrap; margin-bottom: 1.5rem;" id="projects-selector-row">
+          <!-- Selection buttons to toggle project tasks board -->
+        </div>
+        <div class="card" id="project-board-card" style="display: none;">
+          <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 1rem; margin-bottom: 1.5rem;">
+            <div>
+              <h2 id="proj-board-name" style="font-family: var(--font-display);">Project Board</h2>
+              <p class="text-muted" id="proj-board-meta">Client • Budget: ₹0</p>
+            </div>
+            <div style="display: flex; gap: 0.5rem; align-items: center;">
+              <button class="btn btn-secondary btn-sm" id="btn-add-proj-task">
+                <i data-lucide="check-square"></i>
+                <span>Add Task</span>
+              </button>
+              <button class="btn btn-secondary btn-sm" id="btn-complete-project" onclick="toggleActiveProjectComplete()" style="background-color: var(--success-alpha); color: var(--success); border-color: var(--success-alpha);">
+                <i data-lucide="check-circle"></i>
+                <span id="btn-complete-project-text">Complete Project</span>
+              </button>
+              <button class="btn btn-text btn-sm" id="btn-edit-project-details" style="color: var(--primary);">
+                <i data-lucide="edit"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="kanban-board" id="project-tasks-kanban" style="height: 420px;">
+            <div class="kanban-column" data-task-status="to-do">
+              <div class="column-header">
+                <span class="column-title">To Do</span>
+                <span class="column-count" id="count-task-todo">0</span>
+              </div>
+              <div class="column-cards" id="cards-task-todo"></div>
+            </div>
+            <div class="kanban-column" data-task-status="doing">
+              <div class="column-header">
+                <span class="column-title">Doing</span>
+                <span class="column-count" id="count-task-doing">0</span>
+              </div>
+              <div class="column-cards" id="cards-task-doing"></div>
+            </div>
+            <div class="kanban-column" data-task-status="done">
+              <div class="column-header">
+                <span class="column-title">Done</span>
+                <span class="column-count" id="count-task-done">0</span>
+              </div>
+              <div class="column-cards" id="cards-task-done"></div>
+            </div>
+          </div>
+        </div>
+
+        <div id="no-projects-view" class="text-center py-5">
+          <i data-lucide="briefcase" class="empty-icon text-muted" style="width: 48px; height: 48px; opacity: 0.3; margin-bottom: 1rem; display: inline-block;"></i>
+          <h3 class="text-muted">Select or create a project to display the task board.</h3>
+        </div>
+      </section>
+
+      <!-- View 5: Invoices & Quotations -->
+      <section class="screen-panel" id="view-invoices">
+        <div class="screen-title-row">
+          <div>
+            <h1>Invoices & Quotations</h1>
+            <p>Generate branded itemized PDFs and track payments in ₹</p>
+          </div>
+          <button class="btn btn-primary" id="btn-new-invoice">
+            <i data-lucide="plus"></i>
+            <span>Create Invoice / Quote</span>
+          </button>
+        </div>
+
+        <div class="card" style="padding: 0; overflow: hidden;">
+          <table>
+            <thead>
+              <tr>
+                <th>Document ID</th>
+                <th>Client</th>
+                <th>Type</th>
+                <th>Total (GST incl.)</th>
+                <th>Issue Date</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="invoices-table-body">
+              <tr>
+                <td colspan="7" class="text-center py-4 text-muted">No records found.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- View 6: Proposals -->
+      <section class="screen-panel" id="view-proposals">
+        <div class="screen-title-row">
+          <div>
+            <h1>Proposals</h1>
+            <p>Build Scope of Work templates and get them signed digitally</p>
+          </div>
+          <button class="btn btn-primary" id="btn-new-proposal">
+            <i data-lucide="plus"></i>
+            <span>New Proposal</span>
+          </button>
+        </div>
+
+        <div class="card" style="padding: 0; overflow: hidden;">
+          <table>
+            <thead>
+              <tr>
+                <th>Proposal Title</th>
+                <th>Client</th>
+                <th>Status</th>
+                <th>Signed By</th>
+                <th>Signed Date</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="proposals-table-body">
+              <tr>
+                <td colspan="6" class="text-center py-4 text-muted">No proposals found.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- View 7: Intake Forms -->
+      <section class="screen-panel" id="view-intakes">
+        <div class="screen-title-row">
+          <div>
+            <h1>Intake Forms</h1>
+            <p>Share tokenized onboarding forms with clients to retrieve details</p>
+          </div>
+          <button class="btn btn-primary" id="btn-new-intake">
+            <i data-lucide="plus"></i>
+            <span>New Intake Form</span>
+          </button>
+        </div>
+
+        <div class="card" style="padding: 0; overflow: hidden;">
+          <table>
+            <thead>
+              <tr>
+                <th>Form Title</th>
+                <th>Client Folder</th>
+                <th>Public URL</th>
+                <th>Submissions</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="intakes-table-body">
+              <tr>
+                <td colspan="5" class="text-center py-4 text-muted">No intake templates defined.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- View 8: Meetings -->
+      <section class="screen-panel" id="view-meetings">
+        <div class="screen-title-row">
+          <div>
+            <h1>Meetings</h1>
+            <p>Schedule syncs and auto-generate Google Meet invitations</p>
+          </div>
+          <button class="btn btn-primary" id="btn-new-meeting">
+            <i data-lucide="plus"></i>
+            <span>Schedule Meeting</span>
+          </button>
+        </div>
+
+        <div class="card" style="padding: 0; overflow: hidden;">
+          <table>
+            <thead>
+              <tr>
+                <th>Topic</th>
+                <th>Client</th>
+                <th>Scheduled Date / Time</th>
+                <th>Google Meet URL</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="meetings-table-body">
+              <tr>
+                <td colspan="5" class="text-center py-4 text-muted">No scheduled meetings.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- View 9: Client Reviews -->
+      <section class="screen-panel" id="view-reviews">
+        <div class="screen-title-row">
+          <div>
+            <h1>Verified Reviews</h1>
+            <p>Share your credentials and display testimonials automatically</p>
+          </div>
+        </div>
+
+        <div class="grid-3" style="margin-bottom: 2rem;">
+          <div class="card">
+            <h3 style="font-family: var(--font-display); margin-bottom: 0.5rem;">Embed Badge</h3>
+            <p class="text-muted" style="font-size: 0.8rem;">Display your average rating on your portfolio site using this code snippet:</p>
+            <div class="badge-code-box" id="badge-snippet-code">
+&lt;iframe src="http://localhost:5000/reviews-badge" width="150" height="40" style="border:none"&gt;&lt;/iframe&gt;
+            </div>
+            <button class="btn btn-secondary btn-sm" onclick="copyBadgeSnippet()">
+              <i data-lucide="copy"></i>
+              <span>Copy Embed Link</span>
+            </button>
+          </div>
+          <div class="card" style="grid-column: span 2;">
+            <h3 style="font-family: var(--font-display); margin-bottom: 0.5rem;">Your Public Review Portfolio</h3>
+            <p class="text-muted" style="font-size: 0.8rem; margin-bottom: 0.75rem;">Clients can read reviews left by other clients at this public endpoint:</p>
+            <div class="badge-code-box" id="reviews-portfolio-url" style="background-color: var(--primary-alpha); color: var(--primary);">
+              http://localhost:5000/?reviews=userId
+            </div>
+            <a href="#" id="btn-view-public-portfolio" target="_blank" class="btn btn-primary btn-sm">
+              <i data-lucide="external-link"></i>
+              <span>View Portfolio Page</span>
+            </a>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3 style="font-family: var(--font-display); margin-bottom: 1rem;">Client Testimonials Feed</h3>
+          <div id="reviews-feed-container" class="space-y-4">
+            <div class="text-center py-4 text-muted">No client reviews logged yet.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- View 10: Team Management -->
+      <section class="screen-panel" id="view-team">
+        <div class="screen-title-row">
+          <div>
+            <h1>Team Management</h1>
+            <p>Collaborate with developers, designers, and track payments</p>
+          </div>
+          <button class="btn btn-primary" id="btn-new-team">
+            <i data-lucide="plus"></i>
+            <span>Add Member</span>
+          </button>
+        </div>
+
+        <div class="card" style="padding: 0; overflow: hidden;">
+          <table>
+            <thead>
+              <tr>
+                <th>Member Name</th>
+                <th>Email Address</th>
+                <th>Role / Status</th>
+                <th>Paid Sum</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="team-table-body">
+              <tr>
+                <td colspan="5" class="text-center py-4 text-muted">No team members added.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- View 11: Client Portal View -->
+      <section class="screen-panel" id="view-client-portal">
+        <div class="screen-title-row">
+          <div>
+            <h1 id="client-portal-title">Client Workspace</h1>
+            <p id="client-portal-subtitle">Welcome back! Review project status and sign files below</p>
+          </div>
+          <span class="badge badge-active" style="padding: 0.5rem 1rem;">Client Portal</span>
+        </div>
+
+        <div class="grid-2">
+          <!-- Left Col: Projects & Proposals -->
+          <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+            <div class="card">
+              <h3 style="font-family: var(--font-display); margin-bottom: 1rem;">My Active Projects</h3>
+              <div id="client-portal-projects" style="display: flex; flex-direction: column; gap: 1rem;">
+                <div class="text-center py-4 text-muted">No assigned projects yet.</div>
+              </div>
+            </div>
+            <div class="card">
+              <h3 style="font-family: var(--font-display); margin-bottom: 1rem;">Contracts & Proposals to Review</h3>
+              <div id="client-portal-proposals" style="display: flex; flex-direction: column; gap: 1rem;">
+                <div class="text-center py-4 text-muted">No pending documents to sign.</div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Right Col: Invoices & Forms -->
+          <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+            <div class="card">
+              <h3 style="font-family: var(--font-display); margin-bottom: 1rem;">Billing & Invoices</h3>
+              <div id="client-portal-invoices" style="display: flex; flex-direction: column; gap: 1rem;">
+                <div class="text-center py-4 text-muted">No invoices raised.</div>
+              </div>
+            </div>
+            <div class="card">
+              <h3 style="font-family: var(--font-display); margin-bottom: 1rem;">Onboarding & Intake Forms</h3>
+              <div id="client-portal-intakes" style="display: flex; flex-direction: column; gap: 1rem;">
+                <div class="text-center py-4 text-muted">No pending forms.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- View 12: Public Onboarding Intake form screen (Full page template) -->
+      <section class="screen-panel" id="view-public-intake" style="padding: 0;">
+        <div class="public-form-body">
+          <h1 id="public-intake-title" style="font-family: var(--font-display); margin-bottom: 0.5rem; text-align: center;">Onboarding Intake</h1>
+          <p id="public-intake-desc" class="text-muted" style="text-align: center; margin-bottom: 2rem;">Please fill out this quick form so we can align details.</p>
+          <form id="public-intake-form-el">
+            <div id="public-intake-fields-container"></div>
+            <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Submit Response</button>
+          </form>
+        </div>
+      </section>
+
+      <!-- View 13: Public Reviews Portfolio Page (Full page template) -->
+      <section class="screen-panel" id="view-public-reviews" style="padding: 2rem; max-width: 800px; margin: 0 auto;">
+        <div class="card" style="text-align: center; margin-bottom: 2rem; padding: 2.5rem;">
+          <h1 id="public-portfolio-title" style="font-family: var(--font-display); margin-bottom: 0.5rem;">Client Testimonials</h1>
+          <p class="text-muted" id="public-portfolio-subtitle">Verified feedback from completed projects</p>
+          <div style="font-size: 2rem; color: var(--warning); margin-top: 1rem;" id="public-portfolio-stars">★★★★★</div>
+          <div style="font-size: 0.9rem; font-weight: 600; margin-top: 0.5rem;" id="public-portfolio-avg">5.0 / 5.0 Star Rating</div>
+        </div>
+        <div id="public-portfolio-feed" style="display: flex; flex-direction: column; gap: 1rem;">
+          <!-- Testimonials -->
+        </div>
+      </section>
+
+      <!-- Print layout (Only styled visible on @media print) -->
+      <section class="printable-invoice-container" id="printable-invoice-block">
+        <div class="invoice-print-header">
+          <div>
+            <h1 style="font-family: var(--font-display); font-size: 2.5rem; color: var(--primary);">INVOICE</h1>
+            <p id="print-invoice-num">INV-2026-000</p>
+          </div>
+          <div style="text-align: right;">
+            <h3 id="print-developer-name">Agency Name</h3>
+            <p id="print-developer-email">email@agency.com</p>
+          </div>
+        </div>
+        
+        <div style="display: flex; justify-content: space-between; margin-bottom: 2.5rem; border-top: 1px solid #e5e7eb; padding-top: 1.5rem;">
+          <div>
+            <strong>BILLED TO:</strong>
+            <p id="print-client-name">Client Name</p>
+            <p id="print-client-company">Company</p>
+            <p id="print-client-address">Street Address</p>
+          </div>
+          <div style="text-align: right;">
+            <p><strong>DATE OF ISSUE:</strong> <span id="print-date-issue">July 15, 2026</span></p>
+            <p><strong>DUE DATE:</strong> <span id="print-date-due">July 30, 2026</span></p>
+          </div>
+        </div>
+        
+        <table>
+          <thead>
+            <tr>
+              <th style="width: 60%;">Description</th>
+              <th style="text-align: right;">Qty</th>
+              <th style="text-align: right;">Rate</th>
+              <th style="text-align: right;">Amount</th>
+            </tr>
+          </thead>
+          <tbody id="print-items-body"></tbody>
+        </table>
+        
+        <div style="display: flex; justify-content: flex-end; margin-top: 2rem;">
+          <div style="width: 300px; text-align: right; line-height: 1.8;">
+            <p>Subtotal: <span id="print-subtotal">₹0.00</span></p>
+            <p>GST (18%): <span id="print-gst">₹0.00</span></p>
+            <p style="font-size: 1.25rem; font-weight: 800; border-top: 2px solid black; padding-top: 0.5rem; margin-top: 0.5rem;">
+              Total: <span id="print-total">₹0.00</span>
+            </p>
+          </div>
+        </div>
+        <div style="margin-top: 4rem; border-top: 1px solid #e5e7eb; padding-top: 1rem; font-size: 0.85rem; color: #6b7280;" id="print-notes-area"></div>
+      </section>
     </main>
   </div>
 
-  <!-- SLIDE OUT CLIENT DRAWER (Client Files Pocket) -->
+  <!-- SLIDE OUT CLIENT DRAWER -->
   <div class="drawer-overlay" id="folder-drawer-overlay"></div>
   <aside class="folder-drawer" id="folder-drawer">
     <div class="drawer-header">
@@ -77,64 +684,90 @@
     </div>
     
     <div class="drawer-body">
-      <!-- Info Section -->
-      <div class="drawer-meta-section">
-        <div class="meta-row">
-          <div class="meta-item">
-            <span class="meta-label">Email</span>
-            <span class="meta-val" id="drawer-email">-</span>
+      <!-- Tabs -->
+      <div class="drawer-tabs">
+        <div class="drawer-tab active" data-tab="overview">Overview</div>
+        <div class="drawer-tab" data-tab="files">Files</div>
+        <div class="drawer-tab" data-tab="projects">Projects</div>
+        <div class="drawer-tab" data-tab="billing">Invoices</div>
+      </div>
+
+      <!-- Tab 1: Overview -->
+      <div class="drawer-tab-content active" id="tab-overview">
+        <div class="drawer-meta-section">
+          <div class="meta-row">
+            <div class="meta-item">
+              <span class="meta-label">Email</span>
+              <span class="meta-val" id="drawer-email">-</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Phone</span>
+              <span class="meta-val" id="drawer-phone">-</span>
+            </div>
           </div>
-          <div class="meta-item">
-            <span class="meta-label">Phone</span>
-            <span class="meta-val" id="drawer-phone">-</span>
+          <div class="meta-row">
+            <div class="meta-item">
+              <span class="meta-label">Website</span>
+              <span class="meta-val" id="drawer-website">-</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Address</span>
+              <span class="meta-val" id="drawer-address">-</span>
+            </div>
           </div>
-        </div>
-        <div class="meta-row">
-          <div class="meta-item">
-            <span class="meta-label">Website</span>
-            <span class="meta-val" id="drawer-website">-</span>
+          <div class="meta-item mt-2">
+            <span class="meta-label">Tags</span>
+            <div class="tag-list mt-1" id="drawer-tags"></div>
           </div>
-          <div class="meta-item">
-            <span class="meta-label">Address</span>
-            <span class="meta-val" id="drawer-address">-</span>
+          <div class="meta-item mt-2" id="drawer-notes-wrapper">
+            <span class="meta-label">Folder Notes</span>
+            <p class="notes-para" id="drawer-notes">-</p>
           </div>
-        </div>
-        <div class="meta-item mt-2">
-          <span class="meta-label">Tags</span>
-          <div class="tag-list mt-1" id="drawer-tags">
-            <!-- Dynamic tags -->
+          
+          <div class="drawer-actions-row" style="margin-top: 1.5rem; display: flex; gap: 0.5rem;">
+            <button class="btn btn-secondary btn-sm" id="btn-edit-client">
+              <i data-lucide="edit"></i>
+              <span>Edit Details</span>
+            </button>
+            <button class="btn btn-secondary btn-sm text-danger" id="btn-delete-client">
+              <i data-lucide="trash-2"></i>
+              <span>Delete Folder</span>
+            </button>
           </div>
-        </div>
-        <div class="meta-item mt-2" id="drawer-notes-wrapper">
-          <span class="meta-label">Folder Notes</span>
-          <p class="notes-para" id="drawer-notes">-</p>
-        </div>
-        
-        <div class="drawer-actions-row">
-          <button class="btn btn-secondary btn-sm" id="btn-edit-client">
-            <i data-lucide="edit"></i>
-            <span>Edit Details</span>
-          </button>
-          <button class="btn btn-secondary btn-sm text-danger" id="btn-delete-client">
-            <i data-lucide="trash-2"></i>
-            <span>Delete Folder</span>
-          </button>
         </div>
       </div>
 
-      <!-- Files Section (Cabinet Pocket) -->
-      <div class="drawer-files-section">
-        <div class="files-header">
+      <!-- Tab 2: Files -->
+      <div class="drawer-tab-content" id="tab-files">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
           <h3>Files Pocket (<span id="drawer-files-count">0</span>)</h3>
           <button class="btn btn-primary btn-sm" id="btn-upload-file">
             <i data-lucide="upload"></i>
             <span>Upload File</span>
           </button>
         </div>
-        
-        <div class="drawer-files-list" id="drawer-files-list-container">
-          <!-- Dynamic document list -->
+        <div class="drawer-files-list" id="drawer-files-list-container" style="display: flex; flex-direction: column; gap: 0.75rem;">
           <div class="text-center py-4 text-muted">No files in this folder.</div>
+        </div>
+      </div>
+
+      <!-- Tab 3: Projects -->
+      <div class="drawer-tab-content" id="tab-projects">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+          <h3>Projects</h3>
+        </div>
+        <div id="drawer-projects-list" style="display: flex; flex-direction: column; gap: 0.75rem;">
+          <div class="text-center py-4 text-muted">No projects.</div>
+        </div>
+      </div>
+
+      <!-- Tab 4: Billing -->
+      <div class="drawer-tab-content" id="tab-billing">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+          <h3>Invoices & Quotes</h3>
+        </div>
+        <div id="drawer-invoices-list" style="display: flex; flex-direction: column; gap: 0.75rem;">
+          <div class="text-center py-4 text-muted">No invoices.</div>
         </div>
       </div>
     </div>
@@ -155,12 +788,12 @@
         <input type="hidden" id="client-form-id">
         <div class="form-row">
           <div class="form-group col-6">
-            <label for="client-name" class="required-label">Folder Title</label>
-            <input type="text" id="client-name" required placeholder="e.g. John Doe">
+            <label for="client-name" class="required-label">Client Name</label>
+            <input type="text" id="client-name" required placeholder="e.g. Rohan D.">
           </div>
           <div class="form-group col-6">
             <label for="client-company">Company</label>
-            <input type="text" id="client-company" placeholder="e.g. Acme Inc">
+            <input type="text" id="client-company" placeholder="e.g. Acme Studio">
           </div>
         </div>
         <div class="form-row">
@@ -170,47 +803,72 @@
           </div>
           <div class="form-group col-6">
             <label for="client-phone">Phone Number</label>
-            <input type="tel" id="client-phone" placeholder="+1 (555) 000-0000">
+            <input type="tel" id="client-phone" placeholder="+91 99999 99999">
           </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-6">
+            <label for="client-status">Status</label>
+            <select id="client-status">
+              <option value="active">Active Client</option>
+              <option value="lead">CRM Lead</option>
+              <option value="on-hold">On Hold</option>
+              <option value="completed">Completed Client</option>
+            </select>
+          </div>
+          <div class="form-group col-6" id="client-lead-fields" style="display: none;">
+            <label for="client-lead-stage">Lead Stage</label>
+            <select id="client-lead-stage">
+              <option value="new">New Lead</option>
+              <option value="in-talks">In Talks</option>
+              <option value="proposal-sent">Proposal Sent</option>
+              <option value="won">Won (Convert to Client)</option>
+              <option value="lost">Lost</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group" id="client-value-field" style="display: none;">
+          <label for="client-lead-value">Est. Deal Value (₹)</label>
+          <input type="number" id="client-lead-value" placeholder="e.g. 45000" value="0">
         </div>
         <div class="form-group">
           <label for="client-website">Website</label>
           <input type="url" id="client-website" placeholder="https://example.com">
         </div>
-        <fieldset class="form-fieldset">
-          <legend>Address Details</legend>
-          <div class="form-row">
-            <div class="form-group col-12">
-              <label for="client-street">Street</label>
-              <input type="text" id="client-street" placeholder="123 Freelancer Lane">
-            </div>
+        <fieldset style="border: 1px solid var(--border-color); padding: 1rem; border-radius: var(--radius-sm); margin-bottom: 1.25rem;">
+          <legend style="padding: 0 0.5rem; font-size: 0.8rem; font-weight: 600;">Address Details</legend>
+          <div class="form-group">
+            <label for="client-street">Street</label>
+            <input type="text" id="client-street" placeholder="123 Freelancer Lane">
           </div>
           <div class="form-row">
-            <div class="form-group col-4">
+            <div class="form-group col-6">
               <label for="client-city">City</label>
               <input type="text" id="client-city" placeholder="Seattle">
             </div>
-            <div class="form-group col-4">
+            <div class="form-group col-6">
               <label for="client-state">State</label>
               <input type="text" id="client-state" placeholder="WA">
             </div>
-            <div class="form-group col-4">
-              <label for="client-zip">Zip</label>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-6">
+              <label for="client-zip">Zip Code</label>
               <input type="text" id="client-zip" placeholder="98101">
             </div>
-          </div>
-          <div class="form-group">
-            <label for="client-country">Country</label>
-            <input type="text" id="client-country" placeholder="United States">
+            <div class="form-group col-6">
+              <label for="client-country">Country</label>
+              <input type="text" id="client-country" placeholder="India">
+            </div>
           </div>
         </fieldset>
         <div class="form-group">
           <label for="client-tags">Tags (comma-separated)</label>
-          <input type="text" id="client-tags" placeholder="e.g. active, retainer, website">
+          <input type="text" id="client-tags" placeholder="e.g. active, design-project">
         </div>
         <div class="form-group">
           <label for="client-notes">Folder Notes</label>
-          <textarea id="client-notes" rows="3" placeholder="Key relationship points, milestones, etc..."></textarea>
+          <textarea id="client-notes" rows="3" placeholder="Key relationships points..."></textarea>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-text" id="client-modal-cancel">Cancel</button>
@@ -238,23 +896,19 @@
           </div>
           <div class="form-group col-4">
             <label for="doc-category" class="required-label">Category</label>
-            <div class="select-wrapper">
-              <select id="doc-category" required>
-                <option value="invoice">Invoice</option>
-                <option value="contract">Contract</option>
-                <option value="proposal">Proposal</option>
-                <option value="receipt">Receipt</option>
-                <option value="other" selected>Other</option>
-              </select>
-            </div>
+            <select id="doc-category" required>
+              <option value="invoice">Invoice</option>
+              <option value="contract">Contract</option>
+              <option value="proposal">Proposal</option>
+              <option value="receipt">Receipt</option>
+              <option value="other" selected>Other</option>
+            </select>
           </div>
         </div>
         <div class="form-group">
           <label for="doc-description">Description</label>
           <input type="text" id="doc-description" placeholder="Brief folder note about this file...">
         </div>
-        
-        <!-- File Input Drop Zone -->
         <div class="form-group">
           <label class="required-label">Select File</label>
           <div class="file-drop-area" id="file-drop-zone">
@@ -275,10 +929,9 @@
             </button>
           </div>
         </div>
-
         <div class="form-group">
           <label for="doc-tags">Tags (comma-separated)</label>
-          <input type="text" id="doc-tags" placeholder="e.g. v2, signed, final">
+          <input type="text" id="doc-tags" placeholder="e.g. signed, final">
         </div>
         <div class="form-group">
           <label class="checkbox-label">
@@ -288,18 +941,392 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-text" id="document-modal-cancel">Cancel</button>
-          <button type="submit" class="btn btn-primary" id="document-modal-submit">Upload & File</button>
+          <button type="submit" class="btn btn-primary">Upload & File</button>
         </div>
       </form>
     </div>
   </div>
 
-  <!-- DOCUMENT PREVIEW MODAL -->
+  <!-- PROJECT MODAL (New/Edit) -->
+  <div class="modal-overlay" id="project-modal">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h2 id="project-modal-title">New Project</h2>
+        <button class="modal-close-btn" onclick="closeModal('project-modal')">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+      <form id="project-form" class="modal-body">
+        <input type="hidden" id="project-form-id">
+        <div class="form-group">
+          <label for="project-client-select" class="required-label">Client Folder</label>
+          <select id="project-client-select" required></select>
+        </div>
+        <div class="form-group">
+          <label for="project-name" class="required-label">Project Name</label>
+          <input type="text" id="project-name" required placeholder="e.g. Website redesign">
+        </div>
+        <div class="form-group">
+          <label for="project-desc">Description</label>
+          <textarea id="project-desc" rows="2" placeholder="Describe scope details..."></textarea>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-6">
+            <label for="project-budget">Budget (₹)</label>
+            <input type="number" id="project-budget" value="0">
+          </div>
+          <div class="form-group col-6">
+            <label for="project-deadline">Deadline</label>
+            <input type="date" id="project-deadline">
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="project-status-select">Status</label>
+          <select id="project-status-select">
+            <option value="to-do">To Do</option>
+            <option value="doing">Doing</option>
+            <option value="done">Done / Completed</option>
+          </select>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-text" onclick="closeModal('project-modal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Project</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- INVOICE/QUOTE MODAL (New/Edit) -->
+  <div class="modal-overlay" id="invoice-modal">
+    <div class="modal-container" style="max-width: 720px;">
+      <div class="modal-header">
+        <h2 id="invoice-modal-title">Create Smart Document</h2>
+        <button class="modal-close-btn" onclick="closeModal('invoice-modal')">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+      <form id="invoice-form" class="modal-body">
+        <input type="hidden" id="invoice-form-id">
+        <div class="form-row">
+          <div class="form-group col-6">
+            <label for="invoice-client-select" class="required-label">Client Folder</label>
+            <select id="invoice-client-select" required></select>
+          </div>
+          <div class="form-group col-6">
+            <label for="invoice-type" class="required-label">Document Type</label>
+            <select id="invoice-type" required>
+              <option value="invoice">Invoice</option>
+              <option value="quotation">Quotation</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-6">
+            <label for="invoice-number" class="required-label">Document Number</label>
+            <input type="text" id="invoice-number" required placeholder="e.g. INV-2026-001">
+          </div>
+          <div class="form-group col-6">
+            <label for="invoice-status">Status</label>
+            <select id="invoice-status">
+              <option value="draft">Draft</option>
+              <option value="sent">Sent</option>
+              <option value="paid">Paid</option>
+              <option value="approved">Approved (Quotes)</option>
+              <option value="declined">Declined (Quotes)</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-6">
+            <label for="invoice-issue-date">Issue Date</label>
+            <input type="date" id="invoice-issue-date">
+          </div>
+          <div class="form-group col-6">
+            <label for="invoice-due-date">Due Date</label>
+            <input type="date" id="invoice-due-date">
+          </div>
+        </div>
+
+        <div style="margin-top: 1rem; border-top: 1px solid var(--border-color); padding-top: 1rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+            <h4 style="font-family: var(--font-display);">Itemized List</h4>
+            <button type="button" class="btn btn-secondary btn-sm" onclick="addInvoiceItemRow()">
+              <i data-lucide="plus" style="width:14px;height:14px;"></i>
+              <span>Add Item</span>
+            </button>
+          </div>
+          
+          <table class="invoice-items-table" style="margin-top:0.5rem;">
+            <thead>
+              <tr>
+                <th style="width: 50%;">Description</th>
+                <th style="width: 15%; text-align:right;">Qty</th>
+                <th style="width: 15%; text-align:right;">Rate (₹)</th>
+                <th style="width: 15%; text-align:right;">Total</th>
+                <th style="width: 5%;"></th>
+              </tr>
+            </thead>
+            <tbody id="invoice-items-rows-container">
+              <!-- Item rows -->
+            </tbody>
+          </table>
+
+          <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 0.5rem; margin-top: 1rem; border-top: 1px solid var(--border-color); padding-top: 1rem;">
+            <div class="form-row" style="align-items: center; width: 260px;">
+              <label style="margin: 0; font-size: 0.85rem; width: 140px; text-align: right;">GST Rate (%):</label>
+              <input type="number" id="invoice-tax-rate" value="18" min="0" max="100" style="width: 100px; text-align: right;" oninput="recalcInvoiceTotals()">
+            </div>
+            <div style="font-weight: 600; font-size: 0.85rem; width: 260px; display: flex; justify-content: space-between; color: var(--text-muted);">
+              <span>Subtotal:</span>
+              <span id="invoice-calc-subtotal">₹0.00</span>
+            </div>
+            <div style="font-weight: 600; font-size: 0.85rem; width: 260px; display: flex; justify-content: space-between; color: var(--text-muted);">
+              <span>GST Amount:</span>
+              <span id="invoice-calc-tax">₹0.00</span>
+            </div>
+            <div style="font-weight: 800; font-size: 1.1rem; width: 260px; display: flex; justify-content: space-between; border-top: 1px dashed var(--border-color); padding-top: 0.5rem;">
+              <span>Total Sum:</span>
+              <span id="invoice-calc-total">₹0.00</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="invoice-notes">Internal Notes / Terms</label>
+          <textarea id="invoice-notes" rows="2" placeholder="e.g. Bank Account details..."></textarea>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-text" onclick="closeModal('invoice-modal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Document</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- PROPOSAL MODAL (New/Edit) -->
+  <div class="modal-overlay" id="proposal-modal">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h2 id="proposal-modal-title">New Proposal</h2>
+        <button class="modal-close-btn" onclick="closeModal('proposal-modal')">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+      <form id="proposal-form" class="modal-body">
+        <input type="hidden" id="proposal-form-id">
+        <div class="form-group">
+          <label for="proposal-client-select" class="required-label">Client Folder</label>
+          <select id="proposal-client-select" required></select>
+        </div>
+        <div class="form-group">
+          <label for="proposal-title" class="required-label">Proposal Title</label>
+          <input type="text" id="proposal-title" required placeholder="e.g. Product Scope of Work & Pricing">
+        </div>
+        <div class="form-group">
+          <label for="proposal-content" class="required-label">Scope Description</label>
+          <textarea id="proposal-content" rows="6" required placeholder="Describe milestones, deliverables, and rates..."></textarea>
+        </div>
+        <div class="form-group">
+          <label for="proposal-terms">Terms & Conditions</label>
+          <textarea id="proposal-terms" rows="3" placeholder="Payment terms, contract end dates, etc..."></textarea>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-text" onclick="closeModal('proposal-modal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Proposal</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- INTAKE MODAL (New/Edit) -->
+  <div class="modal-overlay" id="intake-modal">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h2 id="intake-modal-title">Configure Intake Form</h2>
+        <button class="modal-close-btn" onclick="closeModal('intake-modal')">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+      <form id="intake-form" class="modal-body">
+        <input type="hidden" id="intake-form-id">
+        <div class="form-group">
+          <label for="intake-client-select" class="required-label">Associate to Client</label>
+          <select id="intake-client-select" required></select>
+        </div>
+        <div class="form-group">
+          <label for="intake-title" class="required-label">Form Title</label>
+          <input type="text" id="intake-title" required placeholder="e.g. Design Branding Onboarding">
+        </div>
+        <div class="form-group">
+          <label for="intake-desc">Form Description</label>
+          <input type="text" id="intake-desc" placeholder="Helpful details for the client...">
+        </div>
+
+        <div style="margin-top: 1rem; border-top: 1px solid var(--border-color); padding-top: 1rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+            <h4 style="font-family: var(--font-display);">Form Fields</h4>
+            <button type="button" class="btn btn-secondary btn-sm" onclick="addIntakeFieldRow()">
+              <i data-lucide="plus" style="width:14px;height:14px;"></i>
+              <span>Add Field</span>
+            </button>
+          </div>
+          <div id="intake-fields-rows-container" style="display: flex; flex-direction: column; gap: 0.5rem;">
+            <!-- Intake fields list -->
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-text" onclick="closeModal('intake-modal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Publish Form</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MEETING MODAL -->
+  <div class="modal-overlay" id="meeting-modal">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h2>Schedule Meeting</h2>
+        <button class="modal-close-btn" onclick="closeModal('meeting-modal')">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+      <form id="meeting-form" class="modal-body">
+        <div class="form-group">
+          <label for="meeting-client-select" class="required-label">Client Folder</label>
+          <select id="meeting-client-select" required></select>
+        </div>
+        <div class="form-group">
+          <label for="meeting-title" class="required-label">Topic / Title</label>
+          <input type="text" id="meeting-title" required placeholder="e.g. Kickoff Call">
+        </div>
+        <div class="form-group">
+          <label for="meeting-desc">Description</label>
+          <input type="text" id="meeting-desc" placeholder="Agenda...">
+        </div>
+        <div class="form-row">
+          <div class="form-group col-6">
+            <label for="meeting-start" class="required-label">Start Date/Time</label>
+            <input type="datetime-local" id="meeting-start" required>
+          </div>
+          <div class="form-group col-6">
+            <label for="meeting-end" class="required-label">End Date/Time</label>
+            <input type="datetime-local" id="meeting-end" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-text" onclick="closeModal('meeting-modal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Schedule sync</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- TEAM MODAL -->
+  <div class="modal-overlay" id="team-modal">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h2>Add Team Member</h2>
+        <button class="modal-close-btn" onclick="closeModal('team-modal')">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+      <form id="team-form" class="modal-body">
+        <div class="form-group">
+          <label for="team-name" class="required-label">Full Name</label>
+          <input type="text" id="team-name" required placeholder="e.g. John Doe">
+        </div>
+        <div class="form-group">
+          <label for="team-email" class="required-label">Email Address</label>
+          <input type="email" id="team-email" required placeholder="john@developer.com">
+        </div>
+        <div class="form-group">
+          <label for="team-role" class="required-label">Role</label>
+          <input type="text" id="team-role" required placeholder="e.g. React Designer">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-text" onclick="closeModal('team-modal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Add Member</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- TEAM PAYMENT RECORD MODAL -->
+  <div class="modal-overlay" id="payment-modal">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h2>Record Team Payment</h2>
+        <button class="modal-close-btn" onclick="closeModal('payment-modal')">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+      <form id="payment-form" class="modal-body">
+        <input type="hidden" id="payment-member-id">
+        <div class="form-group">
+          <label for="payment-amount" class="required-label">Amount (₹)</label>
+          <input type="number" id="payment-amount" required placeholder="e.g. 15000">
+        </div>
+        <div class="form-group">
+          <label for="payment-date">Date</label>
+          <input type="date" id="payment-date">
+        </div>
+        <div class="form-group">
+          <label for="payment-notes">Notes</label>
+          <input type="text" id="payment-notes" placeholder="e.g. Milestone 1 payment">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-text" onclick="closeModal('payment-modal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Record Payment</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- PROJECT TASK MODAL (New/Edit) -->
+  <div class="modal-overlay" id="task-modal">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h2 id="task-modal-title">New Task</h2>
+        <button class="modal-close-btn" onclick="closeModal('task-modal')">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+      <form id="task-form" class="modal-body">
+        <input type="hidden" id="task-project-id">
+        <input type="hidden" id="task-index-id">
+        <div class="form-group">
+          <label for="task-name" class="required-label">Task Name</label>
+          <input type="text" id="task-name" required placeholder="e.g. Draft UI Wireframes">
+        </div>
+        <div class="form-group">
+          <label for="task-assignee">Assign To</label>
+          <select id="task-assignee"></select>
+        </div>
+        <div class="form-group">
+          <label for="task-status-select">Status</label>
+          <select id="task-status-select">
+            <option value="to-do">To Do</option>
+            <option value="doing">Doing</option>
+            <option value="done">Done</option>
+          </select>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-text" onclick="closeModal('task-modal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Task</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- PREVIEW MODAL -->
   <div class="modal-overlay" id="preview-modal">
-    <div class="modal-container modal-large">
+    <div class="modal-container" style="max-width: 720px;">
       <div class="modal-header">
         <h2 id="preview-title">File Preview</h2>
-        <div class="header-actions-right">
+        <div style="display: flex; gap: 0.5rem; align-items: center;">
           <a href="#" id="preview-download-btn" class="btn btn-secondary btn-sm" download>
             <i data-lucide="download"></i>
             <span>Download</span>
@@ -309,43 +1336,84 @@
           </button>
         </div>
       </div>
-      <div class="modal-body preview-modal-body">
-        <div class="preview-layout">
-          <!-- Left: Preview pane -->
-          <div class="preview-viewer" id="preview-viewer-container">
-            <!-- Filled dynamically -->
-          </div>
-          <!-- Right: Document Info -->
-          <div class="preview-meta">
-            <div class="meta-section">
-              <span class="meta-label">Folder Directory</span>
-              <span class="meta-value" id="preview-client">-</span>
-            </div>
-            <div class="meta-section">
-              <span class="meta-label">Category</span>
-              <span class="meta-value badge" id="preview-category">-</span>
-            </div>
-            <div class="meta-section">
-              <span class="meta-label">Format / Size</span>
-              <span class="meta-value" id="preview-details">-</span>
-            </div>
-            <div class="meta-section">
-              <span class="meta-label">Date Uploaded</span>
-              <span class="meta-value" id="preview-date">-</span>
-            </div>
-            <div class="meta-section border-none">
-              <span class="meta-label">File Description</span>
-              <p class="meta-desc" id="preview-desc">No description.</p>
-            </div>
-            <div class="meta-section border-none">
-              <span class="meta-label">Tags</span>
-              <div class="tag-list" id="preview-tags">
-                <!-- tags -->
-              </div>
-            </div>
-          </div>
+      <div class="modal-body">
+        <div class="preview-viewer" id="preview-viewer-container" style="height: 380px; overflow: auto; text-align: center; border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 1rem; background-color: #faf9f6;">
+          <!-- Content dynamically rendered -->
+        </div>
+        <div style="margin-top: 1rem; display: flex; flex-direction: column; gap: 0.5rem;" class="no-print">
+          <div><strong>Category:</strong> <span class="badge" id="preview-category"></span></div>
+          <div><strong>File Details:</strong> <span id="preview-details"></span></div>
+          <div><strong>Uploaded:</strong> <span id="preview-date"></span></div>
+          <div><strong>Description:</strong> <span id="preview-desc"></span></div>
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- CLIENT PORTAL: SIGNATURE MODAL -->
+  <div class="modal-overlay" id="signature-modal">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h2>Draw E-Signature</h2>
+        <button class="modal-close-btn" onclick="closeModal('signature-modal')">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p class="text-muted" style="font-size:0.8rem; margin-bottom: 0.75rem;">Draw your signature inside the area. Click "Sign Proposal" to apply legally.</p>
+        <div class="signature-pad-container">
+          <canvas class="signature-canvas" id="sig-pad-canvas"></canvas>
+          <div class="signature-pad-actions">
+            <button class="btn btn-secondary btn-sm" onclick="clearSignaturePad()">Clear Pad</button>
+          </div>
+        </div>
+        <div class="form-group" style="margin-top: 1rem;">
+          <label for="signature-name-input" class="required-label">Your Legal Name</label>
+          <input type="text" id="signature-name-input" placeholder="e.g. Rohan D.">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-text" onclick="closeModal('signature-modal')">Cancel</button>
+        <button class="btn btn-primary" onclick="submitPortalSignature()">Sign Proposal</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CLIENT PORTAL: PROJECT REVIEW MODAL -->
+  <div class="modal-overlay" id="review-submission-modal">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h2>Submit Project Feedback</h2>
+        <button class="modal-close-btn" onclick="closeModal('review-submission-modal')">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+      <form id="review-submission-form" class="modal-body">
+        <input type="hidden" id="review-client-id">
+        <input type="hidden" id="review-project-id">
+        
+        <div class="form-group" style="text-align: center; margin-bottom: 1.5rem;">
+          <label class="required-label" style="text-align: left;">Star Rating</label>
+          <div style="font-size: 2.25rem; color: #d1d5db; display: flex; justify-content: center; gap: 0.5rem; cursor: pointer;" id="star-selector-container">
+            <span class="star-rating-star" data-rating="1">★</span>
+            <span class="star-rating-star" data-rating="2">★</span>
+            <span class="star-rating-star" data-rating="3">★</span>
+            <span class="star-rating-star" data-rating="4">★</span>
+            <span class="star-rating-star" data-rating="5">★</span>
+          </div>
+          <input type="hidden" id="review-rating-value" required value="5">
+        </div>
+        
+        <div class="form-group">
+          <label for="review-feedback" class="required-label">Your Testimonial</label>
+          <textarea id="review-feedback" rows="4" required placeholder="How was your experience working on this project? Description..."></textarea>
+        </div>
+        
+        <div class="modal-footer">
+          <button type="button" class="btn btn-text" onclick="closeModal('review-submission-modal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Submit Testimonial</button>
+        </div>
+      </form>
     </div>
   </div>
 
@@ -353,8 +1421,11 @@
   <div class="toast-container" id="toast-container"></div>
 
   <!-- AUTHENTICATION OVERLAY SCREEN -->
-  <div id="auth-screen" class="auth-overlay active">
-    <div class="auth-card">
+  <div id="auth-screen" class="auth-overlay">
+    <div class="auth-card" style="position: relative;">
+      <button type="button" class="modal-close-btn" onclick="hideAuthScreen()" style="position: absolute; right: 1rem; top: 1rem; z-index: 10;">
+        <i data-lucide="x"></i>
+      </button>
       <div class="auth-brand">
         <div class="logo-icon">
           <i data-lucide="folder-closed"></i>
@@ -369,7 +1440,7 @@
 
       <!-- Login Form -->
       <form id="login-form" class="auth-form-panel active">
-        <p class="auth-subtitle">Workspace Portal. Please authenticate to open the cabinet.</p>
+        <p class="auth-subtitle">Workspace Portal. Please authenticate to open the dashboard cabinet.</p>
         <div class="form-group">
           <label for="login-email" class="required-label">Email Address</label>
           <input type="email" id="login-email" required placeholder="developer@clientsy.com">
@@ -378,17 +1449,36 @@
           <label for="login-password" class="required-label">Password</label>
           <input type="password" id="login-password" required placeholder="••••••••">
         </div>
+        
+        <div class="form-group">
+          <label class="checkbox-label">
+            <input type="checkbox" id="login-as-client-check">
+            <span>Log in as Client (Client Portal)</span>
+          </label>
+        </div>
+
         <button type="submit" class="btn btn-primary mt-4" style="width: 100%;">
           <span>Sign In</span>
           <i data-lucide="arrow-right"></i>
         </button>
+
+        <div style="display: flex; align-items: center; text-align: center; margin: 1rem 0; color: var(--text-muted); font-size: 0.75rem;">
+          <div style="flex: 1; border-bottom: 1px solid var(--border-color);"></div>
+          <span style="padding: 0 0.5rem;">OR</span>
+          <div style="flex: 1; border-bottom: 1px solid var(--border-color);"></div>
+        </div>
+
+        <a href="/api/auth/google" class="btn btn-secondary" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.5rem; text-decoration: none;">
+          <i data-lucide="chrome" style="color: #4f46e5;"></i>
+          <span>Continue with Google</span>
+        </a>
       </form>
 
       <!-- Register Form -->
       <form id="register-form" class="auth-form-panel">
         <p class="auth-subtitle">Create cabinet credentials. Gain access key features.</p>
         <div class="form-group">
-          <label for="register-name" class="required-label">Developer Name</label>
+          <label for="register-name" class="required-label">Name</label>
           <input type="text" id="register-name" required placeholder="e.g. John Doe">
         </div>
         <div class="form-group">
@@ -399,12 +1489,165 @@
           <label for="register-password" class="required-label">Password</label>
           <input type="password" id="register-password" required placeholder="Minimum 6 characters">
         </div>
+        <div class="form-group">
+          <label for="register-role">Register As</label>
+          <select id="register-role">
+            <option value="developer">Developer / Freelancer</option>
+            <option value="client">Client User</option>
+          </select>
+        </div>
         <button type="submit" class="btn btn-primary mt-4" style="width: 100%;">
           <span>Create Account</span>
           <i data-lucide="user-plus"></i>
         </button>
       </form>
     </div>
+  </div>
+
+  <!-- LANDING PAGE CONTAINER -->
+  <div id="landing-page" class="landing-page-container">
+    <header class="landing-header">
+      <a href="#" class="landing-logo">
+        <i data-lucide="folder-closed"></i>
+        <span>Clientsy</span>
+      </a>
+      <nav class="landing-nav">
+        <a href="#features" class="landing-nav-link">Features</a>
+        <a href="#pricing" class="landing-nav-link">Pricing</a>
+        <button class="btn btn-secondary btn-sm" onclick="showAuthScreen('login')">Sign In</button>
+      </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="landing-hero">
+      <div class="landing-hero-content">
+        <div class="landing-badge">100% Free SaaS Workspace</div>
+        <h1 class="landing-title">One app to run your whole freelance business</h1>
+        <p class="landing-subtitle">
+          Stop stitching together six different tools. Clientsy handles leads, clients, proposals, projects, invoices, your client portal, team, and analytics — and looks good doing it.
+        </p>
+        <div class="landing-actions">
+          <button class="btn btn-primary" onclick="showAuthScreen('register')">Start for free</button>
+          <a href="#features" class="btn btn-secondary" style="text-decoration: none; display: flex; align-items: center; justify-content: center;">See how it works</a>
+        </div>
+      </div>
+      <div class="landing-preview-container">
+        <!-- Mock Dashboard Preview card -->
+        <div class="landing-preview-card">
+          <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 0.75rem;">
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+              <i data-lucide="folder-closed" style="color: var(--primary); width: 18px; height: 18px;"></i>
+              <span style="font-weight: 700; font-size: 0.85rem;">Active Cabinets</span>
+            </div>
+            <span style="font-size: 0.75rem; color: var(--success); font-weight: 600;">● Active</span>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.8rem;">
+            <div style="display: flex; justify-content: space-between; padding: 0.5rem; background-color: var(--bg-hover); border-radius: var(--radius-sm);">
+              <span>Acme Corp Portal Setup</span>
+              <span class="text-muted">₹45,000</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; padding: 0.5rem; background-color: var(--bg-hover); border-radius: var(--radius-sm);">
+              <span>SaaS Brand Identity</span>
+              <span class="text-muted">₹80,000</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="landing-preview-card" style="margin-left: 2rem;">
+          <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+            <i data-lucide="calendar" style="color: #4f46e5; width: 18px; height: 18px;"></i>
+            <span style="font-weight: 700; font-size: 0.85rem;">Auto Meet & Calendar Sync</span>
+          </div>
+          <p style="font-size: 0.75rem; color: var(--text-muted);">
+            Google Calendar event synced instantly with dynamic Google Meet links for client consultations.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="landing-section" id="features">
+      <h2 class="landing-section-title">Everything you need to run your business</h2>
+      <div class="features-grid">
+        <!-- Card 1 -->
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i data-lucide="columns-3"></i>
+          </div>
+          <h3 class="feature-title">CRM Lead Pipeline</h3>
+          <p class="feature-desc">Track and manage prospective leads from first contact to close with standard pipeline stages.</p>
+        </div>
+        <!-- Card 2 -->
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i data-lucide="folder-open"></i>
+          </div>
+          <h3 class="feature-title">Client Management</h3>
+          <p class="feature-desc">Vault client contacts, shared agreements, portal setups, and notes securely in one place.</p>
+        </div>
+        <!-- Card 3 -->
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i data-lucide="kanban-square"></i>
+          </div>
+          <h3 class="feature-title">Project Tracking</h3>
+          <p class="feature-desc">Stay on schedule with customizable Kanban task boards to track design and code sprints.</p>
+        </div>
+        <!-- Card 4 -->
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i data-lucide="receipt-text"></i>
+          </div>
+          <h3 class="feature-title">Smart Invoicing</h3>
+          <p class="feature-desc">Create professional invoices and quotations in Indian Rupees (₹), with PDF download support.</p>
+        </div>
+        <!-- Card 5 -->
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i data-lucide="calendar"></i>
+          </div>
+          <h3 class="feature-title">Meetings & Reminders</h3>
+          <p class="feature-desc">Integrate calendar scheduling with automated Google Meet video links and details.</p>
+        </div>
+        <!-- Card 6 -->
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i data-lucide="badge-check"></i>
+          </div>
+          <h3 class="feature-title">Verified Reviews</h3>
+          <p class="feature-desc">Collect reviews from completed project portfolios and embed them directly on your site.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section class="landing-section" id="pricing">
+      <h2 class="landing-section-title">Simple, transparent pricing</h2>
+      <div class="landing-pricing-card">
+        <div class="landing-badge">Core Plan</div>
+        <div style="font-size: 3rem; font-weight: 850; font-family: var(--font-display);">Free</div>
+        <p class="text-muted">No credit card required. Keep 100% of your earnings.</p>
+        <ul style="text-align: left; display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.9rem; list-style-type: none; padding: 0;">
+          <li style="display: flex; align-items: center; gap: 0.5rem;">
+            <i data-lucide="check" style="color: var(--success); width: 16px; height: 16px;"></i>
+            <span>Unlimited clients & projects</span>
+          </li>
+          <li style="display: flex; align-items: center; gap: 0.5rem;">
+            <i data-lucide="check" style="color: var(--success); width: 16px; height: 16px;"></i>
+            <span>Google Calendar & Meet integration</span>
+          </li>
+          <li style="display: flex; align-items: center; gap: 0.5rem;">
+            <i data-lucide="check" style="color: var(--success); width: 16px; height: 16px;"></i>
+            <span>Unlimited PDF invoicing</span>
+          </li>
+        </ul>
+        <button class="btn btn-primary" style="width: 100%;" onclick="showAuthScreen('register')">Create Free Account</button>
+      </div>
+    </section>
+
+    <footer class="landing-footer">
+      <p>© 2026 Clientsy. Your freelance business command center.</p>
+    </footer>
   </div>
 
   <!-- Javascript Modules -->
