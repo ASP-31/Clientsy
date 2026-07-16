@@ -20,6 +20,10 @@ const documentSchema = new Schema({
     type: String, // URL to stored file (e.g., AWS S3, local uploads)
     required: true
   },
+  publicId: {
+    type: String,
+    required: false
+  },
   fileType: {
     type: String,
     required: true

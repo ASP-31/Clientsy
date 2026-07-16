@@ -25,20 +25,9 @@ const userSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: [function() { return !this.googleId; }, 'Please add a password'],
+    required: [true, 'Please add a password'],
     minlength: 6,
     select: false
-  },
-  googleId: {
-    type: String,
-    sparse: true,
-    unique: true
-  },
-  googleAccessToken: {
-    type: String
-  },
-  googleRefreshToken: {
-    type: String
   },
   createdAt: {
     type: Date,

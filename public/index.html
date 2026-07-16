@@ -3,6 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Clientsy is a premium, streamlined client management platform and workspace designed specifically for freelancers. Track CRM leads, manage projects, send invoices, sign proposals, and schedule meetings seamlessly.">
+  <meta name="keywords" content="freelance crm, client management platform, freelancer dashboard, project management tool, client billing, invoice creator, online proposals, schedule client meetings">
+  <meta name="author" content="Clientsy">
+  <meta property="og:title" content="Clientsy | Streamlined Freelance Workspace">
+  <meta property="og:description" content="Manage your freelance clients, projects, invoices, and meetings in a single, high-performance workspace. Built for freelancers who value simplicity and aesthetics.">
+  <meta property="og:type" content="website">
   <title>Clientsy | Streamlined Freelance Workspace</title>
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -27,11 +33,11 @@
     <!-- Sidebar Navigation -->
     <aside class="sidebar" id="app-sidebar">
       <div class="sidebar-header">
-        <div class="sidebar-logo">
-          <i data-lucide="folder-closed"></i>
+        <div class="sidebar-logo" style="overflow: hidden; display: flex; align-items: center; justify-content: center;">
+          <img src="/clientsy_logo.png" alt="Clientsy Logo" style="width: 100%; height: 100%; object-fit: contain;">
         </div>
         <span class="sidebar-brand-name">Clientsy</span>
-        <button class="btn-sidebar-close no-print" id="sidebar-close-btn" style="display: none; background: none; border: none; color: var(--text-muted); cursor: pointer; margin-left: auto; padding: 0.25rem;">
+        <button class="btn-sidebar-close no-print" id="sidebar-close-btn" style="background: none; border: none; color: var(--text-muted); cursor: pointer; margin-left: auto; padding: 0.25rem;">
           <i data-lucide="x" style="width: 18px; height: 18px;"></i>
         </button>
       </div>
@@ -107,7 +113,7 @@
       <!-- Top header bar -->
       <header class="main-header no-print">
         <div class="header-title-area" style="display: flex; align-items: center; gap: 0.75rem;">
-          <button class="btn-sidebar-toggle no-print" id="sidebar-toggle-btn" style="display: none; background: none; border: none; color: var(--text-main); cursor: pointer; padding: 0.25rem; align-items: center; justify-content: center;">
+          <button class="btn-sidebar-toggle no-print" id="sidebar-toggle-btn" style="background: none; border: none; color: var(--text-main); cursor: pointer; padding: 0.25rem; align-items: center; justify-content: center;">
             <i data-lucide="menu" style="width: 20px; height: 20px;"></i>
           </button>
           <h2 id="header-view-title">Dashboard</h2>
@@ -173,20 +179,7 @@
           </div>
         </div>
 
-        <!-- Google Calendar Integration Widget -->
-        <div class="card" id="google-calendar-banner" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; padding: 1.25rem 1.5rem; background-color: var(--primary-alpha); border: 1px solid var(--border-color); border-radius: var(--radius-md); gap: 1rem; flex-wrap: wrap;">
-          <div style="display: flex; align-items: center; gap: 0.75rem;">
-            <i data-lucide="calendar" style="color: var(--primary); width: 24px; height: 24px; flex-shrink: 0;"></i>
-            <div>
-              <h4 style="font-family: var(--font-display); font-weight: 700; font-size: 0.95rem; color: var(--text-main);">Google Calendar Sync</h4>
-              <p class="text-muted" id="google-calendar-status-text" style="font-size: 0.8rem; margin-top: 0.15rem;">Sync scheduled meetings automatically to your Google Calendar.</p>
-            </div>
-          </div>
-          <a href="/api/auth/google" id="btn-connect-google-calendar" class="btn btn-primary btn-sm" style="text-decoration: none;">
-            <i data-lucide="refresh-cw"></i>
-            <span id="btn-connect-google-calendar-text">Connect Google</span>
-          </a>
-        </div>
+
 
         <div class="grid-2">
           <!-- Left: Revenue Analytics Chart (SVG) -->
@@ -467,7 +460,7 @@
         <div class="screen-title-row">
           <div>
             <h1>Meetings</h1>
-            <p>Schedule syncs and auto-generate Google Meet invitations</p>
+            <p>Schedule syncs and auto-generate virtual meeting invitations</p>
           </div>
           <button class="btn btn-primary" id="btn-new-meeting">
             <i data-lucide="plus"></i>
@@ -482,7 +475,7 @@
                 <th>Topic</th>
                 <th>Client</th>
                 <th>Scheduled Date / Time</th>
-                <th>Google Meet URL</th>
+                <th>Meeting URL</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -1445,8 +1438,8 @@
   <!-- LANDING PAGE CONTAINER -->
   <div id="landing-page" class="landing-page-container">
     <header class="landing-header">
-      <a href="#" class="landing-logo">
-        <i data-lucide="folder-closed"></i>
+      <a href="#" class="landing-logo" style="display: flex; align-items: center; gap: 0.5rem; text-decoration: none;">
+        <img src="/clientsy_logo.png" alt="Clientsy Logo" style="width: 32px; height: 32px; object-fit: contain;">
         <span>Clientsy</span>
       </a>
       <nav class="landing-nav">
@@ -1608,7 +1601,7 @@
             <i data-lucide="calendar"></i>
           </div>
           <h3 class="feature-title">Meetings & Reminders</h3>
-          <p class="feature-desc">Integrate calendar scheduling with automated Google Meet video links and details.</p>
+          <p class="feature-desc">Integrate calendar scheduling with automated virtual meeting video links and details.</p>
         </div>
         <!-- Card 6 -->
         <div class="feature-card">
@@ -1635,7 +1628,7 @@
           </li>
           <li style="display: flex; align-items: center; gap: 0.5rem;">
             <i data-lucide="check" style="color: var(--success); width: 16px; height: 16px;"></i>
-            <span>Google Calendar & Meet integration</span>
+            <span>Calendar & Meeting scheduling</span>
           </li>
           <li style="display: flex; align-items: center; gap: 0.5rem;">
             <i data-lucide="check" style="color: var(--success); width: 16px; height: 16px;"></i>
@@ -1680,7 +1673,7 @@
               </div>
               <div class="auth-feature-item">
                 <i data-lucide="check-circle"></i>
-                <span>Google Calendar &amp; Meet integration</span>
+                <span>Calendar &amp; Meeting scheduling</span>
               </div>
               <div class="auth-feature-item">
                 <i data-lucide="check-circle"></i>
@@ -1721,8 +1714,8 @@
 
           <div class="auth-card">
             <div class="auth-brand">
-              <div class="logo-icon">
-                <i data-lucide="folder-closed"></i>
+              <div class="logo-icon" style="overflow: hidden; display: flex; align-items: center; justify-content: center;">
+                <img src="/clientsy_logo.png" alt="Clientsy Logo" style="width: 100%; height: 100%; object-fit: contain;">
               </div>
               <span class="logo-text">Clientsy</span>
             </div>
@@ -1756,16 +1749,7 @@
                 <i data-lucide="arrow-right"></i>
               </button>
 
-              <div style="display: flex; align-items: center; text-align: center; margin: 1rem 0; color: var(--text-muted); font-size: 0.75rem;">
-                <div style="flex: 1; border-bottom: 1px solid var(--border-color);"></div>
-                <span style="padding: 0 0.5rem;">OR</span>
-                <div style="flex: 1; border-bottom: 1px solid var(--border-color);"></div>
-              </div>
 
-              <a href="/api/auth/google" class="btn btn-secondary" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.5rem; text-decoration: none;">
-                <i data-lucide="chrome" style="color: #4f46e5;"></i>
-                <span>Continue with Google</span>
-              </a>
             </form>
 
             <!-- Register Form -->

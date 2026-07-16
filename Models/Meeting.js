@@ -33,10 +33,6 @@ const meetingSchema = new Schema({
     type: String,
     trim: true
   },
-  googleCalendarEventId: {
-    type: String,
-    trim: true
-  },
   createdAt: {
     type: Date,
     default: Date.now

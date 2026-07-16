@@ -17,9 +17,7 @@ const state = {
   projectsFilterTab: 'active',
   
   // File upload state
-  uploadedFileBase64: null,
-  uploadedFileType: null,
-  uploadedFileSize: 0,
+  selectedFile: null,
   
   // Signature Canvas state
   isDrawing: false,
@@ -116,11 +114,7 @@ async function checkSessionAndRoute() {
   if (errorParam) {
     // Show error toast dynamically after layout initialization
     setTimeout(() => {
-      if (errorParam === 'google_not_configured') {
-        showToast('Google Client Credentials are not configured or are placeholders in your .env file.', 'warning');
-      } else {
-        showToast('Google Authentication failed. Please try again.', 'error');
-      }
+      showToast('Authentication failed. Please try again.', 'error');
     }, 500);
     window.history.replaceState({}, document.title, window.location.pathname);
   }
@@ -386,37 +380,6 @@ function setupNavigation() {
 
 // --- View 1: Dashboard Analytics ---
 function renderDashboard() {
-  // Update Google Calendar widget status dynamically based on state.user info
-  const calBanner = document.getElementById('google-calendar-banner');
-  const calText = document.getElementById('google-calendar-status-text');
-  const calBtnText = document.getElementById('btn-connect-google-calendar-text');
-  const calBtn = document.getElementById('btn-connect-google-calendar');
-  
-  if (calBanner && state.user) {
-    if (state.user.googleId) {
-      calBanner.style.backgroundColor = 'var(--success-alpha)';
-      calBanner.style.borderColor = 'var(--success)';
-      if (calText) calText.innerHTML = `Connected as <strong>${escapeHTML(state.user.email)}</strong>. Calendar and Meet auto-sync is active.`;
-      if (calBtnText) calBtnText.textContent = 'Account Sync Active';
-      if (calBtn) {
-        calBtn.className = 'btn btn-secondary btn-sm';
-        // Add a checkmark icon to show it is active
-        const icon = calBtn.querySelector('i');
-        if (icon) icon.setAttribute('data-lucide', 'check');
-      }
-    } else {
-      calBanner.style.backgroundColor = 'var(--primary-alpha)';
-      calBanner.style.borderColor = 'var(--border-color)';
-      if (calText) calText.textContent = 'Sync scheduled meetings automatically to your Google Calendar.';
-      if (calBtnText) calBtnText.textContent = 'Connect Google';
-      if (calBtn) {
-        calBtn.className = 'btn btn-primary btn-sm';
-        const icon = calBtn.querySelector('i');
-        if (icon) icon.setAttribute('data-lucide', 'refresh-cw');
-      }
-    }
-  }
-
   // Stats math
   const paidInvoices = state.invoices.filter(i => i.type === 'invoice' && i.status === 'paid');
   const revenueTotal = paidInvoices.reduce((sum, item) => sum + item.totalAmount, 0);
@@ -1117,7 +1080,7 @@ function renderMeetingsModule() {
       <td>${escapeHTML(m.client ? m.client.name : 'Unknown')}</td>
       <td>${new Date(m.startAt).toLocaleString()}</td>
       <td>
-        <a href="${safeExternalUrl(m.meetLink)}" target="_blank" rel="noopener noreferrer" style="color:var(--primary); font-weight:600;">Join Google Meet</a>
+        <a href="${safeExternalUrl(m.meetLink)}" target="_blank" rel="noopener noreferrer" style="color:var(--primary); font-weight:600;">Join Meeting</a>
       </td>
       <td>
         <button class="action-btn delete-action" onclick="deleteMeetingRecord('${m._id}')"><i data-lucide="calendar-x" style="width:14px;height:14px;"></i></button>
@@ -1681,7 +1644,7 @@ function setupDocumentModalListeners() {
   
   document.getElementById('document-form').addEventListener('submit', async (e) => {
     e.preventDefault();
-    if (!state.uploadedFileBase64) {
+    if (!state.selectedFile) {
       showToast('Please select a file first.', 'warning');
       return;
     }
@@ -1689,20 +1652,24 @@ function setupDocumentModalListeners() {
     const tagsVal = document.getElementById('doc-tags').value;
     const tags = tagsVal ? tagsVal.split(',').map(t => t.trim()).filter(Boolean) : [];
 
-    const payload = {
-      client: document.getElementById('doc-client').value,
-      name: document.getElementById('doc-name').value.trim(),
-      category: document.getElementById('doc-category').value,
-      description: document.getElementById('doc-description').value.trim(),
-      fileUrl: state.uploadedFileBase64,
-      fileType: state.uploadedFileType,
-      fileSize: state.uploadedFileSize,
-      isPublic: document.getElementById('doc-is-public').checked,
-      tags
-    };
+    // Construct FormData.
+    // IMPORTANT: Append metadata fields BEFORE appending the file so that
+    // req.body.category is populated when the storage engine processes the stream.
+    const formData = new FormData();
+    formData.append('client', document.getElementById('doc-client').value);
+    formData.append('name', document.getElementById('doc-name').value.trim());
+    formData.append('category', document.getElementById('doc-category').value);
+    formData.append('description', document.getElementById('doc-description').value.trim());
+    formData.append('isPublic', document.getElementById('doc-is-public').checked);
+    
+    tags.forEach(tag => {
+      formData.append('tags', tag);
+    });
+
+    formData.append('file', state.selectedFile);
 
     try {
-      await window.documentAPI.create(payload);
+      await window.documentAPI.create(formData);
       showToast('File uploaded and filed in drawer pocket!', 'success');
       closeModal('document-modal');
       await loadAllData();
@@ -1769,20 +1736,12 @@ function handleSelectedFile(file) {
     docNameInput.value = extIndex > 0 ? file.name.substring(0, extIndex) : file.name;
   }
 
-  const reader = new FileReader();
-  reader.onload = function(e) {
-    state.uploadedFileBase64 = e.target.result;
-    state.uploadedFileType = file.type || 'application/octet-stream';
-    state.uploadedFileSize = file.size;
-  };
-  reader.readAsDataURL(file);
+  state.selectedFile = file;
 }
 
 function resetUploadedFile() {
   document.getElementById('doc-file-input').value = '';
-  state.uploadedFileBase64 = null;
-  state.uploadedFileType = null;
-  state.uploadedFileSize = 0;
+  state.selectedFile = null;
   
   document.getElementById('file-drop-zone').style.display = 'flex';
   document.getElementById('selected-file-details').style.display = 'none';
@@ -1800,7 +1759,7 @@ window.deleteDocument = async function(id) {
   }
 };
 
-window.previewDocument = function(docId) {
+window.previewDocument = async function(docId) {
   // Can find in either state.documents or state.portalData
   let doc = state.documents.find(d => d._id === docId);
   if (!doc && state.portalData) {
@@ -1844,8 +1803,14 @@ window.previewDocument = function(docId) {
     container.appendChild(iframe);
   } else if (type.includes('text') || type.includes('json') || type.includes('javascript') || type.includes('html')) {
     try {
-      const base64Data = doc.fileUrl.split(',')[1];
-      const text = atob(base64Data);
+      let text = '';
+      if (doc.fileUrl.startsWith('data:')) {
+        const base64Data = doc.fileUrl.split(',')[1];
+        text = atob(base64Data);
+      } else {
+        const res = await fetch(safeExternalUrl(doc.fileUrl));
+        text = await res.text();
+      }
       const pre = document.createElement('pre');
       pre.style.textAlign = 'left';
       pre.style.fontSize = '0.8rem';
@@ -2861,22 +2826,37 @@ function setupThemeAndResponsive() {
   const sidebarToggleBtn = document.getElementById('sidebar-toggle-btn');
   const sidebarCloseBtn = document.getElementById('sidebar-close-btn');
 
+  // Backdrop overlay container element
+  let backdrop = document.getElementById('sidebar-backdrop');
+  if (!backdrop) {
+    backdrop = document.createElement('div');
+    backdrop.id = 'sidebar-backdrop';
+    backdrop.className = 'sidebar-backdrop';
+    document.getElementById('app-container').appendChild(backdrop);
+  }
+
+  const closeSidebar = () => {
+    if (DOM.sidebar) DOM.sidebar.classList.remove('mobile-open');
+    backdrop.classList.remove('active');
+  };
+
   if (sidebarToggleBtn) {
     sidebarToggleBtn.addEventListener('click', () => {
       if (DOM.sidebar) DOM.sidebar.classList.add('mobile-open');
+      backdrop.classList.add('active');
     });
   }
   if (sidebarCloseBtn) {
-    sidebarCloseBtn.addEventListener('click', () => {
-      if (DOM.sidebar) DOM.sidebar.classList.remove('mobile-open');
-    });
+    sidebarCloseBtn.addEventListener('click', closeSidebar);
   }
+
+  backdrop.addEventListener('click', closeSidebar);
 
   // Close sidebar on item selection
   const menuItems = document.querySelectorAll('.menu-item');
   menuItems.forEach(item => {
     item.addEventListener('click', () => {
-      if (DOM.sidebar) DOM.sidebar.classList.remove('mobile-open');
+      closeSidebar();
     });
   });
 }

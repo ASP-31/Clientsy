@@ -49,7 +49,7 @@ const handleControllerError = (res, error, fallback = 'Server Error') => {
   return res.status(500).json({ success: false, message: fallback });
 };
 
-const omitProtectedFields = (body, fields = ['owner', 'uploadedBy', 'googleAccessToken', 'googleRefreshToken']) => {
+const omitProtectedFields = (body, fields = ['owner', 'uploadedBy']) => {
   const payload = { ...body };
   fields.forEach((field) => delete payload[field]);
   return payload;

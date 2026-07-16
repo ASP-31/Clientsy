@@ -90,6 +90,17 @@ exports.deleteClient = async (req, res) => {
     }
 
     // Cascade delete associated entities
+    const documents = await Document.find({ client: req.params.id, uploadedBy: req.user.id });
+    const { cloudinary } = require('../config/cloudinary');
+    for (const doc of documents) {
+      if (doc.publicId) {
+        try {
+          await cloudinary.uploader.destroy(doc.publicId);
+        } catch (err) {
+          console.error(`Failed to destroy Cloudinary asset ${doc.publicId} during client cascade delete:`, err);
+        }
+      }
+    }
     await Document.deleteMany({ client: req.params.id, uploadedBy: req.user.id });
     await Project.deleteMany({ client: req.params.id, owner: req.user.id });
     await Invoice.deleteMany({ client: req.params.id, owner: req.user.id });

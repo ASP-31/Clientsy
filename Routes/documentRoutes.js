@@ -1,11 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const documentController = require('../Controllers/documentController');
+const { upload } = require('../config/cloudinary');
 
 // Document routes
 router.route('/')
   .get(documentController.getDocuments)
-  .post(documentController.createDocument);
+  .post(upload.single('file'), documentController.createDocument);
 
 router.route('/:id')
   .get(documentController.getDocumentById)

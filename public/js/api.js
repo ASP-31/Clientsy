@@ -5,9 +5,14 @@ async function apiFetch(endpoint, options = {}) {
   const token = localStorage.getItem('token');
   
   const headers = {
-    'Content-Type': 'application/json',
     ...options.headers
   };
+  
+  if (options.body && !(options.body instanceof FormData)) {
+    headers['Content-Type'] = 'application/json';
+  } else if (!options.body) {
+    headers['Content-Type'] = 'application/json';
+  }
 
   if (token) {
     headers['Authorization'] = `Bearer ${token}`;
@@ -79,7 +84,7 @@ const documentAPI = {
   getById: (id) => apiFetch(`/documents/${id}`),
   create: (data) => apiFetch('/documents', {
     method: 'POST',
-    body: JSON.stringify(data)
+    body: data instanceof FormData ? data : JSON.stringify(data)
   }),
   update: (id, data) => apiFetch(`/documents/${id}`, {
     method: 'PUT',

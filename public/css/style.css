@@ -2475,7 +2475,60 @@ html[data-theme="light"] .auth-visual-side a.hover-primary:hover {
   }
 }
 
+#sidebar-toggle-btn, #sidebar-close-btn {
+  display: none !important;
+}
+
 @media (max-width: 768px) {
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: var(--sidebar-width);
+    transform: translateX(-100%);
+    z-index: 1000;
+    box-shadow: var(--shadow-xl);
+    transition: var(--transition-smooth);
+  }
+
+  .sidebar.mobile-open {
+    transform: translateX(0) !important;
+  }
+
+  #sidebar-toggle-btn {
+    display: flex !important;
+  }
+
+  #sidebar-close-btn {
+    display: block !important;
+  }
+
+  .main-content {
+    width: 100vw;
+    margin-left: 0;
+  }
+
+  .sidebar-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(4px);
+    z-index: 999;
+  }
+
+  .sidebar-backdrop.active {
+    display: block;
+  }
+
+  table {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
   .screen-panel {
     padding: 1.25rem;
   }
