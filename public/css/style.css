@@ -93,7 +93,52 @@
   --sidebar-width: 260px;
 }
 
-/* --- Light Theme removed — Clientsy uses premium dark glassmorphism --- */
+/* --- Light Theme Variables --- */
+html[data-theme="light"] {
+  /* Premium Soft Cream/White Background Layers */
+  --bg-base: #f4f6f8;
+  --bg-deep: #eef1f5;
+  --bg-app: #f4f6f8;
+  --bg-surface: rgba(255, 255, 255, 0.65);
+  --bg-surface-hover: rgba(255, 255, 255, 0.85);
+  --bg-card: rgba(255, 255, 255, 0.7);
+  --bg-card-hover: rgba(255, 255, 255, 0.9);
+  --bg-sidebar: rgba(28, 37, 65, 0.95); /* Keep premium dark sidebar even in light mode or make it lighter */
+  --bg-input: rgba(255, 255, 255, 0.8);
+  --bg-input-focus: rgba(255, 255, 255, 1);
+
+  /* Borders */
+  --border-color: rgba(28, 37, 65, 0.08);
+  --border-hover: rgba(28, 37, 65, 0.15);
+  --border-focus: rgba(28, 37, 65, 0.4);
+  --border-glow: rgba(28, 37, 65, 0.1);
+
+  /* Primary Navy & Warm Gold in Light Mode */
+  --primary: #1C2541;
+  --primary-bright: #2d3b66;
+  --primary-hover: #151b30;
+  --primary-alpha: rgba(28, 37, 65, 0.06);
+  --primary-alpha-hover: rgba(28, 37, 65, 0.12);
+  --primary-glow: 0 0 15px rgba(28, 37, 65, 0.1);
+
+  /* Gradient Definitions */
+  --gradient-primary: linear-gradient(135deg, #1C2541 0%, #2d3b66 50%, #151b30 100%);
+  --gradient-sidebar: linear-gradient(180deg, #1c2541 0%, #0c101d 100%);
+  --gradient-hero: linear-gradient(135deg, #f4f6f8 0%, #eef1f5 100%);
+
+  /* Typography */
+  --text-main: #1C2541;
+  --text-secondary: #374151;
+  --text-muted: #6b7280;
+  --text-dim: #9ca3af;
+  --text-inverse: #ffffff;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05), 0 0 8px rgba(0, 0, 0, 0.02);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.06), 0 0 20px rgba(0, 0, 0, 0.03);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.08), 0 0 40px rgba(0, 0, 0, 0.04);
+  --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.1), 0 0 60px rgba(0, 0, 0, 0.05);
+}
 
 /* ============================================================
    KEYFRAME ANIMATIONS
@@ -2341,9 +2386,11 @@ tr:last-child td { border-bottom: none; }
    RESPONSIVE
    ============================================================ */
 
-/* Theme toggle button */
-.theme-icon-sun { display: none !important; }
-.theme-icon-moon { display: inline-block !important; }
+/* Theme toggle buttons */
+html[data-theme="light"] .theme-icon-sun { display: inline-block !important; }
+html[data-theme="light"] .theme-icon-moon { display: none !important; }
+html[data-theme="dark"] .theme-icon-sun { display: none !important; }
+html[data-theme="dark"] .theme-icon-moon { display: inline-block !important; }
 
 /* Auth visual side panel */
 .auth-visual-side {

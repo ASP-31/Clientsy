@@ -18,9 +18,15 @@
   <script src="https://unpkg.com/lucide@latest"></script>
   <!-- Theme load helper to prevent flash -->
   <script>
-    // Clientsy uses a premium dark glassmorphism theme
-    localStorage.removeItem('theme');
-    document.documentElement.setAttribute('data-theme', 'dark');
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+
+    function toggleTheme() {
+      const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+    }
   </script>
   <!-- Stylesheets -->
   <link rel="stylesheet" href="/css/style.css?v=3">
@@ -103,7 +109,7 @@
         </div>
         <button class="btn-theme-toggle" id="btn-sidebar-theme-toggle" onclick="toggleTheme()" title="Toggle Theme" style="background: none; border: none; color: var(--text-dim); padding: 0.45rem; border-radius: var(--radius-xs); cursor: pointer; display: flex; align-items: center; justify-content: center;">
           <i data-lucide="sun" class="theme-icon-sun" style="width: 16px; height: 16px;"></i>
-          <i data-lucide="moon" class="theme-icon-moon" style="display: none; width: 16px; height: 16px;"></i>
+          <i data-lucide="moon" class="theme-icon-moon" style="width: 16px; height: 16px;"></i>
         </button>
         <button class="btn-logout" id="btn-logout" title="Sign Out">
           <i data-lucide="log-out"></i>
@@ -1455,7 +1461,7 @@
         <a href="#pricing" class="landing-nav-link">Pricing</a>
         <button class="btn-theme-toggle" onclick="toggleTheme()" title="Toggle Theme" style="background: none; border: none; color: var(--text-muted); cursor: pointer; padding: 0.5rem; display: flex; align-items: center; justify-content: center;">
           <i data-lucide="sun" class="theme-icon-sun" style="width: 18px; height: 18px;"></i>
-          <i data-lucide="moon" class="theme-icon-moon" style="display: none; width: 18px; height: 18px;"></i>
+          <i data-lucide="moon" class="theme-icon-moon" style="width: 18px; height: 18px;"></i>
         </button>
         <button class="btn btn-secondary btn-sm" onclick="showAuthScreen('login')">Sign In</button>
       </nav>

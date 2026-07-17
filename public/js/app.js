@@ -2914,6 +2914,26 @@ function setupThemeAndResponsive() {
   });
 }
 
-// Theme toggle disabled — Clientsy uses a single clean light theme
-window.toggleTheme = function() { /* Dark mode removed */ };
-function updateThemeUI() { /* no-op */ }
+// Theme toggle functionality
+window.toggleTheme = function() {
+  const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+  const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', newTheme);
+  localStorage.setItem('theme', newTheme);
+  updateThemeUI();
+};
+
+function updateThemeUI() {
+  const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+  document.querySelectorAll('.btn-theme-toggle').forEach(btn => {
+    const sunIcon = btn.querySelector('.theme-icon-sun');
+    const moonIcon = btn.querySelector('.theme-icon-moon');
+    if (currentTheme === 'light') {
+      if (sunIcon) sunIcon.style.display = 'inline-block';
+      if (moonIcon) moonIcon.style.display = 'none';
+    } else {
+      if (sunIcon) sunIcon.style.display = 'none';
+      if (moonIcon) moonIcon.style.display = 'inline-block';
+    }
+  });
+}
