@@ -1,3 +1,56 @@
+// --- Global Form Submit capturing wrapper (disables button + loading status + inline error highlights) ---
+(function() {
+  const originalAddEventListener = EventTarget.prototype.addEventListener;
+  EventTarget.prototype.addEventListener = function(type, listener, options) {
+    if (type === 'submit' && this.tagName === 'FORM') {
+      const form = this;
+      const wrappedListener = async function(e) {
+        const submitBtn = form.querySelector('[type="submit"]') || form.querySelector('button:not([type="button"])');
+        if (submitBtn) {
+          submitBtn.disabled = true;
+          submitBtn.dataset.origText = submitBtn.innerHTML;
+          submitBtn.innerHTML = '<span class="spinner" style="width:12px;height:12px;border-width:1.5px;vertical-align:middle;margin-right:4px;"></span> Saving...';
+        }
+        
+        // Clear all inline errors in this form
+        form.querySelectorAll('.invalid-feedback').forEach(el => el.remove());
+        form.querySelectorAll('input, select, textarea').forEach(el => el.style.borderColor = '');
+        
+        try {
+          // Call original handler
+          await listener.call(this, e);
+        } catch (err) {
+          console.error('Captured form error:', err);
+          if (err && err.errors) {
+            Object.keys(err.errors).forEach(field => {
+              const input = form.querySelector(`#${field}`) || form.querySelector(`[name="${field}"]`) || form.querySelector(`[id$="${field}"]`);
+              if (input) {
+                input.style.borderColor = 'var(--danger)';
+                const errDiv = document.createElement('div');
+                errDiv.className = 'invalid-feedback';
+                errDiv.style.color = 'var(--danger)';
+                errDiv.style.fontSize = '0.75rem';
+                errDiv.style.marginTop = '0.25rem';
+                errDiv.textContent = err.errors[field].message || err.errors[field];
+                input.parentNode.appendChild(errDiv);
+              }
+            });
+          } else {
+            showToast(err.message || 'Action failed', 'error');
+          }
+        } finally {
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = submitBtn.dataset.origText;
+          }
+        }
+      };
+      return originalAddEventListener.call(this, type, wrappedListener, options);
+    }
+    return originalAddEventListener.call(this, type, listener, options);
+  };
+})();
+
 // --- App State Store ---
 const state = {
   user: null,

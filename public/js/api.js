@@ -38,7 +38,9 @@ async function apiFetch(endpoint, options = {}) {
     const result = await response.json();
     
     if (!response.ok) {
-      throw new Error(result.message || `HTTP error! Status: ${response.status}`);
+      const err = new Error(result.message || `HTTP error! Status: ${response.status}`);
+      err.errors = result.errors;
+      throw err;
     }
     
     return result;
