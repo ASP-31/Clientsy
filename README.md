@@ -1,76 +1,55 @@
 # Clientsy
 
-A streamlined client management platform designed specifically for freelancers to organize, store, and manage all client-related documents and communications in one centralized location.
+An all-in-one freelance workspace and CRM designed to streamline client management, invoices, e-sign proposals, manually-scheduled meetings, intake forms, project tracking, and verified reviews. 
 
-## Overview
+Clientsy features a premium workspace layout designed to provide freelancers with a modern, high-performance portal to manage their businesses.
 
-Clientsy simplifies freelance workflow by providing a centralized hub where freelancers can:
-- Create dedicated folders for each client
-- Store and organize invoices, receipts, contracts, proposals, and other client documents
-- Securely view and download files whenever needed
-- Prepare for upcoming lead generation and client management features
+## Tech Stack
 
-## Technology Stack
+- **Frontend**: Single-Page Application (SPA) built with vanilla JS and modern, tactile CSS custom properties.
+- **Backend**: Node.js & Express.js server providing secure REST API endpoints.
+- **Database**: MongoDB (Atlas) database mapping workspaces, clients, vaults, proposals, invoices, and meetings.
 
-- **MongoDB** - Flexible document database for storing varied client documents and metadata
-- **Express.js** - Minimalist web framework for Node.js APIs
-- **React** - Component-based frontend for responsive UI
-- **Node.js** - JavaScript runtime for server-side logic
+## Active Features
 
-## Features
-
-- Create individual folders for each client
-- Upload and organize invoices, receipts, contracts, proposals, and other documents
-- Securely view and download files whenever needed
-- Plan for future lead generation and client communication tools
-
-## Future Features
-
-- Lead generation tools
-- Client communication tracking
-- Invoice generation and tracking
-- Contract templates library
+- **CRM Lead Pipeline**: Manage client prospects through customizable drag-and-drop columns from contact to conversion.
+- **Clients Vault**: Organise client documentation (contracts, assets, invoices) in interactive, tabbed card cabinets.
+- **Projects**: Visual kanban task boards representing in-progress deliverables.
+- **Invoices & Quotes**: Custom itemised billing sheets with integrated GST calculations and status tracking.
+- **Proposals & E-Sign**: Draft contract terms and acquire digital signatures on secure, verified landing pages.
+- **Intake Forms**: Publish customizable forms to gather requirements directly from new clients.
+- **Meetings Manager**: Schedule and log calls and touchpoints directly inside the workspace.
+- **Client Reviews**: Generate a verified client review profile with embeddable review badges.
+- **Client-Facing Portal**: Dedicated view for clients to log in, review deliverables, sign contracts, and pay invoices.
+- **Team Members**: Invite and manage collaborators inside the workspace.
 
 ## Installation
 
-1. Clone the repository:
+1. **Clone the Repository**
    ```bash
    git clone https://github.com/ASP-31/Clientsy.git
    cd Clientsy
    ```
 
-2. Install dependencies:
+2. **Configure Environment Variables**
+   Create a `.env` file in the root directory based on `.env.example`:
+   ```env
+   PORT=5000
+   MONGODB_URI=your_mongodb_connection_string
+   JWT_SECRET=your_jwt_signing_key
+   ```
+
+3. **Install Dependencies**
    ```bash
    npm install
    ```
 
-3. Start the application:
+4. **Launch Application**
    ```bash
    npm start
    ```
 
-## Usage
-
-1. Create a client folder
-2. Upload documents for that client
-3. Access, view, and manage files from a central dashboard
-
-## Contributing
-
-1. Fork the repository
-2. Create your feature branch
-3. Commit your changes
-4. Push to the branch
-5. Open a Pull Request
-
 ## License
 
-This project is licensed under the MIT License.
+Distributed under the MIT License.
 
-## Contact
-
-Project Link: https://github.com/ASP-31/Clientsy
-
----
-
-*Clientsy: Simplifying freelance client management, one client at a time.*
