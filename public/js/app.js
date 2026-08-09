@@ -411,11 +411,37 @@ function setupNavigation() {
   
   // Setup search filter
   if (DOM.globalSearch) {
+    let searchTimer;
     DOM.globalSearch.addEventListener('input', () => {
-      if (state.activeView === 'clients') renderClientsVault();
-      if (state.activeView === 'invoices') renderInvoicesModule();
-      if (state.activeView === 'projects') renderProjectsModule();
-      if (state.activeView === 'leads') renderLeadsPipeline();
+      const q = DOM.globalSearch.value.trim();
+
+      // Local, in-view filtering for the four client-side modules
+      if (q === '' || state.activeView === 'clients' || state.activeView === 'invoices' ||
+          state.activeView === 'projects' || state.activeView === 'leads') {
+        if (state.activeView === 'clients') renderClientsVault();
+        if (state.activeView === 'invoices') renderInvoicesModule();
+        if (state.activeView === 'projects') renderProjectsModule();
+        if (state.activeView === 'leads') renderLeadsPipeline();
+        removeSearchDropdown();
+        if (q.length === 0) return;
+      }
+
+      clearTimeout(searchTimer);
+      searchTimer = setTimeout(async () => {
+        if (q.length < 2) return removeSearchDropdown();
+        try {
+          const res = await window.clientAPI.getAll({ search: q, limit: 6 });
+          renderSearchDropdown(res.data, q);
+        } catch (err) {
+          removeSearchDropdown();
+        }
+      }, 300);
+    });
+    DOM.globalSearch.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') removeSearchDropdown();
+    });
+    document.addEventListener('click', (e) => {
+      if (e.target && !e.target.closest('.search-bar-wrapper')) removeSearchDropdown();
     });
   }
 
@@ -430,10 +456,55 @@ function setupNavigation() {
       document.getElementById(tabId).classList.add('active');
     });
   });
+
+  // Sidebar collapse-to-icons (desktop only)
+  if (document.getElementById('sidebar-collapse-btn')) {
+    document.getElementById('sidebar-collapse-btn').addEventListener('click', () => {
+      document.body.classList.toggle('sidebar-collapsed');
+      localStorage.setItem('sidebar-collapsed', document.body.classList.contains('sidebar-collapsed') ? '1' : '0');
+    });
+    if (localStorage.getItem('sidebar-collapsed') === '1') {
+      document.body.classList.add('sidebar-collapsed');
+    }
+  }
+}
+
+// --- Global Search Dropdown ---
+function renderSearchDropdown(clients, q) {
+  removeSearchDropdown();
+  const wrapper = document.querySelector('.search-bar-wrapper');
+  if (!wrapper) return;
+
+  const dd = document.createElement('div');
+  dd.className = 'search-dropdown';
+  if (clients.length === 0) {
+    dd.innerHTML = `<div class="empty-state" style="padding:1rem;"><p>No clients match "<strong>${escapeHTML(q)}</strong>".</p></div>`;
+  } else {
+    dd.innerHTML = clients.map(c => `
+      <div class="search-result-item" onclick="removeSearchDropdown(); window.openFolderDrawer('${c._id}')">
+        <i data-lucide="folder-open" style="width:14px;height:14px;"></i>
+        <span class="truncate">
+          <strong>${escapeHTML(c.name)}</strong>
+          ${c.company ? `<span class="muted"> · ${escapeHTML(c.company)}</span>` : ''}
+        </span>
+        <span class="badge badge-${escapeHTML(c.status)}">${escapeHTML(c.status)}</span>
+      </div>
+    `).join('');
+  }
+  wrapper.appendChild(dd);
+  lucide.createIcons();
+}
+
+function removeSearchDropdown() {
+  const dd = document.querySelector('.search-dropdown');
+  if (dd) dd.remove();
 }
 
 // --- View 1: Dashboard Analytics ---
 function renderDashboard() {
+  const stamp = document.getElementById('dash-refreshed-at');
+  if (stamp) stamp.textContent = `Last refreshed ${new Date().toLocaleTimeString()}`;
+
   // Stats math
   const paidInvoices = state.invoices.filter(i => i.type === 'invoice' && i.status === 'paid');
   const revenueTotal = paidInvoices.reduce((sum, item) => sum + item.totalAmount, 0);
@@ -2874,7 +2945,11 @@ function copyBadgeSnippet() {
 
 function triggerMockDataSync() {
   showToast('Metrics synchronized successfully.', 'success');
-  loadAllData().then(() => renderDashboard());
+  loadAllData().then(() => {
+    renderDashboard();
+    const stamp = document.getElementById('dash-refreshed-at');
+    if (stamp) stamp.textContent = `Last refreshed ${new Date().toLocaleTimeString()}`;
+  });
 }
 
 function showToast(message, type = 'info') {

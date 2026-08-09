@@ -125,6 +125,9 @@
           <button class="btn-sidebar-toggle no-print" id="sidebar-toggle-btn" style="background: none; border: none; color: var(--text-main); cursor: pointer; padding: 0.25rem; align-items: center; justify-content: center;">
             <i data-lucide="menu" style="width: 20px; height: 20px;"></i>
           </button>
+          <button class="btn-sidebar-toggle no-print" id="sidebar-collapse-btn" title="Collapse sidebar" style="background: none; border: none; color: var(--text-muted); cursor: pointer; padding: 0.25rem; align-items: center; justify-content: center; display: none;">
+            <i data-lucide="panel-left-close" style="width: 18px; height: 18px;"></i>
+          </button>
           <h2 id="header-view-title">Dashboard</h2>
         </div>
         <div class="search-bar-wrapper">
@@ -141,6 +144,7 @@
             <p>Your operations rolled up into one beautiful summary</p>
           </div>
           <div class="flex gap-2">
+            <span class="muted" style="font-size:0.7rem; align-self:center;" id="dash-refreshed-at"></span>
             <button class="btn btn-secondary btn-sm" onclick="triggerMockDataSync()">
               <i data-lucide="refresh-cw"></i>
               <span>Refresh Metrics</span>
