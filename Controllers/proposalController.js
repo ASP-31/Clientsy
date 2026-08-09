@@ -1,66 +1,49 @@
 const Proposal = require('../Models/Proposal');
-const { assertOwnedClient, handleControllerError, omitProtectedFields } = require('../Middleware/security');
+const { assertOwnedClient, asyncHandler, omitProtectedFields } = require('../Middleware/security');
 
-exports.getProposals = async (req, res) => {
-  try {
-    const proposals = await Proposal.find({ owner: req.user.id }).populate('client', 'name email company');
-    res.status(200).json({ success: true, data: proposals });
-  } catch (error) {
-    res.status(500).json({ success: false, message: 'Server Error' });
+exports.getProposals = asyncHandler(async (req, res) => {
+  const proposals = await Proposal.find({ owner: req.user.id }).populate('client', 'name email company');
+  res.status(200).json({ success: true, data: proposals });
+});
+
+exports.getProposalById = asyncHandler(async (req, res) => {
+  const proposal = await Proposal.findOne({ _id: req.params.id, owner: req.user.id }).populate('client', 'name email company');
+  if (!proposal) {
+    return res.status(404).json({ success: false, message: 'Proposal not found' });
   }
-};
+  res.status(200).json({ success: true, data: proposal });
+});
 
-exports.getProposalById = async (req, res) => {
-  try {
-    const proposal = await Proposal.findOne({ _id: req.params.id, owner: req.user.id }).populate('client', 'name email company');
-    if (!proposal) {
-      return res.status(404).json({ success: false, message: 'Proposal not found' });
-    }
-    res.status(200).json({ success: true, data: proposal });
-  } catch (error) {
-    res.status(500).json({ success: false, message: 'Server Error' });
+exports.createProposal = asyncHandler(async (req, res) => {
+  if (!req.body.client || !req.body.title || !req.body.content) {
+    return res.status(400).json({ success: false, message: 'Please provide a client, title and scope content' });
   }
-};
+  await assertOwnedClient(req.body.client, req.user.id);
+  const payload = omitProtectedFields(req.body);
+  const proposal = await Proposal.create({ ...payload, owner: req.user.id });
+  res.status(201).json({ success: true, data: proposal });
+});
 
-exports.createProposal = async (req, res) => {
-  try {
+exports.updateProposal = asyncHandler(async (req, res) => {
+  if (req.body.client) {
     await assertOwnedClient(req.body.client, req.user.id);
-    const payload = omitProtectedFields(req.body);
-    const proposal = await Proposal.create({ ...payload, owner: req.user.id });
-    res.status(201).json({ success: true, data: proposal });
-  } catch (error) {
-    handleControllerError(res, error);
   }
-};
+  const payload = omitProtectedFields(req.body);
+  const proposal = await Proposal.findOneAndUpdate(
+    { _id: req.params.id, owner: req.user.id },
+    { ...payload, updatedAt: Date.now() },
+    { new: true, runValidators: true }
+  );
+  if (!proposal) {
+    return res.status(404).json({ success: false, message: 'Proposal not found' });
+  }
+  res.status(200).json({ success: true, data: proposal });
+});
 
-exports.updateProposal = async (req, res) => {
-  try {
-    if (req.body.client) {
-      await assertOwnedClient(req.body.client, req.user.id);
-    }
-    const payload = omitProtectedFields(req.body);
-    const proposal = await Proposal.findOneAndUpdate(
-      { _id: req.params.id, owner: req.user.id },
-      { ...payload, updatedAt: Date.now() },
-      { new: true, runValidators: true }
-    );
-    if (!proposal) {
-      return res.status(404).json({ success: false, message: 'Proposal not found' });
-    }
-    res.status(200).json({ success: true, data: proposal });
-  } catch (error) {
-    handleControllerError(res, error);
+exports.deleteProposal = asyncHandler(async (req, res) => {
+  const proposal = await Proposal.findOneAndDelete({ _id: req.params.id, owner: req.user.id });
+  if (!proposal) {
+    return res.status(404).json({ success: false, message: 'Proposal not found' });
   }
-};
-
-exports.deleteProposal = async (req, res) => {
-  try {
-    const proposal = await Proposal.findOneAndDelete({ _id: req.params.id, owner: req.user.id });
-    if (!proposal) {
-      return res.status(404).json({ success: false, message: 'Proposal not found' });
-    }
-    res.status(200).json({ success: true, data: {} });
-  } catch (error) {
-    res.status(500).json({ success: false, message: 'Server Error' });
-  }
-};
+  res.status(200).json({ success: true, data: {} });
+});

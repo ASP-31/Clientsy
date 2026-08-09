@@ -34,3 +34,6 @@ coverage/
 .env.production
 
 .claude
+
+# Internal agent implementation notes (not shipped)
+IMPLEMENTATION.md

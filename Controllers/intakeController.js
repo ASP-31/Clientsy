@@ -1,107 +1,89 @@
 const IntakeForm = require('../Models/IntakeForm');
 const crypto = require('crypto');
-const { assertOwnedClient, handleControllerError, omitProtectedFields } = require('../Middleware/security');
+const { assertOwnedClient, asyncHandler, omitProtectedFields, isValidObjectId } = require('../Middleware/security');
 
-exports.getIntakeForms = async (req, res) => {
-  try {
-    const forms = await IntakeForm.find({ owner: req.user.id }).populate('client', 'name email company');
-    res.status(200).json({ success: true, data: forms });
-  } catch (error) {
-    res.status(500).json({ success: false, message: 'Server Error' });
+exports.getIntakeForms = asyncHandler(async (req, res) => {
+  const forms = await IntakeForm.find({ owner: req.user.id }).populate('client', 'name email company');
+  res.status(200).json({ success: true, data: forms });
+});
+
+exports.getIntakeFormById = asyncHandler(async (req, res) => {
+  const form = await IntakeForm.findOne({ _id: req.params.id, owner: req.user.id }).populate('client', 'name email company');
+  if (!form) {
+    return res.status(404).json({ success: false, message: 'Intake Form not found' });
   }
-};
+  res.status(200).json({ success: true, data: form });
+});
 
-exports.getIntakeFormById = async (req, res) => {
-  try {
-    const form = await IntakeForm.findOne({ _id: req.params.id, owner: req.user.id }).populate('client', 'name email company');
-    if (!form) {
-      return res.status(404).json({ success: false, message: 'Intake Form not found' });
-    }
-    res.status(200).json({ success: true, data: form });
-  } catch (error) {
-    res.status(500).json({ success: false, message: 'Server Error' });
-  }
-};
+exports.createIntakeForm = asyncHandler(async (req, res) => {
+  await assertOwnedClient(req.body.client, req.user.id);
+  const token = crypto.randomBytes(16).toString('hex');
+  const payload = omitProtectedFields(req.body);
+  const form = await IntakeForm.create({
+    ...payload,
+    token,
+    owner: req.user.id
+  });
+  res.status(201).json({ success: true, data: form });
+});
 
-exports.createIntakeForm = async (req, res) => {
-  try {
+exports.updateIntakeForm = asyncHandler(async (req, res) => {
+  if (req.body.client) {
     await assertOwnedClient(req.body.client, req.user.id);
-    const token = crypto.randomBytes(16).toString('hex');
-    const payload = omitProtectedFields(req.body);
-    const form = await IntakeForm.create({
-      ...payload,
-      token,
-      owner: req.user.id
-    });
-    res.status(201).json({ success: true, data: form });
-  } catch (error) {
-    handleControllerError(res, error);
   }
-};
+  const payload = omitProtectedFields(req.body, ['owner', 'token', 'submissions']);
+  const form = await IntakeForm.findOneAndUpdate(
+    { _id: req.params.id, owner: req.user.id },
+    payload,
+    { new: true, runValidators: true }
+  );
+  if (!form) {
+    return res.status(404).json({ success: false, message: 'Intake Form not found' });
+  }
+  res.status(200).json({ success: true, data: form });
+});
 
-exports.updateIntakeForm = async (req, res) => {
-  try {
-    if (req.body.client) {
-      await assertOwnedClient(req.body.client, req.user.id);
-    }
-    const payload = omitProtectedFields(req.body, ['owner', 'token', 'submissions']);
-    const form = await IntakeForm.findOneAndUpdate(
-      { _id: req.params.id, owner: req.user.id },
-      payload,
-      { new: true, runValidators: true }
-    );
-    if (!form) {
-      return res.status(404).json({ success: false, message: 'Intake Form not found' });
-    }
-    res.status(200).json({ success: true, data: form });
-  } catch (error) {
-    handleControllerError(res, error);
+exports.deleteIntakeForm = asyncHandler(async (req, res) => {
+  const form = await IntakeForm.findOneAndDelete({ _id: req.params.id, owner: req.user.id });
+  if (!form) {
+    return res.status(404).json({ success: false, message: 'Intake Form not found' });
   }
-};
-
-exports.deleteIntakeForm = async (req, res) => {
-  try {
-    const form = await IntakeForm.findOneAndDelete({ _id: req.params.id, owner: req.user.id });
-    if (!form) {
-      return res.status(404).json({ success: false, message: 'Intake Form not found' });
-    }
-    res.status(200).json({ success: true, data: {} });
-  } catch (error) {
-    res.status(500).json({ success: false, message: 'Server Error' });
-  }
-};
+  res.status(200).json({ success: true, data: {} });
+});
 
 // PUBLIC ENDPOINTS
 
-exports.getPublicIntakeByToken = async (req, res) => {
-  try {
-    const form = await IntakeForm.findOne({ token: req.params.token })
-      .select('title description fields client')
-      .populate('client', 'name company');
-    if (!form) {
-      return res.status(404).json({ success: false, message: 'Form not found or link has expired' });
-    }
-    res.status(200).json({ success: true, data: form });
-  } catch (error) {
-    res.status(500).json({ success: false, message: 'Server Error' });
+exports.getPublicIntakeByToken = asyncHandler(async (req, res) => {
+  const form = await IntakeForm.findOne({ token: req.params.token })
+    .select('title description fields client')
+    .populate('client', 'name company');
+  if (!form) {
+    return res.status(404).json({ success: false, message: 'Form not found or link has expired' });
   }
-};
+  res.status(200).json({ success: true, data: form });
+});
 
-exports.submitPublicIntake = async (req, res) => {
-  try {
-    const form = await IntakeForm.findOne({ token: req.params.token });
-    if (!form) {
-      return res.status(404).json({ success: false, message: 'Form not found or link has expired' });
-    }
-
-    form.submissions.push({
-      submittedAt: Date.now(),
-      answers: req.body.answers // Array of { label, value }
-    });
-
-    await form.save();
-    res.status(200).json({ success: true, message: 'Form submitted successfully!' });
-  } catch (error) {
-    res.status(500).json({ success: false, message: error.message || 'Server Error' });
+exports.submitPublicIntake = asyncHandler(async (req, res) => {
+  const form = await IntakeForm.findOne({ token: req.params.token });
+  if (!form) {
+    return res.status(404).json({ success: false, message: 'Form not found or link has expired' });
   }
-};
+
+  // Validate answers payload shape to prevent storing junk
+  const answers = Array.isArray(req.body.answers) ? req.body.answers : [];
+  const clean = answers
+    .filter((a) => a && typeof a === 'object')
+    .map((a) => ({
+      label: String(a.label || '').slice(0, 500),
+      value: String(a.value ?? '').slice(0, 10000)
+    }))
+    .filter((a) => a.label);
+
+  form.submissions.push({
+    submittedAt: Date.now(),
+    answers: clean
+  });
+
+  await form.save();
+  res.status(200).json({ success: true, message: 'Form submitted successfully!' });
+});

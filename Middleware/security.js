@@ -1,4 +1,5 @@
 const crypto = require('crypto');
+const mongoose = require('mongoose');
 const Client = require('../Models/Client');
 
 const insecureSecrets = new Set([
@@ -36,18 +37,44 @@ const assertOwnedClient = async (clientId, ownerId) => {
   return client;
 };
 
-const handleControllerError = (res, error, fallback = 'Server Error') => {
+const isValidObjectId = (id) => mongoose.Types.ObjectId.isValid(id);
+
+const toErrorPayload = (error, fallback = 'Server Error') => {
+  // Client-reported status (404/400/409 etc.)
   if (error.statusCode) {
-    return res.status(error.statusCode).json({ success: false, message: error.message });
+    return { statusCode: error.statusCode, message: error.message };
   }
 
   if (error.name === 'ValidationError') {
     const messages = Object.values(error.errors).map((val) => val.message);
-    return res.status(400).json({ success: false, message: messages.join(', ') });
+    return { statusCode: 400, message: messages.join(', ') };
   }
 
-  return res.status(500).json({ success: false, message: fallback });
+  // Malformed ObjectId
+  if (error.name === 'CastError') {
+    return { statusCode: 400, message: 'Invalid ID format' };
+  }
+
+  // Duplicate key (Mongo error 11000)
+  if (error.code === 11000) {
+    const fields = Object.keys(error.keyPattern || {}).join(', ');
+    return { statusCode: 409, message: `${fields} already exists` };
+  }
+
+  return { statusCode: 500, message: fallback };
 };
+
+const handleControllerError = (res, error, fallback = 'Server Error') => {
+  const { statusCode, message } = toErrorPayload(error, fallback);
+  return res.status(statusCode).json({ success: false, message });
+};
+
+/**
+ * Wraps an async Express handler so rejected promises are forwarded
+ * to the global error middleware instead of crashing the process.
+ */
+const asyncHandler = (fn) => (req, res, next) =>
+  Promise.resolve(fn(req, res, next)).catch(next);
 
 const omitProtectedFields = (body, fields = ['owner', 'uploadedBy']) => {
   const payload = { ...body };
@@ -57,9 +84,12 @@ const omitProtectedFields = (body, fields = ['owner', 'uploadedBy']) => {
 
 module.exports = {
   assertOwnedClient,
+  asyncHandler,
   getJwtSecret,
   handleControllerError,
+  isValidObjectId,
   makeToken,
   omitProtectedFields,
-  requireOwnedClient
+  requireOwnedClient,
+  toErrorPayload
 };

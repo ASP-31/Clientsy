@@ -49,6 +49,33 @@ Clientsy features a premium workspace layout designed to provide freelancers wit
    npm start
    ```
 
+5. **Run Tests**
+   ```bash
+   npm test
+   ```
+
+## API Health Check
+
+Once running (default port `5000`):
+
+```bash
+curl http://localhost:5000/api/health
+```
+
+Returns `200` when the database is connected and `503` otherwise, along with uptime
+and a timestamp.
+
+## Roles & Access
+
+Registration allows only the `developer` or `client` roles (never `admin`). Route
+access is enforced server-side:
+
+- **Developer workspace** (`/api/clients`, `/api/documents`, `/api/projects`,
+  `/api/invoices`, `/api/proposals`, `/api/intakes`, `/api/meetings`, `/api/reviews`,
+  `/api/team`): `developer` / `admin` only.
+- **Client portal** (`/api/portal`): `client` / `admin` only.
+- **Public endpoints** (`/api/public`): open (intake forms, public reviews).
+
 ## License
 
 Distributed under the MIT License.

@@ -145,6 +145,7 @@ document.addEventListener('DOMContentLoaded', () => {
   setupTeamModalListeners();
   setupDragAndDrop();
   setupSignatureCanvas();
+  annotateIconButtons();
   
   // Initial check
   checkSessionAndRoute();
@@ -987,7 +988,8 @@ window.convertQuoteToInvoice = async function(quoteId) {
 };
 
 window.deleteInvoiceRecord = async function(id) {
-  if (!confirm('Are you sure you want to delete this invoice/quotation?')) return;
+  const ok = await customConfirm('Are you sure you want to delete this invoice/quotation?', { confirmLabel: 'Delete', danger: true });
+  if (!ok) return;
   try {
     await window.invoiceAPI.delete(id);
     showToast('Invoice deleted', 'success');
@@ -1027,7 +1029,8 @@ function renderProposalsModule() {
 }
 
 window.deleteProposalRecord = async function(id) {
-  if (!confirm('Are you sure you want to delete this proposal?')) return;
+  const ok = await customConfirm('Are you sure you want to delete this proposal?', { confirmLabel: 'Delete', danger: true });
+  if (!ok) return;
   try {
     await window.proposalAPI.delete(id);
     showToast('Proposal deleted', 'success');
@@ -1070,7 +1073,8 @@ function renderIntakesModule() {
 }
 
 window.deleteIntakeFormRecord = async function(id) {
-  if (!confirm('Are you sure you want to delete this form?')) return;
+  const ok = await customConfirm('Are you sure you want to delete this form?', { confirmLabel: 'Delete', danger: true });
+  if (!ok) return;
   try {
     await window.intakeAPI.delete(id);
     showToast('Form template deleted', 'success');
@@ -1145,7 +1149,8 @@ function renderMeetingsModule() {
 }
 
 window.deleteMeetingRecord = async function(id) {
-  if (!confirm('Are you sure you want to cancel this meeting?')) return;
+  const ok = await customConfirm('Are you sure you want to cancel this meeting?', { confirmLabel: 'Cancel Meeting', danger: true });
+  if (!ok) return;
   try {
     await window.meetingAPI.delete(id);
     showToast('Meeting cancelled successfully.', 'success');
@@ -1234,7 +1239,8 @@ function renderTeamModule() {
 }
 
 window.deleteTeamMemberRecord = async function(id) {
-  if (!confirm('Are you sure you want to remove this member?')) return;
+  const ok = await customConfirm('Are you sure you want to remove this member?', { confirmLabel: 'Remove', danger: true });
+  if (!ok) return;
   try {
     await window.teamAPI.delete(id);
     showToast('Team member removed', 'success');
@@ -1551,13 +1557,61 @@ async function loadPublicReviewsPortfolio(userId) {
 }
 
 // --- Dynamic Modal Controls ---
-window.openModal = function(id) {
-  document.getElementById(id).classList.add('active');
+const modalOverlays = () => document.querySelectorAll('.modal-overlay');
+
+window.openModal = function(id, { focusFirst = true } = {}) {
+  const overlay = document.getElementById(id);
+  if (!overlay) return;
+  overlay.classList.add('active');
+  overlay.setAttribute('aria-hidden', 'false');
+  // Lock body scroll while a modal is open
+  document.body.classList.add('modal-open');
+  if (focusFirst) {
+    const firstInput = overlay.querySelector('input:not([type="hidden"]), textarea, select, button[type="submit"]');
+    if (firstInput) {
+      setTimeout(() => firstInput.focus(), 50);
+    }
+  }
 };
 
 window.closeModal = function(id) {
-  document.getElementById(id).classList.remove('active');
+  const overlay = document.getElementById(id);
+  if (!overlay) return;
+  overlay.classList.remove('active');
+  overlay.setAttribute('aria-hidden', 'true');
+  if (!Array.from(modalOverlays()).some(o => o.classList.contains('active'))) {
+    document.body.classList.remove('modal-open');
+  }
 };
+
+// Close modals via Escape key (accessibility)
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    const openOverlay = Array.from(modalOverlays()).find(o => o.classList.contains('active'));
+    if (openOverlay) {
+      closeModal(openOverlay.id);
+      // Close the sliding drawer too
+      if (DOM.drawer && DOM.drawer.classList.contains('open')) closeFolderDrawer();
+    }
+  }
+});
+
+// Close modals by clicking the overlay backdrop (not inside the dialog)
+modalOverlays().forEach(overlay => {
+  overlay.addEventListener('mousedown', (e) => {
+    if (e.target === overlay) {
+      closeModal(overlay.id);
+    }
+  });
+});
+
+// Prevent body scroll when a modal is open
+if (!document.querySelector('style[data-modal-scroll-lock]')) {
+  const styleEl = document.createElement('style');
+  styleEl.setAttribute('data-modal-scroll-lock', 'true');
+  styleEl.textContent = 'body.modal-open { overflow: hidden; }';
+  document.head.appendChild(styleEl);
+}
 
 // --- Add/Edit Clients ---
 function setupClientModalListeners() {
@@ -1625,7 +1679,8 @@ function setupClientModalListeners() {
   });
 
   document.getElementById('btn-delete-client').addEventListener('click', async () => {
-    if (!confirm('Are you sure you want to permanently delete this client folder directory? All documents, projects, and invoices inside will be lost!')) return;
+    const ok = await customConfirm('Are you sure you want to permanently delete this client folder directory? All documents, projects, and invoices inside will be lost!', { confirmLabel: 'Delete Folder', danger: true });
+    if (!ok) return;
     try {
       await window.clientAPI.delete(state.selectedClientId);
       showToast('Folder directory deleted', 'success');
@@ -1801,7 +1856,8 @@ function resetUploadedFile() {
 }
 
 window.deleteDocument = async function(id) {
-  if (!confirm('Are you sure you want to permanently delete this file?')) return;
+  const ok = await customConfirm('Are you sure you want to permanently delete this file?', { confirmLabel: 'Delete File', danger: true });
+  if (!ok) return;
   try {
     await window.documentAPI.delete(id);
     showToast('File deleted', 'success');
@@ -2824,16 +2880,18 @@ function triggerMockDataSync() {
 function showToast(message, type = 'info') {
   const toast = document.createElement('div');
   toast.className = `toast toast-${type}`;
+  toast.setAttribute('role', type === 'error' ? 'alert' : 'status');
   
   let icon = 'info';
   if (type === 'success') icon = 'check-circle';
   if (type === 'error') icon = 'alert-circle';
   if (type === 'warning') icon = 'alert-triangle';
 
-  toast.innerHTML = `
-    <i data-lucide="${icon}"></i>
-    <span class="toast-message">${message}</span>
-  `;
+  toast.appendChild(lucideIcon(icon));
+  const msgSpan = document.createElement('span');
+  msgSpan.className = 'toast-message';
+  msgSpan.textContent = message;
+  toast.appendChild(msgSpan);
 
   DOM.toastContainer.appendChild(toast);
   lucide.createIcons();
@@ -2844,6 +2902,111 @@ function showToast(message, type = 'info') {
       toast.remove();
     });
   }, 5000);
+}
+
+// Create an inline lucide icon node safely (XSS-free helper)
+function lucideIcon(name, size = 18) {
+  const i = document.createElement('i');
+  i.setAttribute('data-lucide', name);
+  i.style.width = `${size}px`;
+  i.style.height = `${size}px`;
+  return i;
+}
+
+// Auto-add accessible labels to icon-only buttons that lack one
+function annotateIconButtons() {
+  document.querySelectorAll('button, .action-btn, .btn').forEach(btn => {
+    if (btn.getAttribute('aria-label')) return;
+    const hasIcon = btn.querySelector('[data-lucide]');
+    const hasText = (btn.textContent || '').trim().length > 0 || btn.querySelector('.toast-message');
+    const hasTitle = btn.getAttribute('title');
+    if (hasIcon && !hasText && hasTitle) {
+      btn.setAttribute('aria-label', hasTitle);
+      btn.setAttribute('title', hasTitle);
+    }
+  });
+}
+
+// --- Custom Confirm Dialog (replaces native confirm for a consistent, device-safe UX) ---
+window.customConfirm = function(message, { title = 'Are you sure?', confirmLabel = 'Confirm', danger = false } = {}) {
+  return new Promise((resolve) => {
+    const existing = document.getElementById('custom-confirm-modal');
+    if (existing) existing.remove();
+
+    const overlay = document.createElement('div');
+    overlay.className = 'modal-overlay active';
+    overlay.id = 'custom-confirm-modal';
+    overlay.setAttribute('aria-hidden', 'false');
+    overlay.setAttribute('role', 'dialog');
+    overlay.setAttribute('aria-modal', 'true');
+
+    const modal = document.createElement('div');
+    modal.className = 'modal-container';
+    modal.style.maxWidth = '420px';
+
+    const header = document.createElement('div');
+    header.className = 'modal-header';
+    header.innerHTML = `<h2>${escapeHTML(title)}</h2>`;
+    const closeBtn = document.createElement('button');
+    closeBtn.className = 'modal-close-btn';
+    closeBtn.setAttribute('aria-label', 'Close');
+    closeBtn.innerHTML = '<i data-lucide="x"></i>';
+    header.appendChild(closeBtn);
+
+    const body = document.createElement('div');
+    body.className = 'modal-body';
+    const msg = document.createElement('p');
+    msg.className = 'text-muted';
+    msg.style.lineHeight = '1.5';
+    msg.textContent = message;
+    body.appendChild(msg);
+
+    const footer = document.createElement('div');
+    footer.className = 'modal-footer';
+
+    const cancelBtn = document.createElement('button');
+    cancelBtn.type = 'button';
+    cancelBtn.className = 'btn btn-text';
+    cancelBtn.textContent = 'Cancel';
+    cancelBtn.addEventListener('click', () => { cleanup(); resolve(false); });
+
+    const okBtn = document.createElement('button');
+    okBtn.type = 'button';
+    okBtn.className = `btn btn-sm ${danger ? 'btn-danger' : 'btn-primary'}`;
+    okBtn.textContent = confirmLabel;
+    okBtn.addEventListener('click', () => { cleanup(); resolve(true); });
+
+    footer.appendChild(cancelBtn);
+    footer.appendChild(okBtn);
+
+    modal.appendChild(header);
+    modal.appendChild(body);
+    modal.appendChild(footer);
+    overlay.appendChild(modal);
+    document.body.appendChild(overlay);
+
+    const cleanup = () => {
+      overlay.remove();
+      if (!Array.from(modalOverlays()).some(o => o.classList.contains('active'))) {
+        document.body.classList.remove('modal-open');
+      }
+    };
+
+    overlay.addEventListener('mousedown', (e) => {
+      if (e.target === overlay) { cleanup(); resolve(false); }
+    });
+    closeBtn.addEventListener('click', () => { cleanup(); resolve(false); });
+    document.addEventListener('keydown', function onEsc(e) {
+      if (e.key === 'Escape') {
+        cleanup();
+        resolve(false);
+        document.removeEventListener('keydown', onEsc);
+      }
+    });
+
+    document.body.classList.add('modal-open');
+    lucide.createIcons();
+  });
 }
 
 window.switchSimTab = function(tabName) {

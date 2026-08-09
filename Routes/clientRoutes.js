@@ -1,15 +1,16 @@
 const express = require('express');
 const router = express.Router();
 const clientController = require('../Controllers/clientController');
+const { createClientValidators, updateClientValidators } = require('../Middleware/validators');
 
 // Client routes
 router.route('/')
   .get(clientController.getClients)
-  .post(clientController.createClient);
+  .post(createClientValidators, clientController.createClient);
 
 router.route('/:id')
   .get(clientController.getClientById)
-  .put(clientController.updateClient)
+  .put(updateClientValidators, clientController.updateClient)
   .delete(clientController.deleteClient);
 
 module.exports = router;

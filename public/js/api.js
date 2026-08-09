@@ -38,7 +38,12 @@ async function apiFetch(endpoint, options = {}) {
     const result = await response.json();
     
     if (!response.ok) {
-      const err = new Error(result.message || `HTTP error! Status: ${response.status}`);
+      const fallback = `HTTP error! Status: ${response.status}`;
+      let message = result.message || fallback;
+      if (response.status === 429) {
+        message = 'Too many requests. Please wait a moment and try again.';
+      }
+      const err = new Error(message);
       err.errors = result.errors;
       throw err;
     }
@@ -65,7 +70,15 @@ const authAPI = {
 
 // Client API
 const clientAPI = {
-  getAll: () => apiFetch('/clients'),
+  getAll: (params) => {
+    const query = new URLSearchParams();
+    const options = params || (typeof params === 'undefined' ? { limit: 1000 } : {});
+    if (options.search) query.set('search', options.search);
+    if (options.page) query.set('page', options.page);
+    if (options.limit) query.set('limit', options.limit);
+    const qs = query.toString();
+    return apiFetch(`/clients${qs ? `?${qs}` : ''}`);
+  },
   getById: (id) => apiFetch(`/clients/${id}`),
   create: (data) => apiFetch('/clients', {
     method: 'POST',
