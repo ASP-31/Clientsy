@@ -1,3 +1,4 @@
+
 /* ============================================================
    CLIENTSY — ULTRA-PREMIUM DARK GLASSMORPHISM DESIGN SYSTEM
    ============================================================ */
@@ -91,6 +92,13 @@
   --shadow-glow-primary: 0 0 22px rgba(139, 92, 246, 0.28), 0 0 48px rgba(139, 92, 246, 0.08);
   --shadow-glow-cyan: 0 0 22px rgba(34, 211, 238, 0.22), 0 0 48px rgba(34, 211, 238, 0.06);
 
+  /* CTA Accent — single contrasting action colour (the "click" colour).
+     The two matching brand colours are Violet (--primary) + Cyan (--accent-cyan). */
+  --cta: #fb923c;
+  --cta-hover: #ea580c;
+  --cta-alpha: rgba(251, 146, 60, 0.12);
+  --cta-glow: 0 0 20px rgba(251, 146, 60, 0.25);
+
   --sidebar-width: 260px;
 }
 
@@ -143,6 +151,12 @@ html[data-theme="light"] {
   --shadow-xl: 0 16px 48px rgba(109, 40, 217, 0.12), 0 0 72px rgba(109, 40, 217, 0.06);
   --shadow-glow-primary: 0 0 22px rgba(124, 58, 237, 0.22), 0 0 48px rgba(124, 58, 237, 0.06);
   --shadow-glow-cyan: 0 0 22px rgba(6, 182, 212, 0.18), 0 0 48px rgba(6, 182, 212, 0.05);
+
+  /* CTA Accent — single contrasting action colour (light theme) */
+  --cta: #ea580c;
+  --cta-hover: #c2410c;
+  --cta-alpha: rgba(234, 88, 12, 0.10);
+  --cta-glow: 0 0 18px rgba(234, 88, 12, 0.16);
 }
 
 /* ============================================================
@@ -706,16 +720,17 @@ a:hover { color: var(--accent-cyan); }
 
 .btn i, .btn svg { width: 15px; height: 15px; flex-shrink: 0; }
 
-/* Primary Button — Aurora Gradient */
+/* Primary Button — Single CTA Accent Colour (vs. the two-colour Aurora gradient) */
 .btn-primary {
-  background: var(--gradient-primary);
-  color: var(--text-inverse);
-  box-shadow: var(--shadow-glow-primary);
+  background: var(--cta);
+  color: #1c1005;
+  box-shadow: var(--cta-glow);
 }
 
 .btn-primary:hover {
+  background: var(--cta-hover);
   transform: translateY(-2px);
-  box-shadow: 0 6px 22px rgba(139, 92, 246, 0.4), 0 0 36px rgba(34, 211, 238, 0.18);
+  box-shadow: 0 6px 22px rgba(251, 146, 60, 0.35);
 }
 
 .btn-primary:active { transform: translateY(0); }
