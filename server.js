@@ -141,18 +141,25 @@ app.use((error, req, res, next) => {
   res.status(statusCode).json({ success: false, message });
 });
 
-// Connect to MongoDB and start the server
+// Start the server first, then connect to MongoDB in the background.
+// Gating `app.listen` on the DB connection made startup wait on the
+// database (slow Atlas SRV lookups / failed fallbacks delayed the boot).
 let server;
-connectDB().then(() => {
-  server = app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-  });
+server = app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
+
+connectDB()
+  .then(() => console.log('Database connection ready.'))
+  .catch((error) => console.error(`Database connection failed: ${error.message}`));
 
 // Graceful shutdown
 const shutdown = (signal) => {
   console.log(`${signal} received, shutting down gracefully...`);
-  if (server) server.close(() => process.exit(0));
+  if (server) {
+    server.closeAllConnections?.();
+    server.close(() => process.exit(0));
+  }
   setTimeout(() => process.exit(1), 10000).unref();
   mongoose.connection.close();
 };
